@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ดูข้อมูลสินค้า</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        grok: {
+                            bg: '#0b0f17',
+                            card: '#161e2e',
+                            border: '#1e293b',
+                            accent: '#38bdf8',
+                            hover: '#0284c7',
+                            sale: '#f43f5e',
+                            queue: '#64748b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b0f17;
+            color: #ffffff;
+        }
+        .grok-card {
+            background: #161e2e;
+            border: 1px solid #1e293b;
+            transition: all 0.3s ease;
+        }
+        .grok-card:hover {
+            transform: translateY(-4px);
+            border-color: #38bdf8;
+            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.2);
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-100 antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- TOP NAVIGATION -->
+    <nav class="bg-[#111827] border-b border-grok-border sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="font-bold text-lg md:text-xl tracking-wider text-white">SuperGrok<span class="text-grok-accent"> Insurance System</span></span>
+            </div>
+            <div class="flex items-center gap-3 md:gap-6 text-xs md:text-sm font-medium text-gray-300">
+                <a href="index.html" class="hover:text-grok-accent transition">หน้าแรก</a>
+                <a href="#" class="text-grok-accent hover:text-white transition">ตรวจสอบประกัน</a>
+                <a href="https://www.facebook.com/TreethepGolf" target="_blank" class="hover:text-grok-accent transition">ติดต่อผู้ดูแล</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-4xl mx-auto px-4 py-8 md:py-12 w-full">
+        
+        <!-- HEADER SECTION -->
+        <div class="text-center mb-8">
+            <h1 class="text-2xl md:text-4xl font-extrabold mb-2">
+                ดูข้อมูลสินค้า
+            </h1>
+            <p class="text-gray-400 text-xs md:text-sm">กรอกอีเมล เพื่อตรวจสอบแพ็กเกจ ระยะเวลา และข้อมูลประกันความปลอดภัย</p>
+            <p class="text-gray-400 text-xs md:text-sm">ประกันครอบคลุม 1.รหัสเด้ง รหัสหลุด 2.ใช้ครบตามอายุการใช้งาน 3.ได้ใช้หลอดพลังงานครบถ้วน</p>
+        </div>
+
+        <!-- SEARCH BOX SECTION -->
+        <div class="bg-[#161e2e] border border-grok-border rounded-2xl p-6 md:p-8 shadow-2xl mb-10">
+            <label for="username-input" class="block text-sm font-bold text-gray-300 mb-2">
+                🔍 กรอกเมลร้านที่ท่านได้รับ:
+            </label>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <input type="text" id="username-input" placeholder="เช่น golfcraft697@gmail.com" 
+                       class="flex-1 bg-[#0f172a] border border-grok-border rounded-xl px-4 py-3 text-white focus:outline-none focus:border-grok-accent text-sm md:text-base">
+                <button onclick="searchCustomerData()" 
+                        class="bg-grok-accent hover:bg-grok-hover text-slate-950 font-bold px-6 py-3 rounded-xl transition text-sm md:text-base shadow-lg shadow-sky-500/20">
+                    ตรวจสอบข้อมูล
+                </button>
+            </div>
+        </div>
+
+        <!-- RESULT DISPLAY SECTION -->
+        <div id="result-container" class="hidden bg-[#161e2e] border border-sky-500/40 rounded-2xl p-6 md:p-8 shadow-2xl mb-10 relative overflow-hidden">
+            <div class="absolute top-0 right-0 bg-sky-500 text-slate-950 text-xs font-black px-4 py-1 rounded-bl-xl">
+                ตรวจสอบสำเร็จ
+            </div>
+            <h3 class="text-lg md:text-xl font-bold text-white mb-6 flex items-center gap-2 border-b border-grok-border pb-3">
+                📋 รายละเอียดการเช่าและประกัน
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div class="bg-[#0f172a] border border-grok-border p-4 rounded-xl">
+                    <span class="text-gray-400 text-xs block mb-1">1. ประเภทแพ็กเกจ:</span>
+                    <strong id="res-package" class="text-base text-sky-400 font-bold">-</strong>
+                </div>
+                <div class="bg-[#0f172a] border border-grok-border p-4 rounded-xl">
+                    <span class="text-gray-400 text-xs block mb-1">2. หมายเลขสินค้า:</span>
+                    <strong id="res-pnum" class="text-base text-grok-accent font-bold">-</strong>
+                </div>
+                <div class="bg-[#0f172a] border border-grok-border p-4 rounded-xl">
+                    <span class="text-gray-400 text-xs block mb-1">3. ระยะเวลา & วันหมดอายุ:</span>
+                    <p id="res-duration" class="text-gray-200 font-medium">-</p>
+                </div>
+                <div class="bg-[#0f172a] border border-grok-border p-4 rounded-xl">
+                    <span class="text-gray-400 text-xs block mb-1">4. ราคา:</span>
+                    <strong id="res-price" class="text-base text-emerald-400 font-bold">-</strong>
+                </div>
+                <div class="bg-[#0f172a] border border-grok-border p-4 rounded-xl md:col-span-2">
+                    <span class="text-gray-400 text-xs block mb-1">5. ผู้รับประโยชน์ประกันสินค้า:</span>
+                    <strong id="res-insurance" class="text-base text-amber-300 font-bold">-</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- ERROR / NOT FOUND STATE -->
+        <div id="error-container" class="hidden text-center py-10 bg-[#161e2e] border border-rose-500/30 rounded-2xl p-6 mb-10">
+            <p class="text-rose-400 text-base font-semibold">❌ ไม่พบข้อมูล Username นี้ในระบบ หรือยังไม่เปิดใช้งานสถานะ Clear</p>
+        </div>
+
+        <!-- INSURANCE HISTORY SECTION (ประวัติประกัน) -->
+        <div class="border-t border-grok-border pt-8">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-xl font-bold text-white">🛡️ ประวัติประกัน</h2>
+                    <p class="text-xs text-gray-400">แสดงรายการสินค้าที่อยู่ในระบบประกัน (เรียงตามการเคลียร์ล่าสุด)</p>
+                </div>
+            </div>
+            
+            <div id="clear-product-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="col-span-full text-center py-10 text-gray-400 text-sm">
+                    กำลังโหลดประวัติประกัน...
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#111827] border-t border-grok-border py-6 text-center text-xs text-gray-500">
+        <p>© 2026 Supergrok Insurance System · All rights reserved.</p>
+    </footer>
+
+    <!-- SCRIPT LOGIC -->
+    <script>
+        const SHEET_ID = '1FZDa93Qn_N44biC3gugdPf2uaXh2-BeI';
+        const SHEET_TITLE = 'ตารางคิวว่างเช่า AI';
+        const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_TITLE)}`;
+
+        let rawSheetData = [];
+
+        async function fetchSheetData() {
+            try {
+                const response = await fetch(SHEET_URL);
+                const text = await response.text();
+                const jsonString = text.substring(47, text.length - 2);
+                const json = JSON.parse(jsonString);
+                rawSheetData = json.table.rows;
+
+                renderClearProducts();
+            } catch (error) {
+                console.error('Error fetching sheet:', error);
+                document.getElementById('clear-product-grid').innerHTML = `
+                    <div class="col-span-full text-center py-6 text-red-400 text-xs">
+                        ไม่สามารถโหลดข้อมูลจาก Google Sheets ได้ กรุณาตรวจสอบสิทธิ์การแชร์
+                    </div>`;
+            }
+        }
+
+        // ฟังก์ชันแปลงวันที่รองรับทั้งแบบสตริงไทย/สากล และ Google Sheets Date Object
+        function parseDateString(dateStr) {
+            if (!dateStr || dateStr === '-') return null;
+            let targetDate = null;
+
+            if (typeof dateStr === 'string' && dateStr.startsWith('Date(')) {
+                const match = dateStr.match(/Date\((\d+),(\d+),(\d+)\)/);
+                if (match) {
+                    return new Date(parseInt(match[1]), parseInt(match[2]), parseInt(match[3]));
+                }
+            }
+
+            const dmyMatch = dateStr.match(/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
+            if (dmyMatch) {
+                let day = parseInt(dmyMatch[1]);
+                let month = parseInt(dmyMatch[2]) - 1;
+                let year = parseInt(dmyMatch[3]);
+                if (year > 2500) year -= 543;
+                if (year < 100) year += 2000;
+                targetDate = new Date(year, month, day);
+            } else {
+                const thaiMonths = {
+                    'มค': 0, 'มกราคม': 0, 'กพ': 1, 'กุมภาพันธ์': 1, 'มีค': 2, 'มีนาคม': 2,
+                    'เมย': 3, 'เมษายน': 3, 'พค': 4, 'พฤษภาคม': 4, 'มิย': 5, 'มิถุนายน': 5,
+                    'กค': 6, 'กรกฎาคม': 6, 'สค': 7, 'สิงหาคม': 7, 'กย': 8, 'กันยายน': 8,
+                    'ตค': 9, 'ตุลาคม': 9, 'พย': 10, 'พฤศจิกายน': 10, 'ธค': 11, 'ธันวาคม': 11
+                };
+
+                const cleanStr = dateStr.replace(/\./g, '').trim();
+                const parts = cleanStr.split(/\s+/);
+                if (parts.length >= 3) {
+                    let day = parseInt(parts[0]);
+                    let monthKey = parts[1];
+                    let month = thaiMonths[monthKey];
+                    let year = parseInt(parts[2]);
+                    if (year > 2500) year -= 543;
+                    if (year < 100) year += 2000;
+
+                    if (!isNaN(day) && month !== undefined && !isNaN(year)) {
+                        targetDate = new Date(year, month, day);
+                    }
+                }
+            }
+            return (targetDate && !isNaN(targetDate.getTime())) ? targetDate : null;
+        }
+
+        // ฟังก์ชันเซ็นเซอร์ชื่อ
+        function censorName(fullName) {
+            if (!fullName || fullName === '-') return '-';
+            let parts = fullName.trim().split(/\s+/);
+            return parts.map(part => {
+                if (part.length <= 1) return part + '*';
+                return part.charAt(0) + '*'.repeat(part.length - 1);
+            }).join(' ');
+        }
+
+        // --- ส่วนประวัติประกัน: แสดงเฉพาะที่คอลัมน์ K เป็น clear และเรียงตามหมายเลข P ล่าสุด ---
+        function renderClearProducts() {
+            const grid = document.getElementById('clear-product-grid');
+            grid.innerHTML = '';
+
+            let clearList = [];
+
+            rawSheetData.forEach((row, index) => {
+                if (!row.c) return;
+
+                const product = row.c[1] ? row.c[1].v : ''; 
+                const pNum = row.c[15] ? parseInt(row.c[15].v) || 0 : index; 
+                const usernameQ = row.c[16] ? String(row.c[16].v).trim() : ''; 
+                
+                const colKVal = row.c[10] ? String(row.c[10].v).trim().toLowerCase() : '';
+                const isClearInK = colKVal.includes('clear');
+
+                if (isClearInK) {
+                    clearList.push({
+                        product: product || 'Supergrok AI',
+                        pNum: pNum,
+                        usernameQ: usernameQ || 'ทั่วไป',
+                        rawRow: row
+                    });
+                }
+            });
+
+            // เรียงลำดับหมายเลข P ให้สูงขึ้น (วันล่าสุด)
+            clearList.sort((a, b) => b.pNum - a.pNum);
+
+            if (clearList.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-6 text-gray-500 text-xs">ไม่พบข้อมูลในประวัติประกันขณะนี้</div>`;
+                return;
+            }
+
+            clearList.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "grok-card p-4 rounded-xl flex items-center justify-between";
+                card.innerHTML = `
+                    <div>
+                        <span class="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/40">🛡️ อยู่ในประกัน</span>
+                        <h4 class="font-bold text-white text-sm mt-1">${item.product}</h4>
+                        <p class="text-xs text-gray-400">ผู้ใช้: <span class="text-sky-300">${item.usernameQ}</span></p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs text-gray-500 block">หมายเลข</span>
+                        <span class="text-lg font-black text-grok-accent">#${item.pNum}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // --- ระบบตรวจข้อมูลสินค้า (ค้นหาด้วย Username เฉพาะที่คอลัมน์ K เป็น clear) ---
+        function searchCustomerData() {
+            const inputVal = document.getElementById('username-input').value.trim().toLowerCase();
+            const resultBox = document.getElementById('result-container');
+            const errorBox = document.getElementById('error-container');
+
+            if (!inputVal) {
+                alert('กรุณากรอก Username หรืออีเมลก่อนตรวจสอบ');
+                return;
+            }
+
+            let foundRow = null;
+
+            rawSheetData.forEach(row => {
+                if (!row.c) return;
+
+                const colKVal = row.c[10] ? String(row.c[10].v).trim().toLowerCase() : '';
+                if (!colKVal.includes('clear')) return; // คอลัมน์ K ต้องเป็น clear เท่านั้น
+
+                let isMatch = false;
+                row.c.forEach(cell => {
+                    if (cell && cell.v && String(cell.v).trim().toLowerCase().includes(inputVal)) {
+                        isMatch = true;
+                    }
+                });
+
+                if (isMatch) {
+                    foundRow = row.c;
+                }
+            });
+
+            if (!foundRow) {
+                resultBox.classList.add('hidden');
+                errorBox.classList.remove('hidden');
+                return;
+            }
+
+            errorBox.classList.add('hidden');
+            resultBox.classList.remove('hidden');
+
+            // 1. ประเภทแพ็กเกจ (Col B)
+            const colB = foundRow[1] ? String(foundRow[1].v) : 'Supergrok';
+            document.getElementById('res-package').textContent = colB;
+
+            // 2. หมายเลขสินค้า (Col P)
+            const colP = foundRow[15] ? foundRow[15].v : '-';
+            document.getElementById('res-pnum').textContent = `#${colP}`;
+
+            // 3. ระยะเวลา & วันหมดอายุ (H + D)
+            const colHStr = foundRow[7] ? (foundRow[7].f || foundRow[7].v) : '-'; // วันเริ่มต้นเช่า (Col H)
+            const colD = foundRow[3] ? parseInt(foundRow[3].v) || 0 : 0;         // จำนวนวัน (Col D)
+
+            let startDateText = colHStr;
+            let expiredDateText = '-';
+
+            let startDate = parseDateString(colHStr);
+            if (startDate && colD > 0) {
+                let expDate = new Date(startDate);
+                expDate.setDate(expDate.getDate() + colD);
+                
+                let dd = String(expDate.getDate()).padStart(2, '0');
+                let mm = String(expDate.getMonth() + 1).padStart(2, '0');
+                let yyyy = expDate.getFullYear() + 543;
+                expiredDateText = `${dd}/${mm}/${yyyy}`;
+            }
+
+            document.getElementById('res-duration').innerHTML = `
+                วันเริ่มต้นเช่า: <span class="text-sky-300">${startDateText}</span><br>
+                ระยะเวลา: <span class="text-white font-bold">${colD} วัน</span><br>
+                วันหมดอายุ: <span class="text-rose-400 font-bold">${expiredDateText} เวลา 0.00 น.</span>
+            `;
+
+            // 4. ราคา (Col E)
+            const colE = foundRow[4] ? foundRow[4].v : '0';
+            document.getElementById('res-price').textContent = `${Number(colE).toLocaleString()} บาท`;
+
+            // 5. ผู้รับประโยชน์ประกันสินค้า (Col M) พร้อมเซ็นเซอร์ชื่อ
+            const colM = foundRow[12] ? String(foundRow[12].v) : '-';
+            const censored = censorName(colM);
+            document.getElementById('res-insurance').textContent = censored;
+        }
+
+        fetchSheetData();
+    </script>
+</body>
+</html>
