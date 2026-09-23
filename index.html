@@ -393,6 +393,45 @@
       padding: 22px 16px;
     }
     .footer strong { color: #fff; display: block; margin-bottom: 4px; }
+
+    .nav-tabs {
+      display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0 0;
+    }
+    .nav-tab {
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.08);
+      color: #e8eefc;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .nav-tab.active {
+      background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+      color: #071a3d;
+      border-color: transparent;
+    }
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b1e2d, #c2410c);
+      box-shadow: 0 10px 24px rgba(139,30,45,.25);
+    }
+    .form-frame-wrap {
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid #dbe3f2;
+      background: #fff;
+      min-height: 720px;
+    }
+    .form-frame-wrap iframe {
+      width: 100%;
+      height: 780px;
+      border: 0;
+      display: block;
+    }
+    .panel { display: none; }
+    .panel.active { display: block; }
   </style>
 </head>
 <body>
@@ -411,16 +450,27 @@
       <div>
         <div style="color:var(--gold-soft);font-size:12px;letter-spacing:.08em;">ROYAL THAI POLICE</div>
         <h1>ระบบติดตามคดีออนไลน์</h1>
-        <p class="sub">ค้นหาด้วยเลขบัตรประชาชน · แสดงผลเป็นแผนผังความคืบหน้าคดี</p>
+        <p class="sub">ค้นหาด้วยเลขบัตรประชาชน · แจ้งความออนไลน์ · แผนผังความคืบหน้าคดี</p>
+        <div class="nav-tabs">
+          <button type="button" class="nav-tab active" id="tab-track" onclick="showPanel('track')">ตรวจสอบคดี</button>
+          <button type="button" class="nav-tab" id="tab-report" onclick="showPanel('report')">แจ้งความออนไลน์</button>
+        </div>
       </div>
     </div>
   </header>
   <div class="gold-line"></div>
 
   <main class="wrap">
+    <div id="panel-track" class="panel active">
     <section class="card">
-      <h2>ตรวจสอบสถานะคดี</h2>
-      <p class="muted">กรอกเลขบัตร 13 หลัก เพื่อดูรายละเอียดผู้แจ้ง ผู้ต้องหา และแผนภาพการดำเนินคดี</p>
+      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;">
+        <div>
+          <h2>ตรวจสอบสถานะคดี</h2>
+
+          <p class="muted">กรอกเลขบัตร 13 หลัก เพื่อดูรายละเอียดผู้แจ้ง ผู้ต้องหา และแผนภาพการดำเนินคดี</p>
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="showPanel('report')">แจ้งความออนไลน์</button>
+      </div>
       <div class="search-row">
         <input id="id-input" type="text" inputmode="numeric" maxlength="13" placeholder="เช่น 1478600097041">
         <button class="btn" onclick="searchByCitizenId()">ตรวจสอบคดี</button>
@@ -487,6 +537,21 @@
         </div>
       </article>
     </section>
+    </div>
+
+    <div id="panel-report" class="panel">
+      <section class="card">
+        <h2>แจ้งความออนไลน์</h2>
+        <p class="muted">กรอกแบบฟอร์มด้านล่างได้เลยในหน้านี้ ข้อมูลจะเข้า Google Form / Sheet ตามที่ตั้งไว้ หาก iframe โหลดไม่ขึ้น กดเปิดฟอร์มในแท็บใหม่</p>
+        <div class="search-row" style="margin-bottom:14px;">
+          <a class="btn" href="https://forms.gle/5dadArUTFfDUL7No8" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center;">เปิดฟอร์มในแท็บใหม่</a>
+          <button type="button" class="btn" style="background:linear-gradient(135deg,#334155,#64748b);" onclick="showPanel('track')">กลับไปตรวจสอบคดี</button>
+        </div>
+        <div class="form-frame-wrap">
+          <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdRCEjjIqNKKiP6XxqGC_AeLgLaFYwjLFJX82ajfa6BpXovfg/viewform?embedded=true" title="แบบฟอร์มแจ้งความออนไลน์" loading="lazy">กำลังโหลดแบบฟอร์ม...</iframe>
+        </div>
+      </section>
+    </div>
   </main>
 
   <footer class="footer">
@@ -742,6 +807,17 @@
         btn.onclick = () => showCase(c);
         list.appendChild(btn);
       });
+    }
+
+
+    function showPanel(name) {
+      document.getElementById('panel-track').classList.toggle('active', name === 'track');
+      document.getElementById('panel-report').classList.toggle('active', name === 'report');
+      document.getElementById('tab-track').classList.toggle('active', name === 'track');
+      document.getElementById('tab-report').classList.toggle('active', name === 'report');
+      if (name === 'report') {
+        document.getElementById('panel-report').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
 
     async function fetchSheetData() {
