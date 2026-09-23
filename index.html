@@ -542,26 +542,13 @@
     <div id="panel-report" class="panel">
       <section class="card">
         <h2>แจ้งความออนไลน์</h2>
-        <p class="muted">แนะนำให้เปิดฟอร์มเต็มหน้า จะเสถียรกว่าการฝังในเว็บ ถ้าต้องการฝังในหน้านี้ ต้องตั้ง Google Form ให้ “รับคำตอบจากทุกคน” และไม่บังคับล็อกอิน</p>
-
-        <div style="display:grid;gap:12px;margin:16px 0 18px;">
-          <a class="btn" href="https://forms.gle/5dadArUTFfDUL7No8" target="_blank" rel="noopener"
-             style="text-decoration:none;display:flex;justify-content:center;align-items:center;padding:18px 22px;font-size:16px;">
-            เปิดแบบฟอร์มแจ้งความ (แนะนำ)
-          </a>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;">
-            <button type="button" class="btn" style="background:linear-gradient(135deg,#0f3d86,#1c5bb5);" onclick="toggleEmbedForm()">ลองฝังฟอร์มในหน้านี้</button>
-            <button type="button" class="btn" style="background:linear-gradient(135deg,#334155,#64748b);" onclick="showPanel('track')">กลับไปตรวจสอบคดี</button>
-          </div>
+        <p class="muted">กรอกแบบฟอร์มด้านล่างได้เลยในหน้านี้ ข้อมูลจะเข้า Google Form / Sheet ตามที่ตั้งไว้ หาก iframe โหลดไม่ขึ้น กดเปิดฟอร์มในแท็บใหม่</p>
+        <div class="search-row" style="margin-bottom:14px;">
+          <a class="btn" href="https://forms.gle/5dadArUTFfDUL7No8" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center;">เปิดฟอร์มในแท็บใหม่</a>
+          <button type="button" class="btn" style="background:linear-gradient(135deg,#334155,#64748b);" onclick="showPanel('track')">กลับไปตรวจสอบคดี</button>
         </div>
-
-        <div id="embed-help" class="chip" style="margin-bottom:12px;">
-          <span>ถ้าขึ้นข้อความ “ฟอร์มไม่มีชื่อ / เนื้อหานี้มิได้ถูกสร้างขึ้นหรือรับรองโดย Google”</span>
-          <b>ให้เปิดฟอร์มด้วยปุ่มด้านบน หรือไปตั้งค่าฟอร์ม: Settings → ทำให้ทุกคนตอบได้ โดยไม่ต้องล็อกอิน Google</b>
-        </div>
-
-        <div id="form-embed-box" class="form-frame-wrap" style="display:none;">
-          <iframe id="form-iframe" src="https://docs.google.com/forms/d/e/1FAIpQLSdRCEjjIqNKKiP6XxqGC_AeLgLaFYwjLFJX82ajfa6BpXovfg/viewform?embedded=true" title="แบบฟอร์มแจ้งความออนไลน์" loading="lazy">กำลังโหลดแบบฟอร์ม...</iframe>
+        <div class="form-frame-wrap">
+          <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdRCEjjIqNKKiP6XxqGC_AeLgLaFYwjLFJX82ajfa6BpXovfg/viewform?embedded=true" title="แบบฟอร์มแจ้งความออนไลน์" loading="lazy">กำลังโหลดแบบฟอร์ม...</iframe>
         </div>
       </section>
     </div>
@@ -822,18 +809,6 @@
       });
     }
 
-
-
-    function toggleEmbedForm() {
-      const box = document.getElementById('form-embed-box');
-      const show = box.style.display === 'none' || !box.style.display;
-      box.style.display = show ? 'block' : 'none';
-      if (show) {
-        const iframe = document.getElementById('form-iframe');
-        iframe.src = iframe.src; // reload
-        box.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }
 
     function showPanel(name) {
       document.getElementById('panel-track').classList.toggle('active', name === 'track');
