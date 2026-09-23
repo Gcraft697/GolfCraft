@@ -1,372 +1,320 @@
 <!DOCTYPE html>
 <html lang="th" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ดูข้อมูลสินค้า</title>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Prompt', 'sans-serif'],
-                    },
-                    colors: {
-                        grok: {
-                            bg: '#0b0f17',
-                            card: '#161e2e',
-                            border: '#1e293b',
-                            accent: '#38bdf8',
-                            hover: '#0284c7',
-                            sale: '#f43f5e',
-                            queue: '#64748b'
-                        }
-                    }
-                }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบติดตามคดีออนไลน์ | ตรวจสอบสถานะการแจ้งความ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Prompt', 'sans-serif'] },
+          colors: {
+            police: {
+              navy: '#0b1f4a',
+              deep: '#071533',
+              blue: '#123a7a',
+              mid: '#1a4f9c',
+              gold: '#c9a227',
+              light: '#e8eef8',
+              stripe: '#8b1e2d'
             }
+          }
         }
-    </script>
-    <style>
-        body {
-            background-color: #0b0f17;
-            color: #ffffff;
-        }
-        .grok-card {
-            background: #161e2e;
-            border: 1px solid #1e293b;
-            transition: all 0.3s ease;
-        }
-        .grok-card:hover {
-            transform: translateY(-4px);
-            border-color: #38bdf8;
-            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.2);
-        }
-    </style>
+      }
+    }
+  </script>
+  <style>
+    body { background: #f3f6fb; }
+    .police-header {
+      background: linear-gradient(180deg, #0b1f4a 0%, #123a7a 55%, #0b1f4a 100%);
+    }
+    .gold-line {
+      height: 4px;
+      background: linear-gradient(90deg, #8b1e2d 0%, #c9a227 35%, #f5e6a6 50%, #c9a227 65%, #8b1e2d 100%);
+    }
+    .result-card {
+      border: 1px solid #d6e0f0;
+      box-shadow: 0 10px 30px rgba(11, 31, 74, 0.08);
+    }
+    .badge-seal {
+      width: 72px; height: 72px;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
+    }
+    @media (min-width: 768px) {
+      .badge-seal { width: 88px; height: 88px; }
+    }
+  </style>
 </head>
-<body class="font-sans text-gray-100 antialiased min-h-screen flex flex-col justify-between">
+<body class="font-sans text-slate-800 antialiased min-h-screen flex flex-col">
 
-    <!-- TOP NAVIGATION -->
-    <nav class="bg-[#111827] border-b border-grok-border sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <span class="font-bold text-lg md:text-xl tracking-wider text-white">SuperGrok<span class="text-grok-accent"> Insurance System</span></span>
-            </div>
-            <div class="flex items-center gap-3 md:gap-6 text-xs md:text-sm font-medium text-gray-300">
-                <a href="index.html" class="hover:text-grok-accent transition">หน้าแรก</a>
-                <a href="#" class="text-grok-accent hover:text-white transition">ตรวจสอบประกัน</a>
-                <a href="https://www.facebook.com/TreethepGolf" target="_blank" class="hover:text-grok-accent transition">ติดต่อผู้ดูแล</a>
-            </div>
+  <!-- TOP BAR -->
+  <div class="bg-police-deep text-white text-[11px] md:text-xs">
+    <div class="max-w-5xl mx-auto px-4 py-1.5 flex flex-wrap items-center justify-between gap-2">
+      <span>สำนักงานตำรวจแห่งชาติ · ระบบติดตามคดีออนไลน์ (ต้นแบบ)</span>
+      <span class="text-police-gold">พิทักษ์สันติราษฎร์</span>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="police-header text-white">
+    <div class="max-w-5xl mx-auto px-4 py-5 md:py-7 flex items-center gap-4 md:gap-6">
+      <img
+        class="badge-seal"
+        src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Emblem_of_Royal_Thai_Police.png"
+        alt="ตราสำนักงานตำรวจแห่งชาติ"
+        onerror="this.style.display='none'; document.getElementById('seal-fallback').classList.remove('hidden');"
+      >
+      <div id="seal-fallback" class="hidden badge-seal rounded-full bg-police-gold/20 border-2 border-police-gold flex items-center justify-center text-police-gold font-bold text-xs text-center leading-tight px-2">
+        ตร.<br>สตช.
+      </div>
+      <div class="flex-1">
+        <p class="text-police-gold text-xs md:text-sm font-medium tracking-wide mb-0.5">ROYAL THAI POLICE</p>
+        <h1 class="text-xl md:text-3xl font-bold leading-tight">ระบบติดตามคดีออนไลน์</h1>
+        <p class="text-blue-100 text-xs md:text-sm mt-1">ตรวจสอบสถานะการแจ้งความด้วยเลขบัตรประจำตัวประชาชน</p>
+      </div>
+    </div>
+    <div class="gold-line"></div>
+  </header>
+
+  <!-- NAV -->
+  <nav class="bg-white border-b border-slate-200 sticky top-0 z-40">
+    <div class="max-w-5xl mx-auto px-4 h-11 flex items-center gap-5 text-sm font-medium text-police-navy">
+      <a href="#" class="text-police-mid border-b-2 border-police-gold pb-2.5 pt-2">ตรวจสอบคดี</a>
+      <a href="https://www.police.go.th" target="_blank" rel="noopener" class="hover:text-police-mid pb-2.5 pt-2">เว็บ สตช.</a>
+      <a href="https://foryou.police.go.th" target="_blank" rel="noopener" class="hover:text-police-mid pb-2.5 pt-2">แจ้งความออนไลน์</a>
+    </div>
+  </nav>
+
+  <main class="flex-1 max-w-5xl mx-auto px-4 py-8 w-full">
+
+    <!-- INTRO -->
+    <section class="bg-white result-card rounded-2xl p-5 md:p-7 mb-6">
+      <div class="flex flex-col md:flex-row md:items-start gap-4">
+        <div class="flex-1">
+          <h2 class="text-lg md:text-xl font-bold text-police-navy mb-2">บริการตรวจสอบข้อมูลการแจ้งความ</h2>
+          <p class="text-sm text-slate-600 leading-relaxed">
+            กรอกเลขบัตรประจำตัวประชาชน 13 หลัก เพื่อเรียกดูรายละเอียดคดีที่แจ้งไว้ในระบบ
+            ข้อมูลดึงจาก Google Sheet อัตโนมัติแบบออนไลน์
+          </p>
         </div>
-    </nav>
-
-    <!-- MAIN CONTENT -->
-    <main class="max-w-4xl mx-auto px-4 py-8 md:py-12 w-full">
-        
-        <!-- HEADER SECTION -->
-        <div class="text-center mb-8">
-            <h1 class="text-2xl md:text-4xl font-extrabold mb-2">
-                ดูข้อมูลสินค้า
-            </h1>
-            <p class="text-gray-400 text-xs md:text-sm">กรอกอีเมล เพื่อตรวจสอบแพ็กเกจ ระยะเวลา และข้อมูลประกันความปลอดภัย</p>
-            <p class="text-gray-400 text-xs md:text-sm">ประกันครอบคลุม 1.รหัสเด้ง รหัสหลุด 2.ใช้ครบตามอายุการใช้งาน 3.ได้ใช้หลอดพลังงานครบถ้วน</p>
+        <div class="shrink-0 bg-police-light text-police-navy text-xs rounded-xl px-3 py-2 border border-blue-100">
+          <div class="font-semibold mb-1">สถานะระบบ</div>
+          <div id="sheet-status" class="text-slate-600">กำลังเชื่อมต่อข้อมูล...</div>
         </div>
+      </div>
+    </section>
 
-        <!-- SEARCH BOX SECTION -->
-        <div class="bg-[#161e2e] border border-grok-border rounded-2xl p-6 md:p-8 shadow-2xl mb-10">
-            <label for="username-input" class="block text-sm font-bold text-gray-300 mb-2">
-                🔍 กรอกเมลร้านที่ท่านได้รับ:
-            </label>
-            <div class="flex flex-col sm:flex-row gap-3">
-                <input type="text" id="username-input" placeholder="เช่น golfcraft697@gmail.com" 
-                       class="flex-1 bg-[#0f172a] border border-grok-border rounded-xl px-4 py-3 text-white focus:outline-none focus:border-grok-accent text-sm md:text-base">
-                <button onclick="searchCustomerData()" 
-                        class="bg-grok-accent hover:bg-grok-hover text-slate-950 font-bold px-6 py-3 rounded-xl transition text-sm md:text-base shadow-lg shadow-sky-500/20">
-                    ตรวจสอบข้อมูล
-                </button>
-            </div>
+    <!-- SEARCH -->
+    <section class="bg-white result-card rounded-2xl p-5 md:p-7 mb-6">
+      <label for="id-input" class="block text-sm font-semibold text-police-navy mb-2">
+        เลขบัตรประจำตัวประชาชน
+      </label>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <input
+          id="id-input"
+          type="text"
+          inputmode="numeric"
+          maxlength="13"
+          placeholder="เช่น 1XXXXXXXXXXXX"
+          class="flex-1 border border-slate-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-police-mid focus:border-police-mid tracking-wider"
+        >
+        <button
+          id="search-btn"
+          onclick="searchByCitizenId()"
+          class="bg-police-navy hover:bg-police-blue text-white font-semibold px-6 py-3 rounded-xl transition shadow-md"
+        >
+          ค้นหาคดี
+        </button>
+      </div>
+      <p class="text-xs text-slate-500 mt-3">กรอกเฉพาะตัวเลข 13 หลัก ไม่ต้องใส่ช่องว่างหรือขีด</p>
+    </section>
+
+    <!-- RESULT -->
+    <section id="result-container" class="hidden bg-white result-card rounded-2xl p-5 md:p-7 mb-6 relative overflow-hidden">
+      <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-police-stripe via-police-gold to-police-stripe"></div>
+      <div class="flex items-center justify-between gap-3 mb-5 border-b border-slate-100 pb-3">
+        <h3 class="text-lg font-bold text-police-navy">รายละเอียดคดี</h3>
+        <span class="text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full">พบข้อมูล</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+        <div class="bg-police-light/70 border border-blue-100 rounded-xl p-4">
+          <span class="text-slate-500 text-xs block mb-1">ชื่อจริง–นามสกุล</span>
+          <strong id="res-name" class="text-police-navy text-base">-</strong>
         </div>
-
-        <!-- RESULT DISPLAY SECTION -->
-        <div id="result-container" class="hidden bg-[#161e2e] border border-sky-500/40 rounded-2xl p-6 md:p-8 shadow-2xl mb-10 relative overflow-hidden">
-            <div class="absolute top-0 right-0 bg-sky-500 text-slate-950 text-xs font-black px-4 py-1 rounded-bl-xl">
-                ตรวจสอบสำเร็จ
-            </div>
-            <h3 class="text-lg md:text-xl font-bold text-white mb-6 flex items-center gap-2 border-b border-grok-border pb-3">
-                📋 รายละเอียดการเช่าและประกัน
-            </h3>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div class="bg-[#0f172a] border border-grok-border p-4 rounded-xl">
-                    <span class="text-gray-400 text-xs block mb-1">1. ประเภทแพ็กเกจ:</span>
-                    <strong id="res-package" class="text-base text-sky-400 font-bold">-</strong>
-                </div>
-                <div class="bg-[#0f172a] border border-grok-border p-4 rounded-xl">
-                    <span class="text-gray-400 text-xs block mb-1">2. หมายเลขสินค้า:</span>
-                    <strong id="res-pnum" class="text-base text-grok-accent font-bold">-</strong>
-                </div>
-                <div class="bg-[#0f172a] border border-grok-border p-4 rounded-xl">
-                    <span class="text-gray-400 text-xs block mb-1">3. ระยะเวลา & วันหมดอายุ:</span>
-                    <p id="res-duration" class="text-gray-200 font-medium">-</p>
-                </div>
-                <div class="bg-[#0f172a] border border-grok-border p-4 rounded-xl">
-                    <span class="text-gray-400 text-xs block mb-1">4. ราคา:</span>
-                    <strong id="res-price" class="text-base text-emerald-400 font-bold">-</strong>
-                </div>
-                <div class="bg-[#0f172a] border border-grok-border p-4 rounded-xl md:col-span-2">
-                    <span class="text-gray-400 text-xs block mb-1">5. ผู้รับประโยชน์ประกันสินค้า:</span>
-                    <strong id="res-insurance" class="text-base text-amber-300 font-bold">-</strong>
-                </div>
-            </div>
+        <div class="bg-police-light/70 border border-blue-100 rounded-xl p-4">
+          <span class="text-slate-500 text-xs block mb-1">เลขบัตรประจำตัวประชาชน</span>
+          <strong id="res-id" class="text-police-navy text-base tracking-wider">-</strong>
         </div>
-
-        <!-- ERROR / NOT FOUND STATE -->
-        <div id="error-container" class="hidden text-center py-10 bg-[#161e2e] border border-rose-500/30 rounded-2xl p-6 mb-10">
-            <p class="text-rose-400 text-base font-semibold">❌ ไม่พบข้อมูล Username นี้ในระบบ หรือยังไม่เปิดใช้งานสถานะ Clear</p>
+        <div class="bg-police-light/70 border border-blue-100 rounded-xl p-4">
+          <span class="text-slate-500 text-xs block mb-1">เบอร์โทรศัพท์</span>
+          <strong id="res-phone" class="text-police-navy text-base">-</strong>
         </div>
-
-        <!-- INSURANCE HISTORY SECTION (ประวัติประกัน) -->
-        <div class="border-t border-grok-border pt-8">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <h2 class="text-xl font-bold text-white">🛡️ ประวัติประกัน</h2>
-                    <p class="text-xs text-gray-400">แสดงรายการสินค้าที่อยู่ในระบบประกัน (เรียงตามการเคลียร์ล่าสุด)</p>
-                </div>
-            </div>
-            
-            <div id="clear-product-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="col-span-full text-center py-10 text-gray-400 text-sm">
-                    กำลังโหลดประวัติประกัน...
-                </div>
-            </div>
+        <div class="bg-police-light/70 border border-blue-100 rounded-xl p-4">
+          <span class="text-slate-500 text-xs block mb-1">วัน–เวลาที่แจ้ง</span>
+          <strong id="res-time" class="text-police-navy text-base">-</strong>
         </div>
+        <div class="bg-police-light/70 border border-blue-100 rounded-xl p-4 md:col-span-2">
+          <span class="text-slate-500 text-xs block mb-1">ที่อยู่ปัจจุบัน</span>
+          <strong id="res-address" class="text-police-navy text-base font-medium">-</strong>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 md:col-span-2">
+          <span class="text-amber-800/80 text-xs block mb-1">ชื่อผู้ต้องกระทำความผิด</span>
+          <strong id="res-accused" class="text-amber-950 text-base">-</strong>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 md:col-span-2">
+          <span class="text-slate-500 text-xs block mb-1">ข้อเท็จจริง / เรื่องที่ต้องการแจ้ง</span>
+          <p id="res-facts" class="text-slate-800 text-sm leading-relaxed whitespace-pre-wrap">-</p>
+        </div>
+      </div>
+    </section>
 
-    </main>
+    <!-- ERROR -->
+    <section id="error-container" class="hidden bg-white result-card rounded-2xl p-6 mb-6 border border-rose-200 text-center">
+      <p class="text-rose-600 font-semibold mb-1">ไม่พบข้อมูลคดี</p>
+      <p class="text-sm text-slate-500">ไม่พบเลขบัตรนี้ในระบบ หรือยังไม่ได้บันทึกการแจ้งความ</p>
+    </section>
 
-    <!-- FOOTER -->
-    <footer class="bg-[#111827] border-t border-grok-border py-6 text-center text-xs text-gray-500">
-        <p>© 2026 Supergrok Insurance System · All rights reserved.</p>
-    </footer>
+    <!-- HELP -->
+    <section class="bg-police-navy text-white rounded-2xl p-5 md:p-6">
+      <h3 class="font-bold mb-2 text-police-gold">คำแนะนำการใช้งาน</h3>
+      <ul class="text-sm text-blue-100 space-y-1.5 list-disc pl-5">
+        <li>ใช้เลขบัตรเดียวกับที่กรอกในแบบฟอร์มแจ้งความ</li>
+        <li>หากเพิ่งส่งฟอร์ม รอสักครู่แล้วกดค้นหาอีกครั้ง</li>
+        <li>เอกสารนี้เป็นต้นแบบสำหรับติดตามคดี ไม่ใช่เว็บทางการของ สตช.</li>
+      </ul>
+    </section>
+  </main>
 
-    <!-- SCRIPT LOGIC -->
-    <script>
-        const SHEET_ID = '1FZDa93Qn_N44biC3gugdPf2uaXh2-BeI';
-        const SHEET_TITLE = 'ตารางคิวว่างเช่า AI';
-        const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_TITLE)}`;
+  <footer class="mt-8 bg-police-deep text-blue-200 text-xs">
+    <div class="gold-line"></div>
+    <div class="max-w-5xl mx-auto px-4 py-5 text-center space-y-1">
+      <p class="text-white font-medium">ระบบติดตามคดีออนไลน์ (ต้นแบบ)</p>
+      <p>พัฒนาเพื่อการติดตามสถานะการแจ้งความ · ข้อมูลเชื่อมจาก Google Sheets</p>
+      <p class="text-blue-400">อ้างอิงรูปแบบจากเว็บบริการของสำนักงานตำรวจแห่งชาติ</p>
+    </div>
+  </footer>
 
-        let rawSheetData = [];
+  <script>
+    // Sheet ที่แชร์มา: ต้องตั้งสิทธิ์ "ทุกคนที่มีลิงก์ดูได้"
+    const SHEET_ID = '1kmi6OpZvYm3GN1ZDWDAqcFDUfoPD8V_TocYOtVUOCfw';
+    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
-        async function fetchSheetData() {
-            try {
-                const response = await fetch(SHEET_URL);
-                const text = await response.text();
-                const jsonString = text.substring(47, text.length - 2);
-                const json = JSON.parse(jsonString);
-                rawSheetData = json.table.rows;
+    let rawSheetData = [];
+    let colIndex = {
+      time: 0,
+      name: 1,
+      id: 2,
+      phone: 3,
+      address: 4,
+      accused: 5,
+      facts: 6
+    };
 
-                renderClearProducts();
-            } catch (error) {
-                console.error('Error fetching sheet:', error);
-                document.getElementById('clear-product-grid').innerHTML = `
-                    <div class="col-span-full text-center py-6 text-red-400 text-xs">
-                        ไม่สามารถโหลดข้อมูลจาก Google Sheets ได้ กรุณาตรวจสอบสิทธิ์การแชร์
-                    </div>`;
-            }
+    function cellText(cell) {
+      if (!cell) return '';
+      if (cell.f != null && String(cell.f).trim() !== '') return String(cell.f).trim();
+      if (cell.v == null) return '';
+      return String(cell.v).trim();
+    }
+
+    function onlyDigits(str) {
+      return String(str || '').replace(/\D/g, '');
+    }
+
+    function maskId(id) {
+      const d = onlyDigits(id);
+      if (d.length < 5) return d;
+      return d.slice(0, 1) + '********' + d.slice(-4);
+    }
+
+    function mapColumns(cols) {
+      if (!cols || !cols.length) return;
+      cols.forEach((col, i) => {
+        const label = (col.label || '').replace(/\s+/g, ' ').trim();
+        if (label.includes('ประทับเวลา')) colIndex.time = i;
+        else if (label.includes('ชื่อจริง') || label.includes('นามสกุล')) colIndex.name = i;
+        else if (label.includes('บัตร') || label.includes('ประชาชน')) colIndex.id = i;
+        else if (label.includes('เบอร์') || label.includes('โทร')) colIndex.phone = i;
+        else if (label.includes('ที่อยู่')) colIndex.address = i;
+        else if (label.includes('ผู้ต้อง') || label.includes('กระทำ')) colIndex.accused = i;
+        else if (label.includes('ข้อเท็จจริง') || label.includes('แจ้ง')) colIndex.facts = i;
+      });
+    }
+
+    async function fetchSheetData() {
+      const statusEl = document.getElementById('sheet-status');
+      try {
+        const response = await fetch(SHEET_URL);
+        const text = await response.text();
+        const start = text.indexOf('{');
+        const end = text.lastIndexOf('}');
+        if (start < 0 || end < 0) throw new Error('รูปแบบข้อมูลไม่ถูกต้อง');
+        const json = JSON.parse(text.substring(start, end + 1));
+        if (json.status !== 'ok') throw new Error('ชีตยังไม่เปิดสิทธิ์อ่าน');
+        mapColumns(json.table.cols);
+        rawSheetData = json.table.rows || [];
+        statusEl.textContent = 'เชื่อมต่อแล้ว · ' + rawSheetData.length + ' รายการ';
+        statusEl.classList.add('text-emerald-700');
+      } catch (error) {
+        console.error(error);
+        statusEl.textContent = 'เชื่อมต่อชีตไม่สำเร็จ · ตรวจสิทธิ์แชร์';
+        statusEl.classList.add('text-rose-600');
+      }
+    }
+
+    function searchByCitizenId() {
+      const inputVal = onlyDigits(document.getElementById('id-input').value);
+      const resultBox = document.getElementById('result-container');
+      const errorBox = document.getElementById('error-container');
+
+      if (inputVal.length !== 13) {
+        alert('กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก');
+        return;
+      }
+
+      let found = null;
+      rawSheetData.forEach(row => {
+        if (!row.c) return;
+        const cell = row.c[colIndex.id];
+        if (!cell) return;
+        // ใช้ค่าที่จัดรูปแบบก่อน (กันเลขบัตรกลายเป็น scientific)
+        let idDigits = cell.f != null ? onlyDigits(cell.f) : '';
+        if (idDigits.length !== 13 && cell.v != null) {
+          if (typeof cell.v === 'number') idDigits = onlyDigits(String(Math.round(cell.v)));
+          else idDigits = onlyDigits(String(cell.v));
         }
+        if (idDigits === inputVal) found = row.c;
+      });
 
-        // ฟังก์ชันแปลงวันที่รองรับทั้งแบบสตริงไทย/สากล และ Google Sheets Date Object
-        function parseDateString(dateStr) {
-            if (!dateStr || dateStr === '-') return null;
-            let targetDate = null;
+      if (!found) {
+        resultBox.classList.add('hidden');
+        errorBox.classList.remove('hidden');
+        return;
+      }
 
-            if (typeof dateStr === 'string' && dateStr.startsWith('Date(')) {
-                const match = dateStr.match(/Date\((\d+),(\d+),(\d+)\)/);
-                if (match) {
-                    return new Date(parseInt(match[1]), parseInt(match[2]), parseInt(match[3]));
-                }
-            }
+      errorBox.classList.add('hidden');
+      resultBox.classList.remove('hidden');
 
-            const dmyMatch = dateStr.match(/(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
-            if (dmyMatch) {
-                let day = parseInt(dmyMatch[1]);
-                let month = parseInt(dmyMatch[2]) - 1;
-                let year = parseInt(dmyMatch[3]);
-                if (year > 2500) year -= 543;
-                if (year < 100) year += 2000;
-                targetDate = new Date(year, month, day);
-            } else {
-                const thaiMonths = {
-                    'มค': 0, 'มกราคม': 0, 'กพ': 1, 'กุมภาพันธ์': 1, 'มีค': 2, 'มีนาคม': 2,
-                    'เมย': 3, 'เมษายน': 3, 'พค': 4, 'พฤษภาคม': 4, 'มิย': 5, 'มิถุนายน': 5,
-                    'กค': 6, 'กรกฎาคม': 6, 'สค': 7, 'สิงหาคม': 7, 'กย': 8, 'กันยายน': 8,
-                    'ตค': 9, 'ตุลาคม': 9, 'พย': 10, 'พฤศจิกายน': 10, 'ธค': 11, 'ธันวาคม': 11
-                };
+      document.getElementById('res-name').textContent = cellText(found[colIndex.name]) || '-';
+      document.getElementById('res-id').textContent = maskId(inputVal);
+      document.getElementById('res-phone').textContent = cellText(found[colIndex.phone]) || '-';
+      document.getElementById('res-time').textContent = cellText(found[colIndex.time]) || '-';
+      document.getElementById('res-address').textContent = cellText(found[colIndex.address]) || '-';
+      document.getElementById('res-accused').textContent = cellText(found[colIndex.accused]) || '-';
+      document.getElementById('res-facts').textContent = cellText(found[colIndex.facts]) || '-';
 
-                const cleanStr = dateStr.replace(/\./g, '').trim();
-                const parts = cleanStr.split(/\s+/);
-                if (parts.length >= 3) {
-                    let day = parseInt(parts[0]);
-                    let monthKey = parts[1];
-                    let month = thaiMonths[monthKey];
-                    let year = parseInt(parts[2]);
-                    if (year > 2500) year -= 543;
-                    if (year < 100) year += 2000;
+      resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
-                    if (!isNaN(day) && month !== undefined && !isNaN(year)) {
-                        targetDate = new Date(year, month, day);
-                    }
-                }
-            }
-            return (targetDate && !isNaN(targetDate.getTime())) ? targetDate : null;
-        }
+    document.getElementById('id-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') searchByCitizenId();
+    });
 
-        // ฟังก์ชันเซ็นเซอร์ชื่อ
-        function censorName(fullName) {
-            if (!fullName || fullName === '-') return '-';
-            let parts = fullName.trim().split(/\s+/);
-            return parts.map(part => {
-                if (part.length <= 1) return part + '*';
-                return part.charAt(0) + '*'.repeat(part.length - 1);
-            }).join(' ');
-        }
-
-        // --- ส่วนประวัติประกัน: แสดงเฉพาะที่คอลัมน์ K เป็น clear และเรียงตามหมายเลข P ล่าสุด ---
-        function renderClearProducts() {
-            const grid = document.getElementById('clear-product-grid');
-            grid.innerHTML = '';
-
-            let clearList = [];
-
-            rawSheetData.forEach((row, index) => {
-                if (!row.c) return;
-
-                const product = row.c[1] ? row.c[1].v : ''; 
-                const pNum = row.c[15] ? parseInt(row.c[15].v) || 0 : index; 
-                const usernameQ = row.c[16] ? String(row.c[16].v).trim() : ''; 
-                
-                const colKVal = row.c[10] ? String(row.c[10].v).trim().toLowerCase() : '';
-                const isClearInK = colKVal.includes('clear');
-
-                if (isClearInK) {
-                    clearList.push({
-                        product: product || 'Supergrok AI',
-                        pNum: pNum,
-                        usernameQ: usernameQ || 'ทั่วไป',
-                        rawRow: row
-                    });
-                }
-            });
-
-            // เรียงลำดับหมายเลข P ให้สูงขึ้น (วันล่าสุด)
-            clearList.sort((a, b) => b.pNum - a.pNum);
-
-            if (clearList.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-6 text-gray-500 text-xs">ไม่พบข้อมูลในประวัติประกันขณะนี้</div>`;
-                return;
-            }
-
-            clearList.forEach(item => {
-                const card = document.createElement('div');
-                card.className = "grok-card p-4 rounded-xl flex items-center justify-between";
-                card.innerHTML = `
-                    <div>
-                        <span class="bg-amber-500/20 text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/40">🛡️ อยู่ในประกัน</span>
-                        <h4 class="font-bold text-white text-sm mt-1">${item.product}</h4>
-                        <p class="text-xs text-gray-400">ผู้ใช้: <span class="text-sky-300">${item.usernameQ}</span></p>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-xs text-gray-500 block">หมายเลข</span>
-                        <span class="text-lg font-black text-grok-accent">#${item.pNum}</span>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        // --- ระบบตรวจข้อมูลสินค้า (ค้นหาด้วย Username เฉพาะที่คอลัมน์ K เป็น clear) ---
-        function searchCustomerData() {
-            const inputVal = document.getElementById('username-input').value.trim().toLowerCase();
-            const resultBox = document.getElementById('result-container');
-            const errorBox = document.getElementById('error-container');
-
-            if (!inputVal) {
-                alert('กรุณากรอก Username หรืออีเมลก่อนตรวจสอบ');
-                return;
-            }
-
-            let foundRow = null;
-
-            rawSheetData.forEach(row => {
-                if (!row.c) return;
-
-                const colKVal = row.c[10] ? String(row.c[10].v).trim().toLowerCase() : '';
-                if (!colKVal.includes('clear')) return; // คอลัมน์ K ต้องเป็น clear เท่านั้น
-
-                let isMatch = false;
-                row.c.forEach(cell => {
-                    if (cell && cell.v && String(cell.v).trim().toLowerCase().includes(inputVal)) {
-                        isMatch = true;
-                    }
-                });
-
-                if (isMatch) {
-                    foundRow = row.c;
-                }
-            });
-
-            if (!foundRow) {
-                resultBox.classList.add('hidden');
-                errorBox.classList.remove('hidden');
-                return;
-            }
-
-            errorBox.classList.add('hidden');
-            resultBox.classList.remove('hidden');
-
-            // 1. ประเภทแพ็กเกจ (Col B)
-            const colB = foundRow[1] ? String(foundRow[1].v) : 'Supergrok';
-            document.getElementById('res-package').textContent = colB;
-
-            // 2. หมายเลขสินค้า (Col P)
-            const colP = foundRow[15] ? foundRow[15].v : '-';
-            document.getElementById('res-pnum').textContent = `#${colP}`;
-
-            // 3. ระยะเวลา & วันหมดอายุ (H + D)
-            const colHStr = foundRow[7] ? (foundRow[7].f || foundRow[7].v) : '-'; // วันเริ่มต้นเช่า (Col H)
-            const colD = foundRow[3] ? parseInt(foundRow[3].v) || 0 : 0;         // จำนวนวัน (Col D)
-
-            let startDateText = colHStr;
-            let expiredDateText = '-';
-
-            let startDate = parseDateString(colHStr);
-            if (startDate && colD > 0) {
-                let expDate = new Date(startDate);
-                expDate.setDate(expDate.getDate() + colD);
-                
-                let dd = String(expDate.getDate()).padStart(2, '0');
-                let mm = String(expDate.getMonth() + 1).padStart(2, '0');
-                let yyyy = expDate.getFullYear() + 543;
-                expiredDateText = `${dd}/${mm}/${yyyy}`;
-            }
-
-            document.getElementById('res-duration').innerHTML = `
-                วันเริ่มต้นเช่า: <span class="text-sky-300">${startDateText}</span><br>
-                ระยะเวลา: <span class="text-white font-bold">${colD} วัน</span><br>
-                วันหมดอายุ: <span class="text-rose-400 font-bold">${expiredDateText} เวลา 0.00 น.</span>
-            `;
-
-            // 4. ราคา (Col E)
-            const colE = foundRow[4] ? foundRow[4].v : '0';
-            document.getElementById('res-price').textContent = `${Number(colE).toLocaleString()} บาท`;
-
-            // 5. ผู้รับประโยชน์ประกันสินค้า (Col M) พร้อมเซ็นเซอร์ชื่อ
-            const colM = foundRow[12] ? String(foundRow[12].v) : '-';
-            const censored = censorName(colM);
-            document.getElementById('res-insurance').textContent = censored;
-        }
-
-        fetchSheetData();
-    </script>
+    fetchSheetData();
+  </script>
 </body>
 </html>
