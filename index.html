@@ -1,203 +1,510 @@
 <!DOCTYPE html>
-<html lang="th" class="scroll-smooth">
+<html lang="th">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบติดตามคดีออนไลน์ | ตรวจสอบสถานะการแจ้งความ</title>
+  <title>ระบบติดตามคดีออนไลน์</title>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Prompt', 'sans-serif'] },
-          colors: {
-            police: {
-              navy: '#0b1f4a', deep: '#071533', blue: '#123a7a', mid: '#1a4f9c',
-              gold: '#c9a227', light: '#e8eef8', stripe: '#8b1e2d'
-            }
-          }
-        }
-      }
-    }
-  </script>
   <style>
-    body { background: #f3f6fb; }
-    .police-header { background: linear-gradient(180deg, #0b1f4a 0%, #123a7a 55%, #0b1f4a 100%); }
+    :root {
+      --navy: #071a3d;
+      --blue: #0e3a7a;
+      --mid: #1c5bb5;
+      --gold: #d4af37;
+      --gold-soft: #f3e2a0;
+      --bg: #eef2f8;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --ok: #059669;
+      --ok-bg: #ecfdf5;
+      --now: #b45309;
+      --now-bg: #fff7ed;
+      --wait: #94a3b8;
+      --wait-bg: #f8fafc;
+      --danger: #be123c;
+      --line: #c7d2e5;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Prompt', sans-serif;
+      background:
+        radial-gradient(1200px 500px at 10% -10%, #dbe7ff 0%, transparent 55%),
+        radial-gradient(900px 400px at 100% 0%, #ffe9b8 0%, transparent 45%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .topbar {
+      background: linear-gradient(90deg, #050f24, #0b2458 50%, #050f24);
+      color: #cfe0ff;
+      font-size: 12px;
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .topbar .motto { color: var(--gold-soft); }
+    .hero {
+      background: linear-gradient(145deg, #061533 0%, #0f3d86 48%, #0a2a5c 100%);
+      color: white;
+      padding: 28px 16px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -40% auto auto 60%;
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(212,175,55,.25), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+    .seal {
+      width: 84px; height: 84px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.08);
+      border: 2px solid rgba(212,175,55,.65);
+      display: grid; place-items: center;
+      flex-shrink: 0;
+      box-shadow: 0 8px 30px rgba(0,0,0,.25);
+    }
+    .seal img { width: 68px; height: 68px; object-fit: contain; }
+    .seal-fallback {
+      display: none;
+      color: var(--gold-soft);
+      font-weight: 700;
+      font-size: 12px;
+      text-align: center;
+      line-height: 1.2;
+    }
+    .hero h1 { margin: 4px 0 6px; font-size: clamp(1.35rem, 3vw, 2rem); }
+    .hero .sub { margin: 0; color: #c9d9f7; font-size: 13px; }
     .gold-line {
       height: 4px;
-      background: linear-gradient(90deg, #8b1e2d 0%, #c9a227 35%, #f5e6a6 50%, #c9a227 65%, #8b1e2d 100%);
+      background: linear-gradient(90deg, #7f1d1d, var(--gold), #fff3c4, var(--gold), #7f1d1d);
     }
-    .result-card { border: 1px solid #d6e0f0; box-shadow: 0 10px 30px rgba(11, 31, 74, 0.08); }
-    .badge-seal { width: 72px; height: 72px; filter: drop-shadow(0 2px 6px rgba(0,0,0,.35)); }
-    @media (min-width: 768px) { .badge-seal { width: 88px; height: 88px; } }
-    .flow-wrap { display: flex; flex-wrap: wrap; gap: 0.5rem 0; align-items: stretch; }
-    .flow-step {
-      position: relative; flex: 1 1 120px; min-width: 110px; max-width: 160px;
-      border-radius: 14px; padding: 12px 10px; text-align: center;
-      border: 1px solid #dbe3f0; background: #f8fafc; color: #64748b;
+    .wrap { max-width: 980px; margin: 0 auto; padding: 22px 16px 48px; }
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(15, 40, 90, .08);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: 0 12px 40px rgba(15, 40, 90, .07);
+      margin-bottom: 18px;
     }
-    .flow-step.done { background: #ecfdf5; border-color: #6ee7b7; color: #065f46; }
-    .flow-step.current { background: #fffbeb; border-color: #fbbf24; color: #92400e; box-shadow: 0 0 0 2px rgba(201,162,39,.25); }
-    .flow-step.todo { opacity: .7; }
-    .flow-arrow { display: none; align-items: center; color: #94a3b8; font-size: 18px; padding: 0 2px; }
-    @media (min-width: 768px) { .flow-arrow { display: flex; } .flow-step { flex: 0 1 140px; } }
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 1.15rem;
+      color: var(--navy);
+    }
+    .muted { color: var(--muted); font-size: 13px; line-height: 1.55; }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #f1f6ff;
+      border: 1px solid #d7e4ff;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      color: var(--blue);
+      margin-top: 10px;
+    }
+    .search-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    .search-row input {
+      flex: 1;
+      min-width: 220px;
+      border: 1px solid #d5deee;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font: inherit;
+      font-size: 15px;
+      letter-spacing: .06em;
+      outline: none;
+      background: #fbfcff;
+    }
+    .search-row input:focus {
+      border-color: var(--mid);
+      box-shadow: 0 0 0 4px rgba(28,91,181,.12);
+    }
+    .btn {
+      border: 0;
+      border-radius: 14px;
+      padding: 14px 22px;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg, #0b2d66, #1c5bb5);
+      color: white;
+      box-shadow: 0 10px 24px rgba(14,58,122,.28);
+      transition: transform .15s ease, filter .15s ease;
+    }
+    .btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
+    .hidden { display: none !important; }
+
+    /* case picker */
+    .case-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 12px; }
     .case-pick {
-      border: 1px solid #d6e0f0; border-radius: 14px; padding: 14px 16px;
-      cursor: pointer; transition: .2s ease; background: #fff; text-align: left; width: 100%;
+      text-align: left;
+      border: 1px solid #dbe3f2;
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px;
+      cursor: pointer;
+      font: inherit;
+      transition: .2s ease;
     }
     .case-pick:hover, .case-pick.active {
-      border-color: #c9a227; background: #fffdf5; box-shadow: 0 6px 18px rgba(11,31,74,.08);
+      border-color: var(--gold);
+      background: linear-gradient(180deg, #fffdf6, #fff);
+      box-shadow: 0 10px 24px rgba(212,175,55,.15);
     }
+
+    /* result sections */
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 14px;
+      color: var(--navy);
+      font-size: 1.05rem;
+    }
+    .section-title .num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #07204a;
+      background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+      box-shadow: 0 4px 12px rgba(212,175,55,.35);
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    @media (max-width: 700px) {
+      .info-grid { grid-template-columns: 1fr; }
+      .hero-inner { align-items: flex-start; }
+    }
+    .info-item {
+      background: linear-gradient(180deg, #f7f9fd, #f3f6fb);
+      border: 1px solid #e2e8f4;
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
+    .info-item.wide { grid-column: 1 / -1; }
+    .info-item label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .info-item strong, .info-item p {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    .accused-card {
+      background: linear-gradient(180deg, #fff8f1, #fff5eb);
+      border-color: #f3d5b5;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      background: #fff7ed;
+      color: #9a3412;
+      border: 1px solid #fed7aa;
+    }
+
+    /* ===== MIND MAP ===== */
+    .mindmap {
+      position: relative;
+      padding: 8px 4px 4px;
+    }
+    .mm-center {
+      width: min(280px, 100%);
+      margin: 0 auto 28px;
+      text-align: center;
+      background: radial-gradient(circle at 30% 20%, #1c5bb5, #071a3d 70%);
+      color: white;
+      border-radius: 24px;
+      padding: 18px 16px;
+      box-shadow:
+        0 0 0 6px rgba(212,175,55,.18),
+        0 18px 40px rgba(7,26,61,.28);
+      position: relative;
+      z-index: 2;
+    }
+    .mm-center .label { font-size: 11px; opacity: .8; letter-spacing: .08em; }
+    .mm-center .code { font-size: 1.15rem; font-weight: 700; margin: 4px 0; }
+    .mm-center .state {
+      display: inline-block;
+      margin-top: 6px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(243,226,160,.45);
+      color: var(--gold-soft);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .mm-branches {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px 12px;
+      position: relative;
+    }
+    @media (max-width: 800px) {
+      .mm-branches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 520px) {
+      .mm-branches { grid-template-columns: 1fr; }
+    }
+
+    .mm-node {
+      position: relative;
+      border-radius: 18px;
+      padding: 14px 12px 12px;
+      background: var(--wait-bg);
+      border: 1px solid #e2e8f0;
+      min-height: 108px;
+      transition: transform .2s ease, box-shadow .2s ease;
+      overflow: hidden;
+    }
+    .mm-node::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 5px;
+      background: var(--wait);
+    }
+    .mm-node.done {
+      background: var(--ok-bg);
+      border-color: #a7f3d0;
+    }
+    .mm-node.done::before { background: var(--ok); }
+    .mm-node.current {
+      background: linear-gradient(180deg, #fffbeb, #fff7ed);
+      border-color: #fbbf24;
+      box-shadow: 0 12px 28px rgba(245,158,11,.18);
+      transform: translateY(-2px);
+    }
+    .mm-node.current::before { background: var(--gold); width: 6px; }
+    .mm-node.todo { opacity: .78; }
+    .mm-node.rejected {
+      background: #fff1f2;
+      border-color: #fecdd3;
+    }
+    .mm-node.rejected::before { background: var(--danger); }
+
+    .mm-step {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .mm-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+      line-height: 1.35;
+    }
+    .mm-desc {
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.45;
+      min-height: 34px;
+    }
+    .mm-tag {
+      display: inline-flex;
+      margin-top: 8px;
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: #e2e8f0;
+      color: #475569;
+    }
+    .mm-node.done .mm-tag { background: #d1fae5; color: #065f46; }
+    .mm-node.current .mm-tag { background: #fde68a; color: #92400e; }
+    .mm-node.todo .mm-tag { background: #e2e8f0; color: #64748b; }
+    .mm-node.rejected .mm-tag { background: #fecdd3; color: #9f1239; }
+
+    .mm-connector {
+      display: none;
+    }
+
+    .detail-chips {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+    @media (max-width: 700px) {
+      .detail-chips { grid-template-columns: 1fr; }
+    }
+    .chip {
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      padding: 12px 14px;
+      font-size: 13px;
+    }
+    .chip span { display: block; font-size: 11px; color: var(--muted); margin-bottom: 3px; }
+    .chip b { color: var(--navy); font-weight: 600; }
+
+    .error-card {
+      border: 1px solid #fecdd3;
+      background: #fff1f2;
+      color: #9f1239;
+      text-align: center;
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+    .footer {
+      background: #050f24;
+      color: #9db0d4;
+      text-align: center;
+      font-size: 12px;
+      padding: 22px 16px;
+    }
+    .footer strong { color: #fff; display: block; margin-bottom: 4px; }
   </style>
 </head>
-<body class="font-sans text-slate-800 antialiased min-h-screen flex flex-col">
-
-  <div class="bg-police-deep text-white text-[11px] md:text-xs">
-    <div class="max-w-5xl mx-auto px-4 py-1.5 flex flex-wrap items-center justify-between gap-2">
-      <span>สำนักงานตำรวจแห่งชาติ · ระบบติดตามคดีออนไลน์ (ต้นแบบ)</span>
-      <span class="text-police-gold">พิทักษ์สันติราษฎร์</span>
-    </div>
+<body>
+  <div class="topbar">
+    <span>สำนักงานตำรวจแห่งชาติ · ระบบติดตามคดีออนไลน์ (ต้นแบบ)</span>
+    <span class="motto">พิทักษ์สันติราษฎร์</span>
   </div>
 
-  <header class="police-header text-white">
-    <div class="max-w-5xl mx-auto px-4 py-5 md:py-7 flex items-center gap-4 md:gap-6">
-      <img class="badge-seal" src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Emblem_of_Royal_Thai_Police.png" alt="ตรา สตช."
-           onerror="this.style.display='none';document.getElementById('seal-fallback').classList.remove('hidden');">
-      <div id="seal-fallback" class="hidden badge-seal rounded-full bg-police-gold/20 border-2 border-police-gold flex items-center justify-center text-police-gold font-bold text-xs text-center leading-tight px-2">ตร.<br>สตช.</div>
-      <div class="flex-1">
-        <p class="text-police-gold text-xs md:text-sm font-medium tracking-wide mb-0.5">ROYAL THAI POLICE</p>
-        <h1 class="text-xl md:text-3xl font-bold leading-tight">ระบบติดตามคดีออนไลน์</h1>
-        <p class="text-blue-100 text-xs md:text-sm mt-1">ตรวจสอบสถานะการแจ้งความด้วยเลขบัตรประจำตัวประชาชน</p>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="seal">
+        <img id="seal-img" src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Emblem_of_Royal_Thai_Police.png" alt="ตรา สตช."
+             onerror="this.style.display='none';document.getElementById('seal-fallback').style.display='block';">
+        <div id="seal-fallback" class="seal-fallback">ตร.<br>สตช.</div>
+      </div>
+      <div>
+        <div style="color:var(--gold-soft);font-size:12px;letter-spacing:.08em;">ROYAL THAI POLICE</div>
+        <h1>ระบบติดตามคดีออนไลน์</h1>
+        <p class="sub">ค้นหาด้วยเลขบัตรประชาชน · แสดงผลเป็นแผนผังความคืบหน้าคดี</p>
       </div>
     </div>
-    <div class="gold-line"></div>
   </header>
+  <div class="gold-line"></div>
 
-  <nav class="bg-white border-b border-slate-200 sticky top-0 z-40">
-    <div class="max-w-5xl mx-auto px-4 h-11 flex items-center gap-5 text-sm font-medium text-police-navy">
-      <a href="#" class="text-police-mid border-b-2 border-police-gold pb-2.5 pt-2">ตรวจสอบคดี</a>
-      <a href="https://www.police.go.th" target="_blank" rel="noopener" class="hover:text-police-mid pb-2.5 pt-2">เว็บ สตช.</a>
-      <a href="https://foryou.police.go.th" target="_blank" rel="noopener" class="hover:text-police-mid pb-2.5 pt-2">แจ้งความออนไลน์</a>
-    </div>
-  </nav>
-
-  <main class="flex-1 max-w-5xl mx-auto px-4 py-8 w-full">
-    <section class="bg-white result-card rounded-2xl p-5 md:p-7 mb-6">
-      <div class="flex flex-col md:flex-row md:items-start gap-4">
-        <div class="flex-1">
-          <h2 class="text-lg md:text-xl font-bold text-police-navy mb-2">บริการตรวจสอบข้อมูลการแจ้งความ</h2>
-          <p class="text-sm text-slate-600 leading-relaxed">กรอกเลขบัตร 13 หลัก เพื่อดูรายละเอียดคดีและแผนผังความคืบหน้า หากมีหลายคดีจะให้เลือกก่อน</p>
-        </div>
-        <div class="shrink-0 bg-police-light text-police-navy text-xs rounded-xl px-3 py-2 border border-blue-100">
-          <div class="font-semibold mb-1">สถานะระบบ</div>
-          <div id="sheet-status" class="text-slate-600">กำลังเชื่อมต่อข้อมูล...</div>
-        </div>
+  <main class="wrap">
+    <section class="card">
+      <h2>ตรวจสอบสถานะคดี</h2>
+      <p class="muted">กรอกเลขบัตร 13 หลัก เพื่อดูรายละเอียดผู้แจ้ง ผู้ต้องหา และแผนภาพการดำเนินคดี</p>
+      <div class="search-row">
+        <input id="id-input" type="text" inputmode="numeric" maxlength="13" placeholder="เช่น 1478600097041">
+        <button class="btn" onclick="searchByCitizenId()">ตรวจสอบคดี</button>
       </div>
+      <div class="status-pill"><span id="sheet-status">กำลังเชื่อมต่อข้อมูล...</span></div>
     </section>
 
-    <section class="bg-white result-card rounded-2xl p-5 md:p-7 mb-6">
-      <label for="id-input" class="block text-sm font-semibold text-police-navy mb-2">เลขบัตรประจำตัวประชาชน</label>
-      <div class="flex flex-col sm:flex-row gap-3">
-        <input id="id-input" type="text" inputmode="numeric" maxlength="13" placeholder="เช่น 1478600097041"
-               class="flex-1 border border-slate-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-police-mid tracking-wider">
-        <button onclick="searchByCitizenId()" class="bg-police-navy hover:bg-police-blue text-white font-semibold px-6 py-3 rounded-xl transition shadow-md">ค้นหาคดี</button>
-      </div>
+    <section id="case-list-container" class="card hidden">
+      <h2>พบหลายคดีภายใต้เลขบัตรนี้</h2>
+      <p class="muted">เลือกคดีที่ต้องการดู</p>
+      <div id="case-list" class="case-grid"></div>
     </section>
 
-    <section id="case-list-container" class="hidden bg-white result-card rounded-2xl p-5 md:p-7 mb-6">
-      <h3 class="text-lg font-bold text-police-navy mb-1">พบหลายคดีภายใต้เลขบัตรนี้</h3>
-      <p class="text-sm text-slate-500 mb-4">เลือกคดีที่ต้องการดู</p>
-      <div id="case-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+    <section id="error-container" class="error-card hidden">
+      <strong>ไม่พบข้อมูลคดี</strong>
+      <div style="margin-top:6px;font-size:13px;opacity:.85;">ไม่พบเลขบัตรนี้ในระบบ หรือยังไม่ได้บันทึกการแจ้งความ</div>
     </section>
 
-    <section id="result-container" class="hidden bg-white result-card rounded-2xl p-5 md:p-7 mb-6 relative overflow-hidden">
-      <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-police-stripe via-police-gold to-police-stripe"></div>
-      <div class="flex flex-wrap items-center justify-between gap-3 mb-5 border-b border-slate-100 pb-3">
-        <div>
-          <h3 class="text-lg font-bold text-police-navy">รายละเอียดคดี</h3>
-          <p id="res-case-code" class="text-xs text-slate-500 mt-0.5">รหัสคดี: -</p>
+    <section id="result-container" class="hidden">
+      <!-- 1. ผู้แจ้ง -->
+      <article class="card">
+        <h3 class="section-title"><span class="num">1</span> รายละเอียดผู้แจ้ง</h3>
+        <div class="info-grid">
+          <div class="info-item"><label>ชื่อจริง–นามสกุล</label><strong id="res-name">-</strong></div>
+          <div class="info-item"><label>เลขบัตรประจำตัวประชาชน</label><strong id="res-id">-</strong></div>
+          <div class="info-item"><label>เบอร์โทรศัพท์</label><strong id="res-phone">-</strong></div>
+          <div class="info-item"><label>วัน–เวลาที่แจ้ง</label><strong id="res-time">-</strong></div>
+          <div class="info-item wide"><label>ที่อยู่ปัจจุบัน</label><strong id="res-address">-</strong></div>
+          <div class="info-item wide"><label>ข้อเท็จจริง / เรื่องที่ต้องการแจ้ง</label><p id="res-facts">-</p></div>
         </div>
-        <span id="res-status-badge" class="text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-full">-</span>
-      </div>
+      </article>
 
-      <div class="mb-6">
-        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-          <h4 class="font-bold text-police-navy text-sm">แผนผังความคืบหน้าคดี</h4>
-          <span class="text-[11px] text-slate-400">เขียว=ผ่าน · เหลือง=ปัจจุบัน · เทา=ยังไม่ถึง</span>
+      <!-- 2. ผู้ต้องหา -->
+      <article class="card">
+        <h3 class="section-title"><span class="num">2</span> รายละเอียดผู้ต้องหา</h3>
+        <div class="info-grid">
+          <div class="info-item accused-card wide">
+            <label>ชื่อผู้ต้องกระทำความผิด</label>
+            <strong id="res-accused">-</strong>
+          </div>
+          <div class="info-item wide">
+            <label>หมายเหตุร้อยเวร</label>
+            <p id="res-note">-</p>
+          </div>
         </div>
-        <div id="status-flow" class="flow-wrap"></div>
-        <div id="status-detail" class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm"></div>
-      </div>
+      </article>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-        <div class="bg-police-light/70 border border-blue-100 rounded-xl p-4">
-          <span class="text-slate-500 text-xs block mb-1">ชื่อจริง–นามสกุล</span>
-          <strong id="res-name" class="text-police-navy text-base">-</strong>
+      <!-- 3. Mind map -->
+      <article class="card">
+        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
+          <h3 class="section-title" style="margin:0;"><span class="num">3</span> แผนภาพการดำเนินคดี</h3>
+          <span class="badge" id="res-status-badge">-</span>
         </div>
-        <div class="bg-police-light/70 border border-blue-100 rounded-xl p-4">
-          <span class="text-slate-500 text-xs block mb-1">เลขบัตรประจำตัวประชาชน</span>
-          <strong id="res-id" class="text-police-navy text-base tracking-wider">-</strong>
-        </div>
-        <div class="bg-police-light/70 border border-blue-100 rounded-xl p-4">
-          <span class="text-slate-500 text-xs block mb-1">เบอร์โทรศัพท์</span>
-          <strong id="res-phone" class="text-police-navy text-base">-</strong>
-        </div>
-        <div class="bg-police-light/70 border border-blue-100 rounded-xl p-4">
-          <span class="text-slate-500 text-xs block mb-1">วัน–เวลาที่แจ้ง</span>
-          <strong id="res-time" class="text-police-navy text-base">-</strong>
-        </div>
-        <div class="bg-police-light/70 border border-blue-100 rounded-xl p-4 md:col-span-2">
-          <span class="text-slate-500 text-xs block mb-1">ที่อยู่ปัจจุบัน</span>
-          <strong id="res-address" class="text-police-navy text-base font-medium">-</strong>
-        </div>
-        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 md:col-span-2">
-          <span class="text-amber-800/80 text-xs block mb-1">ชื่อผู้ต้องกระทำความผิด</span>
-          <strong id="res-accused" class="text-amber-950 text-base">-</strong>
-        </div>
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 md:col-span-2">
-          <span class="text-slate-500 text-xs block mb-1">ข้อเท็จจริง / เรื่องที่ต้องการแจ้ง</span>
-          <p id="res-facts" class="text-slate-800 text-sm leading-relaxed whitespace-pre-wrap">-</p>
-        </div>
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 md:col-span-2">
-          <span class="text-slate-500 text-xs block mb-1">หมายเหตุร้อยเวร</span>
-          <p id="res-note" class="text-slate-800 text-sm leading-relaxed whitespace-pre-wrap">-</p>
-        </div>
-      </div>
-    </section>
+        <p class="muted" style="margin-top:0;">จุดศูนย์กลางคือสถานะคดีปัจจุบัน กิ่งรอบๆ คือลำดับขั้นตอน — สีเขียวผ่านแล้ว · สีทองถึงขั้นนี้ · สีเทายังไม่ถึง</p>
 
-    <section id="error-container" class="hidden bg-white result-card rounded-2xl p-6 mb-6 border border-rose-200 text-center">
-      <p class="text-rose-600 font-semibold mb-1">ไม่พบข้อมูลคดี</p>
-      <p class="text-sm text-slate-500">ไม่พบเลขบัตรนี้ในระบบ หรือยังไม่ได้บันทึกการแจ้งความ</p>
-    </section>
-
-    <section class="bg-police-navy text-white rounded-2xl p-5 md:p-6 text-sm text-blue-100">
-      <h3 class="font-bold mb-2 text-police-gold">ชีตหลังร้านที่เว็บอ่านอยู่ตอนนี้</h3>
-      <p>รหัสคดี · สถานะหลัก · รับคดีแล้ว · สำสังสอบสวน · สั่งอายัดบัญชี · วันที่อายัดบัญชี · สถานะหมาย · ขั้นตอนทางกฎหมาย · หมายเหตุร้อยเวร · อัปเดตล่าสุดโดย</p>
-      <p class="mt-2 text-blue-200 text-xs">ช่องติ๊กใช้ TRUE/FALSE ได้ · สถานะหลักเช่น รับคดี / ไม่รับคดี / กำลังสอบสวน</p>
+        <div class="mindmap">
+          <div class="mm-center">
+            <div class="label">MIND MAP · คดี</div>
+            <div class="code" id="res-case-code">CASE-xxx</div>
+            <div class="state" id="res-center-state">รอดำเนินการ</div>
+          </div>
+          <div id="status-flow" class="mm-branches"></div>
+          <div id="status-detail" class="detail-chips"></div>
+        </div>
+      </article>
     </section>
   </main>
 
-  <footer class="mt-8 bg-police-deep text-blue-200 text-xs">
-    <div class="gold-line"></div>
-    <div class="max-w-5xl mx-auto px-4 py-5 text-center space-y-1">
-      <p class="text-white font-medium">ระบบติดตามคดีออนไลน์ (ต้นแบบ)</p>
-      <p>ข้อมูลเชื่อมจาก Google Sheets ตามคอลัมน์ปัจจุบัน</p>
-    </div>
+  <footer class="footer">
+    <strong>ระบบติดตามคดีออนไลน์ (ต้นแบบ)</strong>
+    แสดงผลแบบแผนผัง · ข้อมูลจาก Google Sheets
   </footer>
 
   <script>
     const SHEET_ID = '1kmi6OpZvYm3GN1ZDWDAqcFDUfoPD8V_TocYOtVUOCfw';
     const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
-    // แผนผังตามคอลัมน์ชีตปัจจุบัน
     const FLOW_STEPS = [
-      { key: 'รับคดี', label: 'รับคดี' },
-      { key: 'สอบสวน', label: 'สอบสวน' },
-      { key: 'อายัดบัญชี', label: 'อายัดบัญชี' },
-      { key: 'สถานะหมาย', label: 'สถานะหมาย' },
-      { key: 'ขั้นตอนกม', label: 'ขั้นตอนกฎหมาย' },
-      { key: 'ปิด/สรุป', label: 'สรุปสถานะ' }
+      { key: 'รับคดี', label: 'รับคดี', hint: 'รับเรื่องจากผู้แจ้ง' },
+      { key: 'สอบสวน', label: 'สอบสวน', hint: 'รวบรวมพยานหลักฐาน' },
+      { key: 'อายัดบัญชี', label: 'อายัดบัญชี', hint: 'สั่งอายัดบัญชีธนาคาร' },
+      { key: 'สถานะหมาย', label: 'สถานะหมาย', hint: 'หมายเรียก / หมายจับ' },
+      { key: 'ขั้นตอนกม', label: 'ขั้นตอนกฎหมาย', hint: 'ส่งอัยการ / ฟ้อง' },
+      { key: 'ปิด/สรุป', label: 'สรุปสถานะ', hint: 'ปิดคดีหรือสรุปผล' }
     ];
 
     let rawSheetData = [];
@@ -211,34 +518,28 @@
       if (typeof cell.v === 'boolean') return cell.v ? 'TRUE' : 'FALSE';
       return String(cell.v).trim();
     }
-
     function onlyDigits(str) { return String(str || '').replace(/\D/g, ''); }
-
     function maskId(id) {
       const d = onlyDigits(id);
       if (d.length < 5) return d;
       return d.slice(0, 1) + '********' + d.slice(-4);
     }
-
     function isTrue(v) {
       if (v === true) return true;
       const s = String(v || '').trim().toLowerCase();
-      return ['true', 'yes', 'y', '1', 'ใช่', 'แล้ว', 'เรียบร้อย', 'สำเร็จ'].includes(s);
+      return ['true','yes','y','1','ใช่','แล้ว','เรียบร้อย','สำเร็จ'].includes(s);
     }
-
     function isFalse(v) {
       if (v === false) return true;
       const s = String(v || '').trim().toLowerCase();
-      return ['false', 'no', 'n', '0', 'ยัง', 'ไม่', 'ไม่ใช่'].includes(s);
+      return ['false','no','n','0','ยัง','ไม่','ไม่ใช่'].includes(s);
     }
-
     function hasText(v) {
       const s = String(v || '').trim();
       if (!s) return false;
       if (/^date\(/i.test(s)) return false;
       return !isFalse(s);
     }
-
     function findCol(cols, preds) {
       for (let i = 0; i < cols.length; i++) {
         const label = (cols[i].label || '').replace(/\s+/g, ' ').trim();
@@ -246,7 +547,6 @@
       }
       return -1;
     }
-
     function mapColumns(cols) {
       col = {
         time: findCol(cols, [l => l.includes('ประทับเวลา')]),
@@ -268,12 +568,10 @@
         updatedBy: findCol(cols, [l => l.includes('อัปเดตล่าสุด')])
       };
     }
-
     function get(row, key) {
       if (col[key] < 0) return '';
       return cellText(row.c[col[key]]);
     }
-
     function getCitizenId(row) {
       if (col.id < 0 || !row.c) return '';
       const cell = row.c[col.id];
@@ -284,7 +582,6 @@
       }
       return id;
     }
-
     function isRealCaseRow(row) {
       if (!row.c) return false;
       const name = get(row, 'name');
@@ -292,16 +589,13 @@
       const facts = get(row, 'facts');
       return !!(name || (id && id.length >= 10) || facts);
     }
-
     function rowToCase(row, index) {
-      const id = getCitizenId(row);
-      const caseCode = get(row, 'caseCode') || ('CASE-' + String(index + 1).padStart(3, '0'));
       return {
         index,
-        caseCode,
+        caseCode: get(row, 'caseCode') || ('CASE-' + String(index + 1).padStart(3, '0')),
         time: get(row, 'time'),
         name: get(row, 'name'),
-        id,
+        id: getCitizenId(row),
         phone: get(row, 'phone'),
         address: get(row, 'address'),
         accused: get(row, 'accused'),
@@ -318,14 +612,9 @@
       };
     }
 
-    function normalizeMain(status) {
-      return String(status || '').trim();
-    }
-
     function flowProgress(c) {
-      const main = normalizeMain(c.mainStatus);
+      const main = String(c.mainStatus || '').trim();
       const rejected = /ไม่รับ/.test(main);
-
       const flags = {
         'รับคดี': !rejected && (isTrue(c.received) || /รับคดี/.test(main) || !!c.name),
         'สอบสวน': !rejected && (hasText(c.investigate) || /สอบสวน/.test(main) || isTrue(c.investigate)),
@@ -334,9 +623,7 @@
         'ขั้นตอนกม': !rejected && hasText(c.legalStep),
         'ปิด/สรุป': !rejected && (/ปิดคดี|เสร็จ|รับฟ้อง/.test(main) || /รับฟ้อง|ปิดคดี/.test(c.legalStep || ''))
       };
-
-      // ถ้าสถานะหลักเป็นขั้นถัดไป ให้ถือว่าขั้นก่อนหน้าผ่านแล้ว
-      const order = ['รับคดี', 'สอบสวน', 'อายัดบัญชี', 'สถานะหมาย', 'ขั้นตอนกม', 'ปิด/สรุป'];
+      const order = ['รับคดี','สอบสวน','อายัดบัญชี','สถานะหมาย','ขั้นตอนกม','ปิด/สรุป'];
       let pushTo = -1;
       if (/รับคดี/.test(main) && !rejected) pushTo = 0;
       if (/สอบสวน/.test(main)) pushTo = 1;
@@ -345,16 +632,23 @@
       if (/อัยการ|กฎหมาย|ฟ้อง/.test(main)) pushTo = 4;
       if (/ปิด|เสร็จ/.test(main)) pushTo = 5;
       for (let i = 0; i <= pushTo; i++) flags[order[i]] = true;
-
       if (rejected) {
         Object.keys(flags).forEach(k => flags[k] = false);
-        flags['รับคดี'] = false;
       }
-
       let currentIdx = 0;
       order.forEach((k, idx) => { if (flags[k]) currentIdx = idx; });
       if (rejected) currentIdx = 0;
       return { flags, currentIdx, rejected, order };
+    }
+
+    function nodeExtra(c, key) {
+      if (key === 'รับคดี') return isTrue(c.received) ? 'รับแล้ว' : (c.mainStatus || '-');
+      if (key === 'สอบสวน') return c.investigate || '-';
+      if (key === 'อายัดบัญชี') return isTrue(c.freeze) ? ('อายัดแล้ว' + (hasText(c.freezeDate) ? ' · ' + c.freezeDate : '')) : 'ยังไม่อายัด';
+      if (key === 'สถานะหมาย') return c.warrantStatus || 'ยังไม่มีข้อมูลหมาย';
+      if (key === 'ขั้นตอนกม') return c.legalStep || 'ยังไม่ถึงขั้นตอนนี้';
+      if (key === 'ปิด/สรุป') return c.mainStatus || '-';
+      return '-';
     }
 
     function renderFlow(c) {
@@ -364,67 +658,59 @@
       wrap.innerHTML = '';
 
       FLOW_STEPS.forEach((step, idx) => {
-        if (idx > 0) {
-          const arrow = document.createElement('div');
-          arrow.className = 'flow-arrow';
-          arrow.textContent = '→';
-          wrap.appendChild(arrow);
-        }
-        const el = document.createElement('div');
         let state = 'todo';
-        if (rejected && idx === 0) state = 'current';
-        else if (flags[step.key] && idx < currentIdx) state = 'done';
-        else if (idx === currentIdx && flags[step.key]) state = 'current';
-        else if (flags[step.key]) state = 'done';
-        el.className = 'flow-step ' + state;
-        el.innerHTML = `<div class="text-[10px] font-semibold mb-1 opacity-70">ขั้นที่ ${idx + 1}</div><div class="text-sm font-bold leading-snug">${step.label}</div>`;
+        let tag = 'ยังไม่ถึง';
+        if (rejected) {
+          state = idx === 0 ? 'rejected' : 'todo';
+          tag = idx === 0 ? 'ไม่รับคดี' : 'หยุดไว้';
+        } else if (flags[step.key] && idx < currentIdx) {
+          state = 'done'; tag = 'ผ่านแล้ว';
+        } else if (idx === currentIdx && flags[step.key]) {
+          state = 'current'; tag = 'ถึงขั้นนี้';
+        } else if (flags[step.key]) {
+          state = 'done'; tag = 'ผ่านแล้ว';
+        }
+
+        const el = document.createElement('div');
+        el.className = 'mm-node ' + state;
+        el.innerHTML = `
+          <div class="mm-step">กิ่งที่ ${idx + 1}</div>
+          <div class="mm-title">${step.label}</div>
+          <div class="mm-desc">${nodeExtra(c, step.key)}</div>
+          <span class="mm-tag">${tag}</span>
+        `;
         wrap.appendChild(el);
       });
 
       const freezeDateShow = hasText(c.freezeDate) ? c.freezeDate : '-';
       detail.innerHTML = `
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
-          <span class="text-xs text-slate-500 block">สถานะหลัก</span>
-          <strong>${c.mainStatus || '-'}</strong>
-        </div>
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
-          <span class="text-xs text-slate-500 block">รับคดีแล้ว</span>
-          <strong>${isTrue(c.received) ? 'ใช่' : (isFalse(c.received) ? 'ยัง/ไม่' : (c.received || '-'))}</strong>
-        </div>
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
-          <span class="text-xs text-slate-500 block">สอบสวน</span>
-          <strong>${c.investigate || '-'}</strong>
-        </div>
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
-          <span class="text-xs text-slate-500 block">สั่งอายัดบัญชี</span>
-          <strong>${isTrue(c.freeze) ? 'ใช่' : 'ยัง'}</strong>
-          <div class="text-xs text-slate-500 mt-1">วันที่อายัด: ${freezeDateShow}</div>
-        </div>
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
-          <span class="text-xs text-slate-500 block">สถานะหมาย</span>
-          <strong>${c.warrantStatus || '-'}</strong>
-        </div>
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
-          <span class="text-xs text-slate-500 block">ขั้นตอนทางกฎหมาย</span>
-          <strong>${c.legalStep || '-'}</strong>
-          <div class="text-xs text-slate-500 mt-1">${c.updatedBy ? 'อัปเดตโดย: ' + c.updatedBy : ''}</div>
-        </div>
+        <div class="chip"><span>สถานะหลัก</span><b>${c.mainStatus || '-'}</b></div>
+        <div class="chip"><span>รับคดีแล้ว</span><b>${isTrue(c.received) ? 'ใช่' : (isFalse(c.received) ? 'ยัง/ไม่' : (c.received || '-'))}</b></div>
+        <div class="chip"><span>สอบสวน</span><b>${c.investigate || '-'}</b></div>
+        <div class="chip"><span>สั่งอายัดบัญชี</span><b>${isTrue(c.freeze) ? 'ใช่' : 'ยัง'} · วันที่ ${freezeDateShow}</b></div>
+        <div class="chip"><span>สถานะหมาย</span><b>${c.warrantStatus || '-'}</b></div>
+        <div class="chip"><span>ขั้นตอนทางกฎหมาย</span><b>${c.legalStep || '-'}${c.updatedBy ? ' · โดย ' + c.updatedBy : ''}</b></div>
       `;
     }
 
     function showCase(c) {
       document.getElementById('error-container').classList.add('hidden');
       document.getElementById('result-container').classList.remove('hidden');
-      document.getElementById('res-case-code').textContent = 'รหัสคดี: ' + (c.caseCode || '-');
-      document.getElementById('res-status-badge').textContent = c.mainStatus || (isTrue(c.received) ? 'รับคดี' : 'รอดำเนินการ');
+
       document.getElementById('res-name').textContent = c.name || '-';
       document.getElementById('res-id').textContent = maskId(c.id);
       document.getElementById('res-phone').textContent = c.phone || '-';
       document.getElementById('res-time').textContent = c.time || '-';
       document.getElementById('res-address').textContent = c.address || '-';
-      document.getElementById('res-accused').textContent = c.accused || '-';
       document.getElementById('res-facts').textContent = c.facts || '-';
+      document.getElementById('res-accused').textContent = c.accused || '-';
       document.getElementById('res-note').textContent = c.note || '-';
+
+      document.getElementById('res-case-code').textContent = c.caseCode || '-';
+      const centerState = c.mainStatus || (isTrue(c.received) ? 'รับคดี' : 'รอดำเนินการ');
+      document.getElementById('res-center-state').textContent = centerState;
+      document.getElementById('res-status-badge').textContent = centerState;
+
       renderFlow(c);
       document.querySelectorAll('.case-pick').forEach(el => {
         el.classList.toggle('active', el.dataset.code === c.caseCode);
@@ -448,14 +734,11 @@
         btn.className = 'case-pick';
         btn.dataset.code = c.caseCode;
         btn.innerHTML = `
-          <div class="flex items-start justify-between gap-2">
-            <div>
-              <div class="text-xs text-slate-500 mb-1">คดีที่ ${i + 1}</div>
-              <div class="font-bold text-police-navy">${c.caseCode}</div>
-              <div class="text-sm text-slate-600 mt-1">${c.facts || c.accused || 'ไม่มีสรุปเรื่อง'}</div>
-            </div>
-            <span class="text-[10px] font-bold bg-police-light text-police-navy px-2 py-1 rounded-full whitespace-nowrap">${c.mainStatus || '-'}</span>
-          </div>`;
+          <div style="font-size:11px;color:#64748b;margin-bottom:4px;">คดีที่ ${i + 1}</div>
+          <div style="font-weight:700;color:#071a3d;">${c.caseCode}</div>
+          <div style="font-size:13px;color:#475569;margin-top:6px;">${c.facts || c.accused || 'ไม่มีสรุปเรื่อง'}</div>
+          <div style="margin-top:8px;"><span class="badge">${c.mainStatus || '-'}</span></div>
+        `;
         btn.onclick = () => showCase(c);
         list.appendChild(btn);
       });
@@ -474,38 +757,29 @@
         mapColumns(json.table.cols || []);
         rawSheetData = (json.table.rows || []).filter(isRealCaseRow);
         statusEl.textContent = 'เชื่อมต่อแล้ว · ' + rawSheetData.length + ' คดี';
-        statusEl.classList.add('text-emerald-700');
       } catch (err) {
         console.error(err);
         statusEl.textContent = 'เชื่อมต่อชีตไม่สำเร็จ · ตรวจสิทธิ์แชร์';
-        statusEl.classList.add('text-rose-600');
       }
     }
 
     function searchByCitizenId() {
       const inputVal = onlyDigits(document.getElementById('id-input').value);
-      const resultBox = document.getElementById('result-container');
-      const errorBox = document.getElementById('error-container');
-      const listBox = document.getElementById('case-list-container');
-
       if (inputVal.length !== 13) {
         alert('กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก');
         return;
       }
-
       matchedCases = [];
       rawSheetData.forEach((row, index) => {
         if (getCitizenId(row) === inputVal) matchedCases.push(rowToCase(row, index));
       });
-
       if (!matchedCases.length) {
-        resultBox.classList.add('hidden');
-        listBox.classList.add('hidden');
-        errorBox.classList.remove('hidden');
+        document.getElementById('result-container').classList.add('hidden');
+        document.getElementById('case-list-container').classList.add('hidden');
+        document.getElementById('error-container').classList.remove('hidden');
         return;
       }
-
-      errorBox.classList.add('hidden');
+      document.getElementById('error-container').classList.add('hidden');
       renderCaseList(matchedCases);
       showCase(matchedCases[0]);
     }
@@ -513,7 +787,6 @@
     document.getElementById('id-input').addEventListener('keydown', e => {
       if (e.key === 'Enter') searchByCitizenId();
     });
-
     fetchSheetData();
   </script>
 </body>
