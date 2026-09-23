@@ -13,13 +13,8 @@
           fontFamily: { sans: ['Prompt', 'sans-serif'] },
           colors: {
             police: {
-              navy: '#0b1f4a',
-              deep: '#071533',
-              blue: '#123a7a',
-              mid: '#1a4f9c',
-              gold: '#c9a227',
-              light: '#e8eef8',
-              stripe: '#8b1e2d'
+              navy: '#0b1f4a', deep: '#071533', blue: '#123a7a', mid: '#1a4f9c',
+              gold: '#c9a227', light: '#e8eef8', stripe: '#8b1e2d'
             }
           }
         }
@@ -28,80 +23,31 @@
   </script>
   <style>
     body { background: #f3f6fb; }
-    .police-header {
-      background: linear-gradient(180deg, #0b1f4a 0%, #123a7a 55%, #0b1f4a 100%);
-    }
+    .police-header { background: linear-gradient(180deg, #0b1f4a 0%, #123a7a 55%, #0b1f4a 100%); }
     .gold-line {
       height: 4px;
       background: linear-gradient(90deg, #8b1e2d 0%, #c9a227 35%, #f5e6a6 50%, #c9a227 65%, #8b1e2d 100%);
     }
-    .result-card {
-      border: 1px solid #d6e0f0;
-      box-shadow: 0 10px 30px rgba(11, 31, 74, 0.08);
-    }
-    .badge-seal {
-      width: 72px; height: 72px;
-      filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
-    }
-    @media (min-width: 768px) {
-      .badge-seal { width: 88px; height: 88px; }
-    }
-    .flow-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem 0;
-      align-items: stretch;
-      justify-content: flex-start;
-    }
+    .result-card { border: 1px solid #d6e0f0; box-shadow: 0 10px 30px rgba(11, 31, 74, 0.08); }
+    .badge-seal { width: 72px; height: 72px; filter: drop-shadow(0 2px 6px rgba(0,0,0,.35)); }
+    @media (min-width: 768px) { .badge-seal { width: 88px; height: 88px; } }
+    .flow-wrap { display: flex; flex-wrap: wrap; gap: 0.5rem 0; align-items: stretch; }
     .flow-step {
-      position: relative;
-      flex: 1 1 140px;
-      min-width: 120px;
-      max-width: 180px;
-      border-radius: 14px;
-      padding: 12px 10px;
-      text-align: center;
-      border: 1px solid #dbe3f0;
-      background: #f8fafc;
-      color: #64748b;
+      position: relative; flex: 1 1 120px; min-width: 110px; max-width: 160px;
+      border-radius: 14px; padding: 12px 10px; text-align: center;
+      border: 1px solid #dbe3f0; background: #f8fafc; color: #64748b;
     }
-    .flow-step.done {
-      background: #ecfdf5;
-      border-color: #6ee7b7;
-      color: #065f46;
-    }
-    .flow-step.current {
-      background: #fffbeb;
-      border-color: #fbbf24;
-      color: #92400e;
-      box-shadow: 0 0 0 2px rgba(201, 162, 39, 0.25);
-    }
-    .flow-step.todo {
-      opacity: 0.7;
-    }
-    .flow-arrow {
-      display: none;
-      align-items: center;
-      color: #94a3b8;
-      font-size: 18px;
-      padding: 0 2px;
-    }
-    @media (min-width: 768px) {
-      .flow-arrow { display: flex; }
-      .flow-step { flex: 0 1 150px; }
-    }
+    .flow-step.done { background: #ecfdf5; border-color: #6ee7b7; color: #065f46; }
+    .flow-step.current { background: #fffbeb; border-color: #fbbf24; color: #92400e; box-shadow: 0 0 0 2px rgba(201,162,39,.25); }
+    .flow-step.todo { opacity: .7; }
+    .flow-arrow { display: none; align-items: center; color: #94a3b8; font-size: 18px; padding: 0 2px; }
+    @media (min-width: 768px) { .flow-arrow { display: flex; } .flow-step { flex: 0 1 140px; } }
     .case-pick {
-      border: 1px solid #d6e0f0;
-      border-radius: 14px;
-      padding: 14px 16px;
-      cursor: pointer;
-      transition: 0.2s ease;
-      background: #fff;
+      border: 1px solid #d6e0f0; border-radius: 14px; padding: 14px 16px;
+      cursor: pointer; transition: .2s ease; background: #fff; text-align: left; width: 100%;
     }
     .case-pick:hover, .case-pick.active {
-      border-color: #c9a227;
-      background: #fffdf5;
-      box-shadow: 0 6px 18px rgba(11, 31, 74, 0.08);
+      border-color: #c9a227; background: #fffdf5; box-shadow: 0 6px 18px rgba(11,31,74,.08);
     }
   </style>
 </head>
@@ -116,15 +62,9 @@
 
   <header class="police-header text-white">
     <div class="max-w-5xl mx-auto px-4 py-5 md:py-7 flex items-center gap-4 md:gap-6">
-      <img
-        class="badge-seal"
-        src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Emblem_of_Royal_Thai_Police.png"
-        alt="ตราสำนักงานตำรวจแห่งชาติ"
-        onerror="this.style.display='none'; document.getElementById('seal-fallback').classList.remove('hidden');"
-      >
-      <div id="seal-fallback" class="hidden badge-seal rounded-full bg-police-gold/20 border-2 border-police-gold flex items-center justify-center text-police-gold font-bold text-xs text-center leading-tight px-2">
-        ตร.<br>สตช.
-      </div>
+      <img class="badge-seal" src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Emblem_of_Royal_Thai_Police.png" alt="ตรา สตช."
+           onerror="this.style.display='none';document.getElementById('seal-fallback').classList.remove('hidden');">
+      <div id="seal-fallback" class="hidden badge-seal rounded-full bg-police-gold/20 border-2 border-police-gold flex items-center justify-center text-police-gold font-bold text-xs text-center leading-tight px-2">ตร.<br>สตช.</div>
       <div class="flex-1">
         <p class="text-police-gold text-xs md:text-sm font-medium tracking-wide mb-0.5">ROYAL THAI POLICE</p>
         <h1 class="text-xl md:text-3xl font-bold leading-tight">ระบบติดตามคดีออนไลน์</h1>
@@ -143,15 +83,11 @@
   </nav>
 
   <main class="flex-1 max-w-5xl mx-auto px-4 py-8 w-full">
-
     <section class="bg-white result-card rounded-2xl p-5 md:p-7 mb-6">
       <div class="flex flex-col md:flex-row md:items-start gap-4">
         <div class="flex-1">
           <h2 class="text-lg md:text-xl font-bold text-police-navy mb-2">บริการตรวจสอบข้อมูลการแจ้งความ</h2>
-          <p class="text-sm text-slate-600 leading-relaxed">
-            กรอกเลขบัตรประจำตัวประชาชน 13 หลัก เพื่อดูรายละเอียดคดีและแผนผังความคืบหน้า
-            หากมีหลายคดีภายใต้เลขบัตรเดียวกัน ระบบจะให้เลือกคดีก่อน
-          </p>
+          <p class="text-sm text-slate-600 leading-relaxed">กรอกเลขบัตร 13 หลัก เพื่อดูรายละเอียดคดีและแผนผังความคืบหน้า หากมีหลายคดีจะให้เลือกก่อน</p>
         </div>
         <div class="shrink-0 bg-police-light text-police-navy text-xs rounded-xl px-3 py-2 border border-blue-100">
           <div class="font-semibold mb-1">สถานะระบบ</div>
@@ -161,36 +97,20 @@
     </section>
 
     <section class="bg-white result-card rounded-2xl p-5 md:p-7 mb-6">
-      <label for="id-input" class="block text-sm font-semibold text-police-navy mb-2">
-        เลขบัตรประจำตัวประชาชน
-      </label>
+      <label for="id-input" class="block text-sm font-semibold text-police-navy mb-2">เลขบัตรประจำตัวประชาชน</label>
       <div class="flex flex-col sm:flex-row gap-3">
-        <input
-          id="id-input"
-          type="text"
-          inputmode="numeric"
-          maxlength="13"
-          placeholder="เช่น 1XXXXXXXXXXXX"
-          class="flex-1 border border-slate-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-police-mid focus:border-police-mid tracking-wider"
-        >
-        <button
-          onclick="searchByCitizenId()"
-          class="bg-police-navy hover:bg-police-blue text-white font-semibold px-6 py-3 rounded-xl transition shadow-md"
-        >
-          ค้นหาคดี
-        </button>
+        <input id="id-input" type="text" inputmode="numeric" maxlength="13" placeholder="เช่น 1478600097041"
+               class="flex-1 border border-slate-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-police-mid tracking-wider">
+        <button onclick="searchByCitizenId()" class="bg-police-navy hover:bg-police-blue text-white font-semibold px-6 py-3 rounded-xl transition shadow-md">ค้นหาคดี</button>
       </div>
-      <p class="text-xs text-slate-500 mt-3">กรอกเฉพาะตัวเลข 13 หลัก · ข้อมูลสถานะอัปเดตโดยเจ้าหน้าที่ผ่าน Google Sheet</p>
     </section>
 
-    <!-- เลือกคดีเมื่อมีหลายคดี -->
     <section id="case-list-container" class="hidden bg-white result-card rounded-2xl p-5 md:p-7 mb-6">
       <h3 class="text-lg font-bold text-police-navy mb-1">พบหลายคดีภายใต้เลขบัตรนี้</h3>
-      <p class="text-sm text-slate-500 mb-4">เลือกคดีที่ต้องการดูรายละเอียด</p>
+      <p class="text-sm text-slate-500 mb-4">เลือกคดีที่ต้องการดู</p>
       <div id="case-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
     </section>
 
-    <!-- รายละเอียด + แผนผัง -->
     <section id="result-container" class="hidden bg-white result-card rounded-2xl p-5 md:p-7 mb-6 relative overflow-hidden">
       <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-police-stripe via-police-gold to-police-stripe"></div>
       <div class="flex flex-wrap items-center justify-between gap-3 mb-5 border-b border-slate-100 pb-3">
@@ -201,11 +121,10 @@
         <span id="res-status-badge" class="text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-1 rounded-full">-</span>
       </div>
 
-      <!-- แผนผังสถานะ -->
       <div class="mb-6">
-        <div class="flex items-center justify-between mb-3">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
           <h4 class="font-bold text-police-navy text-sm">แผนผังความคืบหน้าคดี</h4>
-          <span class="text-[11px] text-slate-400">綠色=ผ่านแล้ว · เหลือง=ปัจจุบัน · เทา=ยังไม่ถึง</span>
+          <span class="text-[11px] text-slate-400">เขียว=ผ่าน · เหลือง=ปัจจุบัน · เทา=ยังไม่ถึง</span>
         </div>
         <div id="status-flow" class="flow-wrap"></div>
         <div id="status-detail" class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm"></div>
@@ -252,13 +171,10 @@
       <p class="text-sm text-slate-500">ไม่พบเลขบัตรนี้ในระบบ หรือยังไม่ได้บันทึกการแจ้งความ</p>
     </section>
 
-    <section class="bg-police-navy text-white rounded-2xl p-5 md:p-6">
-      <h3 class="font-bold mb-2 text-police-gold">สำหรับเจ้าหน้าที่ (หลังร้าน)</h3>
-      <ul class="text-sm text-blue-100 space-y-1.5 list-disc pl-5">
-        <li>อัปเดตสถานะใน Google Sheet คอลัมน์ รหัสคดี / สถานะหลัก / รับคดีแล้ว / กำลังสอบสวน / สั่งอายัดบัญชี / ส่งหมายเรียก / หมายจับ / อัยการรับฟ้อง</li>
-        <li>ใส่ค่า <b>ใช่</b> หรือ <b>ยัง</b> ในช่องติ๊กสถานะ และเลขครั้งที่หมายเรียก เช่น 1 2 3</li>
-        <li>ประชาชนรีเฟรชหน้าเว็บแล้วค้นหาอีกครั้ง จะเห็นแผนผังเปลี่ยนตามชีต</li>
-      </ul>
+    <section class="bg-police-navy text-white rounded-2xl p-5 md:p-6 text-sm text-blue-100">
+      <h3 class="font-bold mb-2 text-police-gold">ชีตหลังร้านที่เว็บอ่านอยู่ตอนนี้</h3>
+      <p>รหัสคดี · สถานะหลัก · รับคดีแล้ว · สำสังสอบสวน · สั่งอายัดบัญชี · วันที่อายัดบัญชี · สถานะหมาย · ขั้นตอนทางกฎหมาย · หมายเหตุร้อยเวร · อัปเดตล่าสุดโดย</p>
+      <p class="mt-2 text-blue-200 text-xs">ช่องติ๊กใช้ TRUE/FALSE ได้ · สถานะหลักเช่น รับคดี / ไม่รับคดี / กำลังสอบสวน</p>
     </section>
   </main>
 
@@ -266,8 +182,7 @@
     <div class="gold-line"></div>
     <div class="max-w-5xl mx-auto px-4 py-5 text-center space-y-1">
       <p class="text-white font-medium">ระบบติดตามคดีออนไลน์ (ต้นแบบ)</p>
-      <p>พัฒนาเพื่อการติดตามสถานะการแจ้งความ · ข้อมูลเชื่อมจาก Google Sheets</p>
-      <p class="text-blue-400">อ้างอิงรูปแบบจากเว็บบริการของสำนักงานตำรวจแห่งชาติ</p>
+      <p>ข้อมูลเชื่อมจาก Google Sheets ตามคอลัมน์ปัจจุบัน</p>
     </div>
   </footer>
 
@@ -275,16 +190,14 @@
     const SHEET_ID = '1kmi6OpZvYm3GN1ZDWDAqcFDUfoPD8V_TocYOtVUOCfw';
     const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
-    // ลำดับแผนผัง
+    // แผนผังตามคอลัมน์ชีตปัจจุบัน
     const FLOW_STEPS = [
-      { key: 'รับคดี', label: 'รับคดี', match: ['รับคดี', 'รับแจ้ง'] },
-      { key: 'กำลังสอบสวน', label: 'กำลังสอบสวน', match: ['สอบสวน'] },
-      { key: 'สั่งอายัดบัญชี', label: 'อายัดบัญชี', match: ['อายัด'] },
-      { key: 'ส่งหมายเรียก', label: 'หมายเรียก', match: ['หมายเรียก'] },
-      { key: 'ออกหมายจับ', label: 'หมายจับ', match: ['หมายจับ'] },
-      { key: 'ส่งอัยการ', label: 'ส่งอัยการ', match: ['ส่งอัยการ', 'อัยการ'] },
-      { key: 'อัยการรับฟ้อง', label: 'อัยการรับฟ้อง', match: ['รับฟ้อง', 'อัยการรับฟ้อง'] },
-      { key: 'ปิดคดี', label: 'ปิดคดี', match: ['ปิดคดี'] }
+      { key: 'รับคดี', label: 'รับคดี' },
+      { key: 'สอบสวน', label: 'สอบสวน' },
+      { key: 'อายัดบัญชี', label: 'อายัดบัญชี' },
+      { key: 'สถานะหมาย', label: 'สถานะหมาย' },
+      { key: 'ขั้นตอนกม', label: 'ขั้นตอนกฎหมาย' },
+      { key: 'ปิด/สรุป', label: 'สรุปสถานะ' }
     ];
 
     let rawSheetData = [];
@@ -295,12 +208,11 @@
       if (!cell) return '';
       if (cell.f != null && String(cell.f).trim() !== '') return String(cell.f).trim();
       if (cell.v == null) return '';
+      if (typeof cell.v === 'boolean') return cell.v ? 'TRUE' : 'FALSE';
       return String(cell.v).trim();
     }
 
-    function onlyDigits(str) {
-      return String(str || '').replace(/\D/g, '');
-    }
+    function onlyDigits(str) { return String(str || '').replace(/\D/g, ''); }
 
     function maskId(id) {
       const d = onlyDigits(id);
@@ -308,15 +220,29 @@
       return d.slice(0, 1) + '********' + d.slice(-4);
     }
 
-    function yesValue(v) {
+    function isTrue(v) {
+      if (v === true) return true;
       const s = String(v || '').trim().toLowerCase();
-      return ['ใช่', 'yes', 'y', 'true', '1', 'เรียบร้อย', 'แล้ว', 'สำเร็จ'].includes(s);
+      return ['true', 'yes', 'y', '1', 'ใช่', 'แล้ว', 'เรียบร้อย', 'สำเร็จ'].includes(s);
     }
 
-    function findCol(cols, predicates) {
+    function isFalse(v) {
+      if (v === false) return true;
+      const s = String(v || '').trim().toLowerCase();
+      return ['false', 'no', 'n', '0', 'ยัง', 'ไม่', 'ไม่ใช่'].includes(s);
+    }
+
+    function hasText(v) {
+      const s = String(v || '').trim();
+      if (!s) return false;
+      if (/^date\(/i.test(s)) return false;
+      return !isFalse(s);
+    }
+
+    function findCol(cols, preds) {
       for (let i = 0; i < cols.length; i++) {
         const label = (cols[i].label || '').replace(/\s+/g, ' ').trim();
-        if (predicates.some(fn => fn(label))) return i;
+        if (preds.some(fn => fn(label))) return i;
       }
       return -1;
     }
@@ -329,102 +255,112 @@
         phone: findCol(cols, [l => l.includes('เบอร์') || l.includes('โทร')]),
         address: findCol(cols, [l => l.includes('ที่อยู่')]),
         accused: findCol(cols, [l => l.includes('ผู้ต้อง') || l.includes('กระทำ')]),
-        facts: findCol(cols, [l => l.includes('ข้อเท็จจริง') || l.includes('แจ้ง')]),
+        facts: findCol(cols, [l => l.includes('ข้อเท็จจริง')]),
         caseCode: findCol(cols, [l => l.includes('รหัสคดี')]),
         mainStatus: findCol(cols, [l => l.includes('สถานะหลัก')]),
-        received: findCol(cols, [l => l.includes('รับคดี')]),
-        investigating: findCol(cols, [l => l.includes('สอบสวน')]),
-        freeze: findCol(cols, [l => l.includes('อายัด') && !l.includes('วันที่') && !l.includes('เลข')]),
+        received: findCol(cols, [l => l.includes('รับคดีแล้ว') || l === 'รับคดี']),
+        investigate: findCol(cols, [l => l.includes('สอบสวน') || l.includes('สำสัง')]),
+        freeze: findCol(cols, [l => l.includes('สั่งอายัด') || (l.includes('อายัด') && !l.includes('วันที่'))]),
         freezeDate: findCol(cols, [l => l.includes('วันที่อายัด')]),
-        freezeDoc: findCol(cols, [l => l.includes('เลขหนังสืออายัด') || (l.includes('หนังสือ') && l.includes('อายัด'))]),
-        summons: findCol(cols, [l => l.includes('หมายเรียก') && l.includes('ครั้ง')]),
-        summonsDate: findCol(cols, [l => l.includes('วันที่ส่งหมายเรียก')]),
-        warrant: findCol(cols, [l => l.includes('หมายจับ')]),
-        prosecute: findCol(cols, [l => l.includes('อัยการ') || l.includes('รับฟ้อง')]),
+        warrantStatus: findCol(cols, [l => l.includes('สถานะหมาย')]),
+        legalStep: findCol(cols, [l => l.includes('ขั้นตอนทางกฎหมาย') || l.includes('ขั้นตอน')]),
         note: findCol(cols, [l => l.includes('หมายเหตุ')]),
         updatedBy: findCol(cols, [l => l.includes('อัปเดตล่าสุด')])
       };
     }
 
-    function getCitizenIdFromRow(row) {
-      const cell = row.c && row.c[col.id];
+    function get(row, key) {
+      if (col[key] < 0) return '';
+      return cellText(row.c[col[key]]);
+    }
+
+    function getCitizenId(row) {
+      if (col.id < 0 || !row.c) return '';
+      const cell = row.c[col.id];
       if (!cell) return '';
-      let idDigits = cell.f != null ? onlyDigits(cell.f) : '';
-      if (idDigits.length !== 13 && cell.v != null) {
-        if (typeof cell.v === 'number') idDigits = onlyDigits(String(Math.round(cell.v)));
-        else idDigits = onlyDigits(String(cell.v));
+      let id = cell.f != null ? onlyDigits(cell.f) : '';
+      if (id.length !== 13 && cell.v != null) {
+        id = typeof cell.v === 'number' ? onlyDigits(String(Math.round(cell.v))) : onlyDigits(String(cell.v));
       }
-      return idDigits;
+      return id;
+    }
+
+    function isRealCaseRow(row) {
+      if (!row.c) return false;
+      const name = get(row, 'name');
+      const id = getCitizenId(row);
+      const facts = get(row, 'facts');
+      return !!(name || (id && id.length >= 10) || facts);
     }
 
     function rowToCase(row, index) {
-      const c = row.c || [];
-      const get = (key) => (col[key] >= 0 ? cellText(c[col[key]]) : '');
-      const caseCode = get('caseCode') || ('ROW-' + (index + 1));
+      const id = getCitizenId(row);
+      const caseCode = get(row, 'caseCode') || ('CASE-' + String(index + 1).padStart(3, '0'));
       return {
         index,
         caseCode,
-        time: get('time'),
-        name: get('name'),
-        id: getCitizenIdFromRow(row),
-        phone: get('phone'),
-        address: get('address'),
-        accused: get('accused'),
-        facts: get('facts'),
-        mainStatus: get('mainStatus') || 'รับคดี',
-        received: get('received'),
-        investigating: get('investigating'),
-        freeze: get('freeze'),
-        freezeDate: get('freezeDate'),
-        freezeDoc: get('freezeDoc'),
-        summons: get('summons'),
-        summonsDate: get('summonsDate'),
-        warrant: get('warrant'),
-        prosecute: get('prosecute'),
-        note: get('note'),
-        updatedBy: get('updatedBy')
+        time: get(row, 'time'),
+        name: get(row, 'name'),
+        id,
+        phone: get(row, 'phone'),
+        address: get(row, 'address'),
+        accused: get(row, 'accused'),
+        facts: get(row, 'facts'),
+        mainStatus: get(row, 'mainStatus'),
+        received: get(row, 'received'),
+        investigate: get(row, 'investigate'),
+        freeze: get(row, 'freeze'),
+        freezeDate: get(row, 'freezeDate'),
+        warrantStatus: get(row, 'warrantStatus'),
+        legalStep: get(row, 'legalStep'),
+        note: get(row, 'note'),
+        updatedBy: get(row, 'updatedBy')
       };
     }
 
-    function flowProgress(caseData) {
-      // คืนค่า index ขั้นล่าสุดที่ถึงแล้ว (0-based) และชุด done flags
+    function normalizeMain(status) {
+      return String(status || '').trim();
+    }
+
+    function flowProgress(c) {
+      const main = normalizeMain(c.mainStatus);
+      const rejected = /ไม่รับ/.test(main);
+
       const flags = {
-        'รับคดี': yesValue(caseData.received) || !!(caseData.mainStatus || caseData.name),
-        'กำลังสอบสวน': yesValue(caseData.investigating),
-        'สั่งอายัดบัญชี': yesValue(caseData.freeze),
-        'ส่งหมายเรียก': Number(onlyDigits(caseData.summons) || 0) > 0,
-        'ออกหมายจับ': yesValue(caseData.warrant),
-        'ส่งอัยการ': /ส่งอัยการ/.test(caseData.mainStatus || ''),
-        'อัยการรับฟ้อง': yesValue(caseData.prosecute) || /รับฟ้อง/.test(caseData.mainStatus || ''),
-        'ปิดคดี': /ปิดคดี/.test(caseData.mainStatus || '')
+        'รับคดี': !rejected && (isTrue(c.received) || /รับคดี/.test(main) || !!c.name),
+        'สอบสวน': !rejected && (hasText(c.investigate) || /สอบสวน/.test(main) || isTrue(c.investigate)),
+        'อายัดบัญชี': !rejected && isTrue(c.freeze),
+        'สถานะหมาย': !rejected && hasText(c.warrantStatus),
+        'ขั้นตอนกม': !rejected && hasText(c.legalStep),
+        'ปิด/สรุป': !rejected && (/ปิดคดี|เสร็จ|รับฟ้อง/.test(main) || /รับฟ้อง|ปิดคดี/.test(c.legalStep || ''))
       };
 
-      // ใช้สถานะหลักดัน progress ถ้ายังไม่ติ๊กย่อย
-      const main = caseData.mainStatus || '';
-      FLOW_STEPS.forEach((step, idx) => {
-        if (step.match.some(m => main.includes(m))) {
-          for (let i = 0; i <= idx; i++) {
-            // ไม่บังคับติ๊กย้อนหลังทุกอันจากสถานะหลัก ยกเว้นขั้นปัจจุบันและก่อนหน้าแบบอ่อนๆ
-            if (i < idx) {
-              // mark earlier as done only if not explicitly "ยัง"
-            }
-          }
-          flags[step.key] = true;
-          for (let i = 0; i < idx; i++) flags[FLOW_STEPS[i].key] = true;
-        }
-      });
+      // ถ้าสถานะหลักเป็นขั้นถัดไป ให้ถือว่าขั้นก่อนหน้าผ่านแล้ว
+      const order = ['รับคดี', 'สอบสวน', 'อายัดบัญชี', 'สถานะหมาย', 'ขั้นตอนกม', 'ปิด/สรุป'];
+      let pushTo = -1;
+      if (/รับคดี/.test(main) && !rejected) pushTo = 0;
+      if (/สอบสวน/.test(main)) pushTo = 1;
+      if (/อายัด/.test(main)) pushTo = 2;
+      if (/หมายเรียก|หมายจับ|สถานะหมาย/.test(main)) pushTo = 3;
+      if (/อัยการ|กฎหมาย|ฟ้อง/.test(main)) pushTo = 4;
+      if (/ปิด|เสร็จ/.test(main)) pushTo = 5;
+      for (let i = 0; i <= pushTo; i++) flags[order[i]] = true;
+
+      if (rejected) {
+        Object.keys(flags).forEach(k => flags[k] = false);
+        flags['รับคดี'] = false;
+      }
 
       let currentIdx = 0;
-      FLOW_STEPS.forEach((step, idx) => {
-        if (flags[step.key]) currentIdx = idx;
-      });
-      return { flags, currentIdx };
+      order.forEach((k, idx) => { if (flags[k]) currentIdx = idx; });
+      if (rejected) currentIdx = 0;
+      return { flags, currentIdx, rejected, order };
     }
 
-    function renderFlow(caseData) {
+    function renderFlow(c) {
       const wrap = document.getElementById('status-flow');
       const detail = document.getElementById('status-detail');
-      const { flags, currentIdx } = flowProgress(caseData);
+      const { flags, currentIdx, rejected } = flowProgress(c);
       wrap.innerHTML = '';
 
       FLOW_STEPS.forEach((step, idx) => {
@@ -436,63 +372,63 @@
         }
         const el = document.createElement('div');
         let state = 'todo';
-        if (flags[step.key] && idx < currentIdx) state = 'done';
-        else if (idx === currentIdx) state = 'current';
+        if (rejected && idx === 0) state = 'current';
+        else if (flags[step.key] && idx < currentIdx) state = 'done';
+        else if (idx === currentIdx && flags[step.key]) state = 'current';
         else if (flags[step.key]) state = 'done';
         el.className = 'flow-step ' + state;
-        el.innerHTML = `
-          <div class="text-[10px] font-semibold mb-1 opacity-70">ขั้นที่ ${idx + 1}</div>
-          <div class="text-sm font-bold leading-snug">${step.label}</div>
-        `;
+        el.innerHTML = `<div class="text-[10px] font-semibold mb-1 opacity-70">ขั้นที่ ${idx + 1}</div><div class="text-sm font-bold leading-snug">${step.label}</div>`;
         wrap.appendChild(el);
       });
 
-      const summonsN = onlyDigits(caseData.summons) || '0';
+      const freezeDateShow = hasText(c.freezeDate) ? c.freezeDate : '-';
       detail.innerHTML = `
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+          <span class="text-xs text-slate-500 block">สถานะหลัก</span>
+          <strong>${c.mainStatus || '-'}</strong>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+          <span class="text-xs text-slate-500 block">รับคดีแล้ว</span>
+          <strong>${isTrue(c.received) ? 'ใช่' : (isFalse(c.received) ? 'ยัง/ไม่' : (c.received || '-'))}</strong>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+          <span class="text-xs text-slate-500 block">สอบสวน</span>
+          <strong>${c.investigate || '-'}</strong>
+        </div>
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
           <span class="text-xs text-slate-500 block">สั่งอายัดบัญชี</span>
-          <strong>${yesValue(caseData.freeze) ? 'ดำเนินการแล้ว' : 'ยัง'}</strong>
-          <div class="text-xs text-slate-500 mt-1">${caseData.freezeDate ? 'วันที่: ' + caseData.freezeDate : ''}${caseData.freezeDoc ? ' · เลขหนังสือ: ' + caseData.freezeDoc : ''}</div>
+          <strong>${isTrue(c.freeze) ? 'ใช่' : 'ยัง'}</strong>
+          <div class="text-xs text-slate-500 mt-1">วันที่อายัด: ${freezeDateShow}</div>
         </div>
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
-          <span class="text-xs text-slate-500 block">หมายเรียก</span>
-          <strong>ครั้งที่ ${summonsN}</strong>
-          <div class="text-xs text-slate-500 mt-1">${caseData.summonsDate ? 'ส่งล่าสุด: ' + caseData.summonsDate : '-'}</div>
+          <span class="text-xs text-slate-500 block">สถานะหมาย</span>
+          <strong>${c.warrantStatus || '-'}</strong>
         </div>
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
-          <span class="text-xs text-slate-500 block">หมายจับ</span>
-          <strong>${yesValue(caseData.warrant) ? 'ออกแล้ว' : 'ยังไม่ออก'}</strong>
-        </div>
-        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
-          <span class="text-xs text-slate-500 block">อัยการรับฟ้อง</span>
-          <strong>${yesValue(caseData.prosecute) || /รับฟ้อง/.test(caseData.mainStatus) ? 'รับฟ้องแล้ว' : 'ยัง'}</strong>
-          <div class="text-xs text-slate-500 mt-1">${caseData.updatedBy ? 'อัปเดตโดย: ' + caseData.updatedBy : ''}</div>
+          <span class="text-xs text-slate-500 block">ขั้นตอนทางกฎหมาย</span>
+          <strong>${c.legalStep || '-'}</strong>
+          <div class="text-xs text-slate-500 mt-1">${c.updatedBy ? 'อัปเดตโดย: ' + c.updatedBy : ''}</div>
         </div>
       `;
     }
 
-    function showCase(caseData) {
+    function showCase(c) {
       document.getElementById('error-container').classList.add('hidden');
       document.getElementById('result-container').classList.remove('hidden');
-
-      document.getElementById('res-case-code').textContent = 'รหัสคดี: ' + (caseData.caseCode || '-');
-      document.getElementById('res-status-badge').textContent = caseData.mainStatus || 'รับคดี';
-      document.getElementById('res-name').textContent = caseData.name || '-';
-      document.getElementById('res-id').textContent = maskId(caseData.id);
-      document.getElementById('res-phone').textContent = caseData.phone || '-';
-      document.getElementById('res-time').textContent = caseData.time || '-';
-      document.getElementById('res-address').textContent = caseData.address || '-';
-      document.getElementById('res-accused').textContent = caseData.accused || '-';
-      document.getElementById('res-facts').textContent = caseData.facts || '-';
-      document.getElementById('res-note').textContent = caseData.note || '-';
-
-      renderFlow(caseData);
-
-      // highlight selected card
+      document.getElementById('res-case-code').textContent = 'รหัสคดี: ' + (c.caseCode || '-');
+      document.getElementById('res-status-badge').textContent = c.mainStatus || (isTrue(c.received) ? 'รับคดี' : 'รอดำเนินการ');
+      document.getElementById('res-name').textContent = c.name || '-';
+      document.getElementById('res-id').textContent = maskId(c.id);
+      document.getElementById('res-phone').textContent = c.phone || '-';
+      document.getElementById('res-time').textContent = c.time || '-';
+      document.getElementById('res-address').textContent = c.address || '-';
+      document.getElementById('res-accused').textContent = c.accused || '-';
+      document.getElementById('res-facts').textContent = c.facts || '-';
+      document.getElementById('res-note').textContent = c.note || '-';
+      renderFlow(c);
       document.querySelectorAll('.case-pick').forEach(el => {
-        el.classList.toggle('active', el.dataset.code === caseData.caseCode);
+        el.classList.toggle('active', el.dataset.code === c.caseCode);
       });
-
       document.getElementById('result-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
@@ -509,18 +445,17 @@
       cases.forEach((c, i) => {
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'case-pick text-left';
+        btn.className = 'case-pick';
         btn.dataset.code = c.caseCode;
         btn.innerHTML = `
           <div class="flex items-start justify-between gap-2">
             <div>
               <div class="text-xs text-slate-500 mb-1">คดีที่ ${i + 1}</div>
               <div class="font-bold text-police-navy">${c.caseCode}</div>
-              <div class="text-sm text-slate-600 mt-1 line-clamp-2">${c.facts || c.accused || 'ไม่มีสรุปเรื่อง'}</div>
+              <div class="text-sm text-slate-600 mt-1">${c.facts || c.accused || 'ไม่มีสรุปเรื่อง'}</div>
             </div>
-            <span class="text-[10px] font-bold bg-police-light text-police-navy px-2 py-1 rounded-full whitespace-nowrap">${c.mainStatus || 'รับคดี'}</span>
-          </div>
-        `;
+            <span class="text-[10px] font-bold bg-police-light text-police-navy px-2 py-1 rounded-full whitespace-nowrap">${c.mainStatus || '-'}</span>
+          </div>`;
         btn.onclick = () => showCase(c);
         list.appendChild(btn);
       });
@@ -535,13 +470,13 @@
         const end = text.lastIndexOf('}');
         if (start < 0 || end < 0) throw new Error('bad payload');
         const json = JSON.parse(text.substring(start, end + 1));
-        if (json.status !== 'ok') throw new Error('sheet not readable');
+        if (json.status !== 'ok') throw new Error('not ok');
         mapColumns(json.table.cols || []);
-        rawSheetData = json.table.rows || [];
-        statusEl.textContent = 'เชื่อมต่อแล้ว · ' + rawSheetData.length + ' รายการ';
+        rawSheetData = (json.table.rows || []).filter(isRealCaseRow);
+        statusEl.textContent = 'เชื่อมต่อแล้ว · ' + rawSheetData.length + ' คดี';
         statusEl.classList.add('text-emerald-700');
-      } catch (error) {
-        console.error(error);
+      } catch (err) {
+        console.error(err);
         statusEl.textContent = 'เชื่อมต่อชีตไม่สำเร็จ · ตรวจสิทธิ์แชร์';
         statusEl.classList.add('text-rose-600');
       }
@@ -560,10 +495,7 @@
 
       matchedCases = [];
       rawSheetData.forEach((row, index) => {
-        if (!row.c) return;
-        if (getCitizenIdFromRow(row) === inputVal) {
-          matchedCases.push(rowToCase(row, index));
-        }
+        if (getCitizenId(row) === inputVal) matchedCases.push(rowToCase(row, index));
       });
 
       if (!matchedCases.length) {
@@ -578,7 +510,7 @@
       showCase(matchedCases[0]);
     }
 
-    document.getElementById('id-input').addEventListener('keydown', (e) => {
+    document.getElementById('id-input').addEventListener('keydown', e => {
       if (e.key === 'Enter') searchByCitizenId();
     });
 
