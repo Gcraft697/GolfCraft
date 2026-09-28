@@ -160,6 +160,23 @@
     }
     .btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
     .hidden { display: none !important; }
+    .field { flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 6px; }
+    .field-label { font-size: 13px; font-weight: 600; color: var(--navy); }
+    .field-label b { color: var(--mid); }
+    .field-box {
+      display: flex; align-items: center;
+      border: 1px solid #d5deee; border-radius: 14px; background: #fbfcff;
+      padding: 0 16px;
+    }
+    .field-box:focus-within { border-color: var(--mid); box-shadow: 0 0 0 4px rgba(28,91,181,.12); }
+    .field-box .mask { color: #94a3b8; font-size: 15px; letter-spacing: .06em; white-space: nowrap; }
+    .search-row .field-box input {
+      border: 0; background: transparent; box-shadow: none; min-width: 0; width: 100%;
+      padding: 14px 0 14px 4px; font-size: 18px; font-weight: 700; letter-spacing: .35em; color: var(--navy);
+    }
+    .search-row .field-box input:focus { box-shadow: none; }
+    .field-hint { font-size: 11px; color: var(--muted); min-height: 16px; }
+    .search-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 22px; }
 
     /* case picker */
     .case-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 12px; }
@@ -524,14 +541,24 @@
         <div>
           <h2>ตรวจสอบสถานะคดี</h2>
 
-          <p class="muted">กรอกเลข 4 ตัวท้ายบัตรประชาชน และเบอร์โทรศัพท์ (กรอกเต็มเบอร์หรือแค่ 4 ตัวท้ายก็ได้) เพื่อดูสถานะคดี</p>
+          <p class="muted">กรอก <b>เลข 4 ตัวท้ายของบัตรประชาชน</b> และ <b>เลข 4 ตัวท้ายของเบอร์โทรศัพท์</b> ที่ใช้ตอนแจ้งความ เพื่อดูสถานะคดี</p>
         </div>
       </div>
-      <div class="search-row">
-        <input id="id-input" type="text" inputmode="numeric" maxlength="4" placeholder="เลข 4 ตัวท้ายบัตรประชาชน">
-        <input id="phone-input" type="tel" inputmode="numeric" maxlength="12" placeholder="เบอร์โทรศัพท์">
-        <button class="btn" onclick="searchByCitizenId()">ตรวจสอบคดี</button>
-        <button type="button" class="btn" style="background:linear-gradient(135deg,#334155,#64748b);" onclick="resetToHome()">ล้างผล / เริ่มใหม่</button>
+      <div class="search-row" style="align-items:flex-end;">
+        <label class="field">
+          <span class="field-label">เลขบัตรประชาชน <b>4 ตัวท้าย</b></span>
+          <span class="field-box"><span class="mask">x-xxxx-xxxxx-</span><input id="id-input" type="text" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="____"></span>
+          <span class="field-hint">ตัวอย่าง บัตร 1-2345-67890-<b>1234</b> ให้กรอก 1234</span>
+        </label>
+        <label class="field">
+          <span class="field-label">เบอร์โทรศัพท์ <b>4 ตัวท้าย</b></span>
+          <span class="field-box"><span class="mask">xxx-xxx-</span><input id="phone-input" type="text" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="____"></span>
+          <span class="field-hint">ตัวอย่าง เบอร์ 081-234-<b>5678</b> ให้กรอก 5678</span>
+        </label>
+        <div class="search-btns">
+          <button class="btn" onclick="searchByCitizenId()">ตรวจสอบคดี</button>
+          <button type="button" class="btn" style="background:linear-gradient(135deg,#334155,#64748b);" onclick="resetToHome()">ล้างผล / เริ่มใหม่</button>
+        </div>
       </div>
       <div class="status-pill"><span id="sheet-status">กำลังเชื่อมต่อเซิร์ฟเวอร์...</span></div>
     </section>
@@ -544,7 +571,7 @@
 
     <section id="error-container" class="error-card hidden">
       <strong>ไม่พบข้อมูลคดี</strong>
-      <div style="margin-top:6px;font-size:13px;opacity:.85;">ไม่พบข้อมูลที่ตรงกับเลข 4 ตัวท้ายบัตรประชาชนและเบอร์โทรนี้ หรือยังไม่ได้บันทึกการแจ้งความ</div>
+      <div style="margin-top:6px;font-size:13px;opacity:.85;">ไม่พบข้อมูลที่ตรงกับเลข 4 ตัวท้ายบัตรประชาชนและ 4 ตัวท้ายเบอร์โทรนี้ หรือยังไม่ได้บันทึกการแจ้งความ</div>
     </section>
 
     <section id="result-container" class="hidden">
@@ -1015,8 +1042,8 @@
         alert('กรุณากรอกเลข 4 ตัวท้ายบัตรประชาชนให้ครบ 4 หลัก');
         return;
       }
-      if (phone.length < 4) {
-        alert('กรุณากรอกเบอร์โทรศัพท์ (อย่างน้อย 4 ตัวท้าย)');
+      if (phone.length !== 4) {
+        alert('กรุณากรอกเลข 4 ตัวท้ายของเบอร์โทรศัพท์ให้ครบ 4 หลัก');
         return;
       }
       matchedCases = [];
@@ -1037,7 +1064,9 @@
     }
 
     ['id-input', 'phone-input'].forEach(id => {
-      document.getElementById(id).addEventListener('keydown', e => {
+      const el = document.getElementById(id);
+      el.addEventListener('input', () => { el.value = onlyDigits(el.value).slice(0, 4); });
+      el.addEventListener('keydown', e => {
         if (e.key === 'Enter') searchByCitizenId();
       });
     });
