@@ -3,623 +3,313 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบแจ้งความออนคดีไลน์ และติดตามผลคดีออนไลน์ · สภ.ด่านซ้าย</title>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#0b2a5b">
+  <title>ตรวจสอบคดี และแจ้งความออนไลน์ · สภ.ด่านซ้าย จ.เลย</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --navy: #071a3d;
-      --blue: #0e3a7a;
-      --mid: #1c5bb5;
-      --gold: #d4af37;
-      --gold-soft: #f3e2a0;
-      --bg: #eef2f8;
-      --card: #ffffff;
-      --text: #1e293b;
-      --muted: #64748b;
-      --ok: #059669;
-      --ok-bg: #ecfdf5;
-      --now: #b45309;
-      --now-bg: #fff7ed;
-      --wait: #94a3b8;
-      --wait-bg: #f8fafc;
-      --danger: #be123c;
-      --line: #c7d2e5;
+      --navy: #0b2a5b; --navy-2: #123f86;
+      --green: #146c2e; --green-2: #1a8a3b;
+      --red: #b3261e; --red-bg: #fdecea;
+      --amber: #b45309; --amber-bg: #fff4e0;
+      --ok: #146c2e; --ok-bg: #e8f5ec;
+      --gray: #6b7280; --gray-bg: #f3f4f6;
+      --text: #111827; --line: #d1d5db; --bg: #f2f4f8;
     }
     * { box-sizing: border-box; }
+    html { font-size: 19px; }
     body {
-      margin: 0;
-      font-family: 'Prompt', sans-serif;
-      background:
-        radial-gradient(1200px 500px at 10% -10%, #dbe7ff 0%, transparent 55%),
-        radial-gradient(900px 400px at 100% 0%, #ffe9b8 0%, transparent 45%),
-        var(--bg);
-      color: var(--text);
-      min-height: 100vh;
+      margin: 0; background: var(--bg); color: var(--text);
+      font-family: 'Sarabun', 'Noto Sans Thai', 'Leelawadee UI', Tahoma, sans-serif;
+      line-height: 1.55; -webkit-text-size-adjust: 100%;
     }
-    .topbar {
-      background: linear-gradient(90deg, #050f24, #0b2458 50%, #050f24);
-      color: #cfe0ff;
-      font-size: 12px;
-      padding: 8px 16px;
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    .topbar .motto { color: var(--gold-soft); }
-    .hero {
-      background: linear-gradient(145deg, #061533 0%, #0f3d86 48%, #0a2a5c 100%);
-      color: white;
-      padding: 28px 16px 24px;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: -40% auto auto 60%;
-      width: 420px; height: 420px;
-      background: radial-gradient(circle, rgba(212,175,55,.25), transparent 70%);
-      pointer-events: none;
-    }
-    .hero-inner {
-      max-width: 980px;
-      margin: 0 auto;
-      display: flex;
-      gap: 18px;
-      align-items: center;
-      position: relative;
-      z-index: 1;
-    }
-    .seal {
-      width: 148px; height: 148px;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 30% 25%, rgba(255,255,255,.22), transparent 45%),
-        rgba(255,255,255,.1);
-      border: 3px solid rgba(212,175,55,.95);
-      display: grid; place-items: center;
-      flex-shrink: 0;
-      box-shadow:
-        0 0 0 6px rgba(212,175,55,.22),
-        0 0 0 12px rgba(7,26,61,.35),
-        0 18px 40px rgba(0,0,0,.45);
-      overflow: hidden;
-      padding: 6px;
-    }
-    .seal img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
-      display: block;
-      filter: saturate(1.08) contrast(1.05);
-    }
-    .seal-fallback { display: none; }
-    .hero h1 { margin: 4px 0 6px; font-size: clamp(1.35rem, 3vw, 2rem); }
-    .hero .sub { margin: 0; color: #c9d9f7; font-size: 13px; }
-    .gold-line {
-      height: 4px;
-      background: linear-gradient(90deg, #7f1d1d, var(--gold), #fff3c4, var(--gold), #7f1d1d);
-    }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 22px 16px 48px; }
-    .card {
-      background: var(--card);
-      border: 1px solid rgba(15, 40, 90, .08);
-      border-radius: 22px;
-      padding: 22px;
-      box-shadow: 0 12px 40px rgba(15, 40, 90, .07);
-      margin-bottom: 18px;
-    }
-    .card h2 {
-      margin: 0 0 8px;
-      font-size: 1.15rem;
-      color: var(--navy);
-    }
-    .muted { color: var(--muted); font-size: 13px; line-height: 1.55; }
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #f1f6ff;
-      border: 1px solid #d7e4ff;
-      border-radius: 999px;
-      padding: 8px 12px;
-      font-size: 12px;
-      color: var(--blue);
-      margin-top: 10px;
-    }
-    .search-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
-    .search-row input {
-      flex: 1;
-      min-width: 220px;
-      border: 1px solid #d5deee;
-      border-radius: 14px;
-      padding: 14px 16px;
-      font: inherit;
-      font-size: 15px;
-      letter-spacing: .06em;
-      outline: none;
-      background: #fbfcff;
-    }
-    .search-row input:focus {
-      border-color: var(--mid);
-      box-shadow: 0 0 0 4px rgba(28,91,181,.12);
-    }
-    .btn {
-      border: 0;
-      border-radius: 14px;
-      padding: 14px 22px;
-      font: inherit;
-      font-weight: 600;
-      cursor: pointer;
-      background: linear-gradient(135deg, #0b2d66, #1c5bb5);
-      color: white;
-      box-shadow: 0 10px 24px rgba(14,58,122,.28);
-      transition: transform .15s ease, filter .15s ease;
-    }
-    .btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
+    button, input, a { font-family: inherit; }
     .hidden { display: none !important; }
-    .field { flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 6px; }
-    .field-label { font-size: 13px; font-weight: 600; color: var(--navy); }
-    .field-label b { color: var(--mid); }
-    .field-box {
-      display: flex; align-items: center;
-      border: 1px solid #d5deee; border-radius: 14px; background: #fbfcff;
-      padding: 0 16px;
-    }
-    .field-box:focus-within { border-color: var(--mid); box-shadow: 0 0 0 4px rgba(28,91,181,.12); }
-    .field-box .mask { color: #94a3b8; font-size: 15px; letter-spacing: .06em; white-space: nowrap; }
-    .search-row .field-box input {
-      border: 0; background: transparent; box-shadow: none; min-width: 0; width: 100%;
-      padding: 14px 0 14px 4px; font-size: 18px; font-weight: 700; letter-spacing: .35em; color: var(--navy);
-    }
-    .search-row .field-box input:focus { box-shadow: none; }
-    .field-hint { font-size: 11px; color: var(--muted); min-height: 16px; }
-    .field.field-cid { flex: 2; min-width: 260px; }
-    .search-row .field-box input#id-input { letter-spacing: .12em; }
-    .search-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 22px; }
+    svg.ic { width: 1em; height: 1em; flex-shrink: 0; }
 
-    /* case picker */
-    .case-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 12px; }
-    .case-pick {
-      text-align: left;
-      border: 1px solid #dbe3f2;
-      background: #fff;
-      border-radius: 16px;
-      padding: 14px;
-      cursor: pointer;
-      font: inherit;
-      transition: .2s ease;
-    }
-    .case-pick:hover, .case-pick.active {
-      border-color: var(--gold);
-      background: linear-gradient(180deg, #fffdf6, #fff);
-      box-shadow: 0 10px 24px rgba(212,175,55,.15);
-    }
+    /* ส่วนหัว */
+    .header { background: var(--navy); color: #fff; padding: 14px 16px; border-bottom: 5px solid #d4af37; }
+    .header-inner { max-width: 720px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
+    .seal { width: 68px; height: 68px; border-radius: 50%; border: 3px solid #d4af37; overflow: hidden; flex-shrink: 0; background: #fff2; }
+    .seal img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .header .station { font-size: 1.45rem; font-weight: 800; line-height: 1.2; margin: 0; }
+    .header .sub { font-size: .95rem; color: #dbe6ff; margin: 2px 0 0; }
+    .proto { max-width: 720px; margin: 0 auto; padding: 6px 16px 0; font-size: .8rem; color: var(--gray); text-align: center; }
 
-    /* result sections */
-    .section-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 0 0 14px;
-      color: var(--navy);
-      font-size: 1.05rem;
-    }
-    .section-title .num {
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      display: grid; place-items: center;
-      font-size: 13px;
-      font-weight: 700;
-      color: #07204a;
-      background: linear-gradient(135deg, var(--gold-soft), var(--gold));
-      box-shadow: 0 4px 12px rgba(212,175,55,.35);
-    }
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-    @media (max-width: 700px) {
-      .info-grid { grid-template-columns: 1fr; }
-      .hero-inner { align-items: flex-start; }
-      .seal { width: 112px; height: 112px; }
-    }
-    .info-item {
-      background: linear-gradient(180deg, #f7f9fd, #f3f6fb);
-      border: 1px solid #e2e8f4;
-      border-radius: 14px;
-      padding: 12px 14px;
-    }
-    .info-item.wide { grid-column: 1 / -1; }
-    .info-item label {
-      display: block;
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-    .info-item strong, .info-item p {
-      margin: 0;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--navy);
-      white-space: pre-wrap;
-      line-height: 1.5;
-    }
-    .accused-card {
-      background: linear-gradient(180deg, #fff8f1, #fff5eb);
-      border-color: #f3d5b5;
-    }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      border-radius: 999px;
-      padding: 5px 10px;
-      font-size: 11px;
-      font-weight: 700;
-      background: #fff7ed;
-      color: #9a3412;
-      border: 1px solid #fed7aa;
-    }
+    .wrap { max-width: 720px; margin: 0 auto; padding: 12px 16px 40px; }
+    .card { background: #fff; border: 2px solid #e5e7eb; border-radius: 18px; padding: 20px; margin-bottom: 16px; }
+    h2 { font-size: 1.5rem; margin: 0 0 6px; color: var(--navy); line-height: 1.3; }
+    h3 { font-size: 1.25rem; margin: 0 0 12px; color: var(--navy); }
+    .lead { font-size: 1.05rem; margin: 0 0 14px; }
 
-    /* ===== STATUS FLOW (numbered) ===== */
-    .mindmap {
-      position: relative;
-      padding: 8px 4px 4px;
-    }
-    .mm-center {
-      width: min(320px, 100%);
-      margin: 0 auto 22px;
-      text-align: center;
-      background: radial-gradient(circle at 30% 20%, #1c5bb5, #071a3d 70%);
-      color: white;
-      border-radius: 24px;
-      padding: 18px 16px;
-      box-shadow:
-        0 0 0 6px rgba(212,175,55,.18),
-        0 18px 40px rgba(7,26,61,.28);
-      position: relative;
-      z-index: 2;
-    }
-    .mm-center .label { font-size: 11px; opacity: .8; letter-spacing: .08em; }
-    .mm-center .code { font-size: 1.15rem; font-weight: 700; margin: 4px 0; }
-    .mm-center .state {
-      display: inline-block;
-      margin-top: 6px;
-      background: rgba(255,255,255,.12);
-      border: 1px solid rgba(243,226,160,.45);
-      color: var(--gold-soft);
-      border-radius: 999px;
-      padding: 4px 10px;
-      font-size: 12px;
-      font-weight: 600;
-    }
+    /* แถบความคืบหน้า (เชื่อมต่อ / ค้นหา) */
+    .pg { background: #fff; border: 2px solid #c7d2fe; border-radius: 16px; padding: 14px 16px; margin: 0 0 16px;
+          overflow: hidden; max-height: 320px; transition: max-height .5s ease, opacity .5s ease, margin .5s ease, padding .5s ease; }
+    .pg-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-weight: 700; font-size: 1.05rem; }
+    .pg-text { display: flex; align-items: center; gap: 8px; }
+    .pg-pct { font-variant-numeric: tabular-nums; min-width: 3.2em; text-align: right; }
+    .pg-track { height: 16px; background: #e5e7eb; border-radius: 99px; margin-top: 10px; overflow: hidden; }
+    .pg-fill { height: 100%; width: 0; background: repeating-linear-gradient(45deg, #1d4ed8 0 14px, #2563eb 14px 28px);
+               background-size: 40px 40px; animation: stripes 1s linear infinite; border-radius: 99px; transition: width .2s linear; }
+    @keyframes stripes { to { background-position: 40px 0; } }
+    .pg.ok { border-color: #86efac; background: var(--ok-bg); color: var(--ok); }
+    .pg.ok .pg-fill { background: var(--green-2); animation: none; }
+    .pg.fail { border-color: #fca5a5; background: var(--red-bg); color: var(--red); }
+    .pg.fail .pg-fill { background: var(--red); animation: none; width: 100% !important; }
+    .pg.fail .pg-pct { display: none; }
+    .pg-note { font-size: .95rem; font-weight: 600; margin-top: 8px; color: #374151; }
+    .pg.ok .pg-note, .pg.fail .pg-note { display: none; }
+    .pg.collapsed { max-height: 0; opacity: 0; margin: 0; padding-top: 0; padding-bottom: 0; border-width: 0; }
+    .retry-btn { margin-top: 12px; width: 100%; min-height: 60px; border: 0; border-radius: 14px; background: var(--red); color: #fff;
+                 font-size: 1.2rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; }
 
-    .mm-branches {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      position: relative;
-      max-width: 720px;
-      margin: 0 auto;
-      padding-left: 8px;
-    }
-    .mm-branches::before {
-      content: "";
-      position: absolute;
-      left: 27px;
-      top: 18px;
-      bottom: 18px;
-      width: 3px;
-      background: linear-gradient(180deg, #d4af37, #c7d2e5 40%, #e2e8f0);
-      border-radius: 999px;
-      z-index: 0;
-    }
+    /* หน้าแรก: ปุ่มใหญ่ 2 ปุ่ม */
+    .home-title { font-size: 1.35rem; font-weight: 800; color: var(--navy); margin: 6px 0 14px; text-align: center; }
+    .big-btn { width: 100%; min-height: 96px; border: 0; border-radius: 20px; color: #fff; cursor: pointer; text-align: left;
+               display: flex; align-items: center; gap: 16px; padding: 18px 20px; margin: 0 0 16px;
+               box-shadow: 0 6px 0 rgba(0,0,0,.25); transition: transform .08s, box-shadow .08s; text-decoration: none; }
+    .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,.25); }
+    .big-btn:focus-visible, .btn:focus-visible, .back-btn:focus-visible { outline: 4px solid #facc15; outline-offset: 3px; }
+    .big-btn .ic-wrap { width: 64px; height: 64px; border-radius: 16px; background: rgba(255,255,255,.18); display: grid; place-items: center; flex-shrink: 0; font-size: 40px; }
+    .big-btn .t { display: block; font-size: 1.6rem; font-weight: 800; line-height: 1.2; }
+    .big-btn .d { display: block; font-size: 1rem; opacity: .95; margin-top: 4px; line-height: 1.35; }
+    .big-btn.navy { background: var(--navy); }
+    .big-btn.green { background: var(--green); }
 
-    .mm-node {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: 38px 1fr;
-      gap: 12px;
-      align-items: start;
-      border-radius: 16px;
-      padding: 12px 14px 12px 8px;
-      background: var(--wait-bg);
-      border: 1px solid #e2e8f0;
-      transition: transform .2s ease, box-shadow .2s ease;
-    }
-    .mm-node::before { display: none; }
-    .mm-num {
-      width: 38px; height: 38px;
-      border-radius: 50%;
-      display: grid; place-items: center;
-      font-size: 13px;
-      font-weight: 700;
-      color: #475569;
-      background: #e2e8f0;
-      border: 3px solid #fff;
-      box-shadow: 0 0 0 2px #cbd5e1;
-      flex-shrink: 0;
-    }
-    .mm-node.done {
-      background: var(--ok-bg);
-      border-color: #a7f3d0;
-    }
-    .mm-node.done .mm-num {
-      background: var(--ok);
-      color: #fff;
-      box-shadow: 0 0 0 2px #6ee7b7;
-    }
-    .mm-node.current {
-      background: linear-gradient(180deg, #fffbeb, #fff7ed);
-      border-color: #fbbf24;
-      box-shadow: 0 12px 28px rgba(245,158,11,.18);
-      transform: translateY(-1px);
-    }
-    .mm-node.current .mm-num {
-      background: linear-gradient(135deg, var(--gold-soft), var(--gold));
-      color: #071a3d;
-      box-shadow: 0 0 0 2px #f59e0b;
-    }
-    .mm-node.todo { opacity: .82; }
-    .mm-node.rejected {
-      background: #fff1f2;
-      border-color: #fecdd3;
-    }
-    .mm-node.rejected .mm-num {
-      background: var(--danger);
-      color: #fff;
-      box-shadow: 0 0 0 2px #fda4af;
-    }
-    .mm-body { min-width: 0; }
-    .mm-step {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--muted);
-      margin-bottom: 2px;
-    }
-    .mm-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 4px;
-      line-height: 1.35;
-    }
-    .mm-desc {
-      font-size: 12px;
-      color: #475569;
-      line-height: 1.45;
-    }
-    .mm-tag {
-      display: inline-flex;
-      margin-top: 8px;
-      font-size: 10px;
-      font-weight: 700;
-      border-radius: 999px;
-      padding: 3px 8px;
-      background: #e2e8f0;
-      color: #475569;
-    }
-    .mm-node.done .mm-tag { background: #d1fae5; color: #065f46; }
-    .mm-node.current .mm-tag { background: #fde68a; color: #92400e; }
-    .mm-node.todo .mm-tag { background: #e2e8f0; color: #64748b; }
-    .mm-node.rejected .mm-tag { background: #fecdd3; color: #9f1239; }
+    /* ปุ่มทั่วไป */
+    .back-btn { width: 100%; min-height: 64px; border: 3px solid var(--navy); background: #fff; color: var(--navy); border-radius: 16px;
+                font-size: 1.25rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; margin: 0 0 16px; }
+    .btn { width: 100%; min-height: 68px; border: 0; border-radius: 16px; background: var(--navy); color: #fff; font-size: 1.35rem; font-weight: 800;
+           display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; text-decoration: none; padding: 10px 16px; }
+    .btn:disabled { background: #6b7280; cursor: wait; }
+    .btn.green { background: var(--green); }
+    .btn.light { background: #fff; color: #374151; border: 2px solid var(--line); font-size: 1.1rem; min-height: 56px; font-weight: 700; margin-top: 12px; }
 
-    .mm-sub {
-      margin-top: 10px;
-      margin-left: 4px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px dashed #cbd5e1;
-      background: rgba(255,255,255,.72);
-    }
-    .mm-sub .mm-step { margin-bottom: 2px; }
-    .mm-sub .mm-title { font-size: 13px; margin-bottom: 2px; }
-    .mm-node.done .mm-sub { border-color: #6ee7b7; background: #f0fdf4; }
-    .mm-node.current .mm-sub { border-color: #fbbf24; background: #fffbeb; }
+    /* ช่องกรอกเลขบัตร */
+    .field-label { display: block; font-size: 1.15rem; font-weight: 800; margin-bottom: 8px; }
+    #id-input { width: 100%; min-height: 68px; font-size: clamp(24px, 7vw, 32px); font-weight: 800; letter-spacing: .03em; text-align: center; color: var(--navy);
+                border: 3px solid #6b7280; border-radius: 16px; padding: 8px 6px; background: #fff; font-variant-numeric: tabular-nums; }
+    #id-input:focus { outline: none; border-color: var(--navy-2); box-shadow: 0 0 0 5px rgba(37,99,235,.25); }
+    #id-input::placeholder { color: #9ca3af; font-weight: 600; letter-spacing: .04em; }
+    .hint { font-size: .95rem; color: #4b5563; margin: 8px 0 16px; }
 
-    .mm-connector { display: none; }
+    /* ข้อความแจ้งเตือน */
+    .error-card { background: var(--red-bg); border: 3px solid var(--red); color: #7f1d1d; border-radius: 18px; padding: 18px; margin-bottom: 16px; }
+    .error-card strong { display: flex; align-items: center; gap: 10px; font-size: 1.3rem; color: var(--red); }
+    .error-card div { font-size: 1.05rem; margin-top: 6px; }
 
-    .detail-chips {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 16px;
-    }
-    @media (max-width: 700px) {
-      .detail-chips { grid-template-columns: 1fr; }
-    }
-    .chip {
-      border-radius: 14px;
-      border: 1px solid #e2e8f0;
-      background: #f8fafc;
-      padding: 12px 14px;
-      font-size: 13px;
-    }
-    .chip span { display: block; font-size: 11px; color: var(--muted); margin-bottom: 3px; }
-    .chip b { color: var(--navy); font-weight: 600; }
+    /* หลายคดี */
+    .case-pick { width: 100%; min-height: 72px; text-align: left; border: 3px solid var(--line); background: #fff; border-radius: 16px; padding: 12px 16px;
+                 margin-bottom: 10px; cursor: pointer; font-size: 1.1rem; color: var(--text); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .case-pick.active { border-color: var(--navy); background: #eef2ff; }
+    .case-pick b { font-size: 1.3rem; color: var(--navy); }
+    .case-pick .st { font-size: .95rem; color: #374151; }
 
-    .error-card {
-      border: 1px solid #fecdd3;
-      background: #fff1f2;
-      color: #9f1239;
-      text-align: center;
-      border-radius: 18px;
-      padding: 22px;
-      margin-bottom: 18px;
-    }
-    .footer {
-      background: #050f24;
-      color: #9db0d4;
-      text-align: center;
-      font-size: 12px;
-      padding: 22px 16px;
-    }
-    .footer strong { color: #fff; display: block; margin-bottom: 4px; }
+    /* สรุปผล */
+    .summary { background: var(--navy); color: #fff; border-radius: 18px; padding: 20px; margin-bottom: 16px; text-align: center; }
+    .summary .lbl { font-size: 1rem; color: #dbe6ff; }
+    .summary .code { font-size: 2rem; font-weight: 800; line-height: 1.2; margin: 2px 0 12px; }
+    .summary .now { background: #fff; color: var(--navy); border-radius: 14px; padding: 12px; }
+    .summary .now .lbl { color: #374151; }
+    .summary .now b { display: block; font-size: 1.5rem; line-height: 1.3; }
+    .summary .now small { display: block; font-size: 1rem; color: #374151; }
+    .summary.rejected .now { background: var(--red-bg); color: var(--red); }
+    .info-list { margin: 0; }
+    .info-list > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; padding: 12px 0; border-bottom: 1px solid #e5e7eb; }
+    .info-list > div:last-child { border-bottom: 0; }
+    .info-list dt { color: #4b5563; font-size: 1rem; }
+    .info-list dd { margin: 0; font-weight: 800; font-size: 1.15rem; word-break: break-word; }
 
-    .nav-tabs {
-      display: flex; gap: 10px; flex-wrap: wrap; margin: 18px 0 0;
-      position: relative;
-      z-index: 5;
+    /* ขั้นตอนสถานะ */
+    .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 1rem; margin: 0 0 14px; }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .dot { width: 30px; height: 30px; border-radius: 50%; display: inline-grid; place-items: center; font-size: 18px; flex-shrink: 0; }
+    .dot.done { background: var(--ok); color: #fff; }
+    .dot.current { background: var(--amber); color: #fff; }
+    .dot.todo { background: #fff; color: var(--gray); border: 3px solid #9ca3af; }
+    .dot.todo svg { visibility: hidden; } /* ○ วงกลมว่าง = ยังไม่ถึง */
+    .dot.rejected { background: var(--red); color: #fff; }
+    .steps { position: relative; }
+    .step { display: flex; gap: 14px; position: relative; padding-bottom: 14px; }
+    .step:not(:last-child)::before { content: ""; position: absolute; left: 25px; top: 52px; bottom: 0; width: 4px; background: #d1d5db; }
+    .step.done:not(:last-child)::before { background: var(--ok); }
+    .step .dot { width: 54px; height: 54px; font-size: 30px; z-index: 1; }
+    .step-body { flex: 1; border: 2px solid #e5e7eb; border-radius: 16px; padding: 12px 14px; background: #fff; min-width: 0; }
+    .step.done .step-body { border-color: #86efac; background: var(--ok-bg); }
+    .step.current .step-body { border: 3px solid var(--amber); background: var(--amber-bg); }
+    .step.rejected .step-body { border: 3px solid var(--red); background: var(--red-bg); }
+    .step.todo .step-body { background: var(--gray-bg); }
+    .step-num { font-size: .9rem; color: #4b5563; font-weight: 700; }
+    .step-title { font-size: 1.25rem; font-weight: 800; line-height: 1.3; }
+    .step-desc { font-size: 1.05rem; margin-top: 2px; word-break: break-word; }
+    .step-tag { display: inline-block; margin-top: 8px; padding: 3px 12px; border-radius: 99px; font-size: .95rem; font-weight: 800; }
+    .step.done .step-tag { background: var(--ok); color: #fff; }
+    .step.current .step-tag { background: var(--amber); color: #fff; }
+    .step.todo .step-tag { background: #e5e7eb; color: #374151; }
+    .step.rejected .step-tag { background: var(--red); color: #fff; }
+    .step.todo .step-title, .step.todo .step-desc { color: #4b5563; }
+    .step-sub { display: flex; gap: 10px; align-items: flex-start; margin-top: 10px; padding: 10px; border-radius: 12px; background: rgba(255,255,255,.75); border: 1px dashed #9ca3af; }
+    .step-sub .dot { width: 30px; height: 30px; font-size: 17px; }
+    .step-sub .sub-t { font-weight: 800; font-size: 1.05rem; }
+    .step-sub .sub-d { font-size: 1rem; word-break: break-word; }
+
+    details.more { margin-top: 6px; }
+    details.more summary { cursor: pointer; list-style: none; min-height: 56px; display: flex; align-items: center; justify-content: center; gap: 8px;
+                           border: 2px solid var(--line); border-radius: 14px; font-weight: 800; font-size: 1.1rem; color: var(--navy); background: #fff; }
+    details.more summary::-webkit-details-marker { display: none; }
+    details.more[open] summary { margin-bottom: 8px; }
+
+    .note-box { background: #fffbea; border: 2px solid #facc15; border-radius: 14px; padding: 12px 14px; font-size: 1.05rem; margin: 14px 0; }
+    .footer { text-align: center; color: #374151; font-size: .95rem; padding: 18px 16px 28px; }
+    .footer b { display: block; color: var(--navy); }
+
+    @media (min-width: 760px) {
+      html { font-size: 20px; }
+      .card { padding: 26px; }
     }
-    .nav-tab {
-      border: 2px solid rgba(243,226,160,.55);
-      background: rgba(255,255,255,.12);
-      color: #fff;
-      border-radius: 999px;
-      padding: 12px 22px;
-      font: inherit;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 8px 20px rgba(0,0,0,.22);
-      transition: transform .15s ease, filter .15s ease, background .15s ease;
-      -webkit-tap-highlight-color: transparent;
-      position: relative;
-      z-index: 6;
-      pointer-events: auto;
-    }
-    .nav-tab:hover { filter: brightness(1.08); transform: translateY(-1px); }
-    .nav-tab.active {
-      background: linear-gradient(135deg, var(--gold-soft), var(--gold));
-      color: #071a3d;
-      border-color: transparent;
-      box-shadow: 0 10px 24px rgba(212,175,55,.35);
-    }
-    .btn-secondary {
-      background: linear-gradient(135deg, #8b1e2d, #c2410c);
-      box-shadow: 0 10px 24px rgba(139,30,45,.25);
-    }
-    .form-frame-wrap {
-      border-radius: 18px;
-      overflow: hidden;
-      border: 1px solid #dbe3f2;
-      background: #fff;
-      min-height: 720px;
-    }
-    .form-frame-wrap iframe {
-      width: 100%;
-      height: 780px;
-      border: 0;
-      display: block;
-    }
-    .panel { display: none; }
-    .panel.active { display: block; }
+    @media (prefers-reduced-motion: reduce) { .pg-fill { animation: none; transition: none; } .pg { transition: none; } }
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <span>สถานีตำรวจภูธรด่านซ้าย จังหวัดเลย (ต้นแบบ อยู่ระหว่างพัฒนา)</span>
-    <span class="motto">พิทักษ์สันติราษฎร์</span>
-  </div>
+  <!-- ไอคอน SVG ใช้ซ้ำ -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-report" viewBox="0 0 24 24"><path d="M6 2.5h8l5 5V20a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 20V4a1.5 1.5 0 0 1 1-1.5z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M14 2.5V8h5M8.5 12.5h7M8.5 16.5h7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 4 7 12l8 8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4.5 12.5 5 5 10-11" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6" fill="currentColor"/></symbol>
+    <symbol id="i-ring" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.4"/></symbol>
+    <symbol id="i-retry" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.4-5.7M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3 2 20.5h20z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M12 10v5M12 17.8v.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11 12 3.5 21 11M5.5 9.5V20h13V9.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-open" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </svg>
 
-  <header class="hero">
-    <div class="hero-inner">
-            <div class="seal">
-        <img id="seal-img" src="https://cdnstatic.tencentcs.com/edgeone/pages/assets/1790614311158-HzxI.png" alt="โลโก้ สภ.ด่านซ้าย"
-             onerror="this.style.display='none';document.getElementById('seal-fallback').style.display='block';">
-        <div id="seal-fallback" class="seal-fallback" aria-hidden="true"></div>
+  <header class="header">
+    <div class="header-inner">
+      <div class="seal">
+        <img src="https://cdnstatic.tencentcs.com/edgeone/pages/assets/1790614311158-HzxI.png" alt="ตราสัญลักษณ์ สภ.ด่านซ้าย" onerror="this.parentNode.style.display='none'">
       </div>
       <div>
-        <div style="color:var(--gold-soft);font-size:12px;letter-spacing:.08em;">สถานีตำรวจภูธรด่านซ้าย จังหวัดเลย</div>
-        <h1>ระบบแจ้งความคดีออนไลน์ และติดตามผลคดีออนไลน์</h1>
-        <p class="sub">แจ้งความออนไลน์ · ติดตามผลคดี · สภ.ด่านซ้าย จว.เลย</p>
-        <div class="nav-tabs">
-          <button type="button" class="nav-tab active" id="tab-track" onclick="showPanel('track')">ตรวจสอบคดี</button>
-          <button type="button" class="nav-tab" id="tab-report" onclick="showPanel('report'); openReportForm();">แจ้งความออนไลน์</button>
-        </div>
+        <p class="station">สภ.ด่านซ้าย จ.เลย</p>
+        <p class="sub">ตรวจสอบคดี และแจ้งความออนไลน์</p>
       </div>
     </div>
   </header>
-  <div class="gold-line"></div>
+  <div class="proto">สถานีตำรวจภูธรด่านซ้าย จังหวัดเลย (ต้นแบบ อยู่ระหว่างพัฒนา)</div>
 
   <main class="wrap">
-    <div id="panel-track" class="panel active">
-    <section class="card">
-      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start;">
-        <div>
-          <h2>ตรวจสอบสถานะคดี</h2>
-
-          <p class="muted">กรอก <b>เลขบัตรประจำตัวประชาชน 13 หลัก</b> ที่ใช้ตอนแจ้งความ เพื่อดูสถานะคดี</p>
-        </div>
+    <!-- แถบเชื่อมต่อเซิร์ฟเวอร์ -->
+    <div id="conn" class="pg" role="status" aria-live="polite">
+      <div class="pg-row">
+        <span class="pg-text" id="sheet-status">กำลังเชื่อมต่อเซิร์ฟเวอร์...</span>
+        <span class="pg-pct" id="conn-pct">0%</span>
       </div>
-      <div class="search-row" style="align-items:flex-end;">
-        <label class="field field-cid">
-          <span class="field-label">เลขบัตรประจำตัวประชาชน <b>13 หลัก</b></span>
-          <span class="field-box"><input id="id-input" type="text" inputmode="numeric" maxlength="17" autocomplete="off" placeholder="x-xxxx-xxxxx-xx-x"></span>
-          <span class="field-hint">กรอกเฉพาะตัวเลข ระบบจะใส่ขีด (-) ให้อัตโนมัติ</span>
-        </label>
-        <div class="search-btns">
-          <button class="btn" id="search-btn" onclick="searchByCitizenId()">ตรวจสอบคดี</button>
-          <button type="button" class="btn" style="background:linear-gradient(135deg,#334155,#64748b);" onclick="resetToHome()">ล้างผล / เริ่มใหม่</button>
-        </div>
-      </div>
-      <div class="status-pill"><span id="sheet-status">กำลังเชื่อมต่อเซิร์ฟเวอร์...</span></div>
-    </section>
-
-    <section id="case-list-container" class="card hidden">
-      <h2>พบหลายคดีตามข้อมูลที่กรอก</h2>
-      <p class="muted">เลือกคดีที่ต้องการดู</p>
-      <div id="case-list" class="case-grid"></div>
-    </section>
-
-    <section id="error-container" class="error-card hidden">
-      <strong>ไม่พบข้อมูลคดี</strong>
-      <div style="margin-top:6px;font-size:13px;opacity:.85;">ไม่พบข้อมูลที่ตรงกับเลขบัตรประชาชนนี้ หรือยังไม่ได้บันทึกการแจ้งความ</div>
-    </section>
-
-    <section id="result-container" class="hidden">
-      <article class="card">
-        <h3 class="section-title"><span class="num">1</span> ข้อมูลคดี</h3>
-        <div class="info-grid">
-          <div class="info-item"><label>เลขคำขอแจ้งความคดีออนไลน์ที่</label><strong id="res-case-code-top">-</strong></div>
-          <div class="info-item"><label>เลขบัตรประชาชน</label><strong id="res-id">-</strong></div>
-          <div class="info-item" id="res-phone-item"><label>เบอร์โทรศัพท์ (4 ตัวท้าย)</label><strong id="res-phone">-</strong></div>
-          <div class="info-item"><label>อัปเดตล่าสุดโดย</label><strong id="res-updated-by">-</strong></div>
-          <div class="info-item wide"><label>หมายเหตุร้อยเวร</label><p id="res-note">-</p></div>
-        </div>
-      </article>
-
-      <article class="card">
-        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
-          <h3 class="section-title" style="margin:0;"><span class="num">2</span> สถานะคดี</h3>
-          <span class="badge" id="res-status-badge">-</span>
-        </div>
-        <p class="muted" style="margin-top:0;">เรียงตามขั้นตอนจากชีต — สีเขียวผ่านแล้ว · สีทองถึงขั้นนี้ · สีเทายังไม่ถึง</p>
-
-        <div class="mindmap">
-          <div class="mm-center">
-            <div class="label">เลขคำขอแจ้งความ</div>
-            <div class="code" id="res-case-code">-</div>
-            <div class="state" id="res-center-state">รอดำเนินการ</div>
-          </div>
-          <div id="status-flow" class="mm-branches"></div>
-          <div id="status-detail" class="detail-chips"></div>
-        </div>
-      </article>
-    </section>
+      <div class="pg-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="การเชื่อมต่อเซิร์ฟเวอร์"><div class="pg-fill" id="conn-fill"></div></div>
+      <div class="pg-note hidden" id="conn-note">อินเทอร์เน็ตอาจช้า กรุณารอสักครู่...</div>
+      <button type="button" class="retry-btn hidden" id="conn-retry" onclick="checkConnection()"><svg class="ic"><use href="#i-retry"/></svg> ลองใหม่</button>
     </div>
 
-    <div id="panel-report" class="panel">
-      <section class="card">
-        <h2>แจ้งความออนไลน์</h2>
-        <p class="muted">แบบฟอร์มแจ้งความออนไลน์ สถานีตำรวจภูธรด่านซ้าย จังหวัดเลย</p>
-        <div style="display:grid;gap:12px;margin:16px 0 18px;">
-          <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLScrJOlpJ9HXzIQZxoQLGZSt_o04yhe1T6356NbRCoqWlQrLHg/viewform" target="_blank" rel="noopener"
-             style="text-decoration:none;display:flex;justify-content:center;align-items:center;padding:18px 22px;font-size:16px;">
-            เปิดแบบฟอร์มแจ้งความออนไลน์ สภ.ด่านซ้าย
-          </a>
-          <button type="button" class="btn" style="background:linear-gradient(135deg,#334155,#64748b);" onclick="showPanel('track')">กลับหน้าเริ่มต้น / ตรวจสอบคดีใหม่</button>
+    <!-- หน้าแรก -->
+    <section id="panel-home" class="panel">
+      <div class="home-title">ท่านต้องการทำอะไร?</div>
+      <button type="button" class="big-btn navy" id="tab-track" onclick="goTo('track')">
+        <span class="ic-wrap"><svg class="ic"><use href="#i-search"/></svg></span>
+        <span><span class="t">ตรวจสอบคดี</span><span class="d">ดูว่าคดีของท่านถึงขั้นตอนไหนแล้ว</span></span>
+      </button>
+      <button type="button" class="big-btn green" id="tab-report" onclick="goTo('report'); openReportForm();">
+        <span class="ic-wrap"><svg class="ic"><use href="#i-report"/></svg></span>
+        <span><span class="t">แจ้งความออนไลน์</span><span class="d">กรอกแบบฟอร์มแจ้งความทางอินเทอร์เน็ต</span></span>
+      </button>
+    </section>
+
+    <!-- ตรวจสอบคดี -->
+    <section id="panel-track" class="panel hidden">
+      <button type="button" class="back-btn" onclick="goTo('home')"><svg class="ic"><use href="#i-back"/></svg> กลับหน้าแรก</button>
+
+      <div class="card">
+        <h2>ตรวจสอบคดี</h2>
+        <p class="lead">กรอกเลขบัตรประชาชน 13 หลัก ของผู้แจ้งความ</p>
+        <label class="field-label" for="id-input">เลขบัตรประชาชน</label>
+        <input id="id-input" type="text" inputmode="numeric" pattern="[0-9-]*" maxlength="17" autocomplete="off" placeholder="x-xxxx-xxxxx-xx-x">
+        <p class="hint">พิมพ์เฉพาะตัวเลข ระบบใส่ขีดให้เอง</p>
+        <button type="button" class="btn" id="search-btn" onclick="searchByCitizenId()"><svg class="ic"><use href="#i-search"/></svg> <span id="search-btn-text">ตรวจสอบคดี</span></button>
+        <div id="search-pg" class="pg hidden" role="status" aria-live="polite" style="margin:14px 0 0;">
+          <div class="pg-row"><span class="pg-text" id="search-text">กำลังค้นหาข้อมูลคดี...</span><span class="pg-pct" id="search-pct">0%</span></div>
+          <div class="pg-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="การค้นหา"><div class="pg-fill" id="search-fill"></div></div>
+          <div class="pg-note hidden" id="search-note">อินเทอร์เน็ตอาจช้า กรุณารอสักครู่...</div>
         </div>
+        <button type="button" class="btn light" onclick="resetToHome()">ล้างข้อมูล / ค้นหาใหม่</button>
+      </div>
+
+      <section id="error-container" class="error-card hidden">
+        <strong><svg class="ic"><use href="#i-warn"/></svg> ไม่พบข้อมูลคดี</strong>
+        <div>ไม่พบคดีของเลขบัตรนี้ กรุณาตรวจสอบเลขบัตรอีกครั้ง หรืออาจยังไม่ได้บันทึกการแจ้งความ</div>
       </section>
-    </div>
+
+      <section id="case-list-container" class="card hidden">
+        <h3>พบหลายคดี กรุณาเลือกคดีที่ต้องการดู</h3>
+        <div id="case-list"></div>
+      </section>
+
+      <section id="result-container" class="hidden">
+        <div class="summary" id="res-summary">
+          <div class="lbl">เลขคำขอแจ้งความ</div>
+          <div class="code" id="res-case-code">-</div>
+          <div class="now">
+            <div class="lbl">สถานะตอนนี้</div>
+            <b id="res-center-state">-</b>
+            <small id="res-step-of"></small>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>ข้อมูลคดี</h3>
+          <dl class="info-list">
+            <div><dt>เลขบัตรประชาชน</dt><dd id="res-id">-</dd></div>
+            <div id="res-phone-item"><dt>เบอร์โทรศัพท์</dt><dd id="res-phone">-</dd></div>
+            <div><dt>อัปเดตล่าสุด</dt><dd id="res-updated-by">-</dd></div>
+          </dl>
+          <div class="note-box"><b>หมายเหตุจากตำรวจ:</b> <span id="res-note">-</span></div>
+        </div>
+
+        <div class="card">
+          <h3>ขั้นตอนของคดี</h3>
+          <div class="legend">
+            <span><i class="dot done"><svg class="ic"><use href="#i-check"/></svg></i> ทำแล้ว</span>
+            <span><i class="dot current"><svg class="ic"><use href="#i-dot"/></svg></i> กำลังทำ</span>
+            <span><i class="dot todo"><svg class="ic"><use href="#i-ring"/></svg></i> ยังไม่ถึง</span>
+          </div>
+          <div id="status-flow" class="steps"></div>
+          <details class="more">
+            <summary>ดูรายละเอียดทั้งหมด ▾</summary>
+            <dl id="status-detail" class="info-list"></dl>
+          </details>
+        </div>
+
+        <button type="button" class="btn light" onclick="resetToHome(); document.getElementById('id-input').focus();">ค้นหาคดีอื่น</button>
+        <button type="button" class="back-btn" style="margin-top:12px;" onclick="goTo('home')"><svg class="ic"><use href="#i-home"/></svg> กลับหน้าแรก</button>
+      </section>
+    </section>
+
+    <!-- แจ้งความออนไลน์ -->
+    <section id="panel-report" class="panel hidden">
+      <button type="button" class="back-btn" onclick="goTo('home')"><svg class="ic"><use href="#i-back"/></svg> กลับหน้าแรก</button>
+      <div class="card">
+        <h2>แจ้งความออนไลน์</h2>
+        <p class="lead">กดปุ่มสีเขียวด้านล่าง เพื่อเปิดแบบฟอร์มแจ้งความของ สภ.ด่านซ้าย</p>
+        <a class="btn green" id="form-link" href="https://docs.google.com/forms/d/e/1FAIpQLScrJOlpJ9HXzIQZxoQLGZSt_o04yhe1T6356NbRCoqWlQrLHg/viewform" target="_blank" rel="noopener">
+          <svg class="ic"><use href="#i-open"/></svg> เปิดแบบฟอร์ม
+        </a>
+        <div class="note-box">แบบฟอร์มจะเปิดขึ้นในหน้าใหม่ กรอกให้ครบ แล้วกดปุ่ม <b>"ส่ง"</b> ท้ายแบบฟอร์ม</div>
+        <button type="button" class="btn" onclick="goTo('track')"><svg class="ic"><use href="#i-search"/></svg> ไปหน้าตรวจสอบคดี</button>
+      </div>
+    </section>
   </main>
 
   <footer class="footer">
-    <strong>สถานีตำรวจภูธรด่านซ้าย จังหวัดเลย</strong>
+    <b>สถานีตำรวจภูธรด่านซ้าย จังหวัดเลย</b>
     พิทักษ์สันติราษฎร์
   </footer>
 
@@ -880,6 +570,13 @@
       return FLOW_STEPS[currentIdx].label;
     }
 
+    // ===== ส่วนแสดงผล (ออกแบบใหม่ ตัวใหญ่ อ่านง่าย) =====
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    }
+    const ICON = { done: 'i-check', current: 'i-dot', todo: 'i-ring', rejected: 'i-x' };
+    function dot(state) { return `<i class="dot ${state}"><svg class="ic"><use href="#${ICON[state]}"/></svg></i>`; }
+
     function renderFlow(c) {
       const wrap = document.getElementById('status-flow');
       const detail = document.getElementById('status-detail');
@@ -893,11 +590,11 @@
           state = idx === 0 ? 'rejected' : 'todo';
           tag = idx === 0 ? 'ไม่รับแจ้ง' : 'หยุดไว้';
         } else if (flags[step.key] && idx < currentIdx) {
-          state = 'done'; tag = 'ผ่านแล้ว';
+          state = 'done'; tag = 'ทำแล้ว';
         } else if (idx === currentIdx && flags[step.key]) {
-          state = 'current'; tag = 'ถึงขั้นนี้';
+          state = 'current'; tag = 'กำลังดำเนินการ';
         } else if (flags[step.key]) {
-          state = 'done'; tag = 'ผ่านแล้ว';
+          state = 'done'; tag = 'ทำแล้ว';
         }
 
         let subHtml = '';
@@ -905,45 +602,42 @@
           subHtml = step.subs.map(sub => {
             const ok = stepDone(c, sub.key);
             return `
-              <div class="mm-sub">
-                <div class="mm-step">${sub.num}</div>
-                <div class="mm-title">${sub.label}</div>
-                <div class="mm-desc">${nodeExtra(c, sub.key)}</div>
-                <span class="mm-tag">${ok ? 'มีข้อมูล' : 'รอข้อมูล'}</span>
-              </div>
-            `;
+              <div class="step-sub">
+                ${dot(ok ? 'done' : 'todo')}
+                <div><div class="sub-t">${esc(sub.label)}</div><div class="sub-d">${esc(nodeExtra(c, sub.key))}</div></div>
+              </div>`;
           }).join('');
         }
 
         const el = document.createElement('div');
-        el.className = 'mm-node ' + state;
+        el.className = 'step ' + state;
         el.innerHTML = `
-          <div class="mm-num">${step.num}</div>
-          <div class="mm-body">
-            <div class="mm-step">สถานะ ${step.num}</div>
-            <div class="mm-title">${step.label}</div>
-            <div class="mm-desc">${nodeExtra(c, step.key)}</div>
-            <span class="mm-tag">${tag}</span>
+          ${dot(state)}
+          <div class="step-body">
+            <div class="step-num">ขั้นที่ ${step.num}</div>
+            <div class="step-title">${esc(step.label)}</div>
+            <div class="step-desc">${esc(nodeExtra(c, step.key))}</div>
+            <span class="step-tag">${tag}</span>
             ${subHtml}
-          </div>
-        `;
+          </div>`;
         wrap.appendChild(el);
       });
 
       const freezeDateShow = hasText(c.freezeDate) ? c.freezeDate : '-';
-      detail.innerHTML = `
-        <div class="chip"><span>รับแจ้งหรือไม่</span><b>${c.received || '-'}</b></div>
-        <div class="chip"><span>นัดหมายผู้แจ้ง</span><b>${c.appoint || '-'}</b></div>
-        <div class="chip"><span>วันที่นัดหมาย</span><b>${c.appointDate || '-'}</b></div>
-        <div class="chip"><span>สั่งอายัดบัญชี</span><b>${isTrue(c.freeze) ? 'ใช่' : (c.freeze || 'ยัง')} · วันที่ ${freezeDateShow}</b></div>
-        <div class="chip"><span>ขอข้อมูลธนาคาร</span><b>${c.bankRequest || '-'}</b></div>
-        <div class="chip"><span>หนังสือส่ง ที่</span><b>${c.bookNo || '-'}</b></div>
-        <div class="chip"><span>เลขพัสดุไปรษณีย์</span><b>${c.postal || '-'}</b></div>
-        <div class="chip"><span>หมายเรียกพยาน</span><b>${c.witnessSummons || '-'}</b></div>
-        <div class="chip"><span>หมายเรียกผู้ต้องหา</span><b>${c.suspectSummons || '-'}</b></div>
-        <div class="chip"><span>ออกหมายจับ</span><b>${c.arrestWarrant || '-'}</b></div>
-        <div class="chip"><span>ส่งสำนวนอัยการ</span><b>${c.toProsecutor || '-'}</b></div>
-      `;
+      const rows = [
+        ['รับแจ้งหรือไม่', c.received || '-'],
+        ['นัดหมายผู้แจ้ง', c.appoint || '-'],
+        ['วันที่นัดหมาย', c.appointDate || '-'],
+        ['สั่งอายัดบัญชี', (isTrue(c.freeze) ? 'ใช่' : (c.freeze || 'ยัง')) + ' · วันที่ ' + freezeDateShow],
+        ['ขอข้อมูลธนาคาร', c.bankRequest || '-'],
+        ['หนังสือส่ง ที่', c.bookNo || '-'],
+        ['เลขพัสดุไปรษณีย์', c.postal || '-'],
+        ['หมายเรียกพยาน', c.witnessSummons || '-'],
+        ['หมายเรียกผู้ต้องหา', c.suspectSummons || '-'],
+        ['ออกหมายจับ', c.arrestWarrant || '-'],
+        ['ส่งสำนวนอัยการ', c.toProsecutor || '-']
+      ];
+      detail.innerHTML = rows.map(r => `<div><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('');
     }
 
     function showCase(c) {
@@ -953,14 +647,15 @@
       document.getElementById('res-id').textContent = maskCid(c.id);
       document.getElementById('res-phone').textContent = c.phone ? 'xxx-xxx-' + c.phone.slice(-4) : '-';
       document.getElementById('res-phone-item').classList.toggle('hidden', !c.phone);
-      document.getElementById('res-case-code-top').textContent = c.caseCode || '-';
       document.getElementById('res-note').textContent = c.note || '-';
       document.getElementById('res-updated-by').textContent = c.updatedBy || '-';
-
       document.getElementById('res-case-code').textContent = c.caseCode || '-';
-      const centerState = currentStatusLabel(c);
-      document.getElementById('res-center-state').textContent = centerState;
-      document.getElementById('res-status-badge').textContent = centerState;
+
+      const { flags, currentIdx, rejected, order } = flowProgress(c);
+      document.getElementById('res-center-state').textContent = currentStatusLabel(c);
+      document.getElementById('res-step-of').textContent =
+        rejected ? 'คดีนี้ไม่ได้รับแจ้ง' : (flags[order[0]] ? `ขั้นที่ ${currentIdx + 1} จากทั้งหมด ${FLOW_STEPS.length} ขั้น` : 'รอเจ้าหน้าที่ตรวจสอบ');
+      document.getElementById('res-summary').classList.toggle('rejected', rejected);
 
       renderFlow(c);
       document.querySelectorAll('.case-pick').forEach(el => {
@@ -984,11 +679,7 @@
         btn.type = 'button';
         btn.className = 'case-pick';
         btn.dataset.code = c.caseCode;
-        btn.innerHTML = `
-          <div style="font-size:11px;color:#64748b;margin-bottom:4px;">คดีที่ ${i + 1}</div>
-          <div style="font-weight:700;color:#071a3d;">${c.caseCode}</div>
-          <div style="margin-top:8px;"><span class="badge">${currentStatusLabel(c)}</span></div>
-        `;
+        btn.innerHTML = `<span>คดีที่ ${i + 1}<br><b>${esc(c.caseCode)}</b></span><span class="st">${esc(currentStatusLabel(c))}</span>`;
         btn.onclick = () => showCase(c);
         list.appendChild(btn);
       });
@@ -1007,38 +698,43 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // สลับหน้า: home / track / report (ใช้ #hash เพื่อให้ปุ่มย้อนกลับของมือถือกลับหน้าแรกได้)
     function showPanel(name, opts) {
       opts = opts || {};
-      const track = document.getElementById('panel-track');
-      const report = document.getElementById('panel-report');
-      const tabTrack = document.getElementById('tab-track');
-      const tabReport = document.getElementById('tab-report');
-      if (!track || !report || !tabTrack || !tabReport) return;
-
-      track.classList.toggle('active', name === 'track');
-      report.classList.toggle('active', name === 'report');
-      tabTrack.classList.toggle('active', name === 'track');
-      tabReport.classList.toggle('active', name === 'report');
-
-      if (name === 'track') {
-        if (opts.reset !== false) resetToHome();
-        track.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else if (name === 'report') {
-        report.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      if (!['home', 'track', 'report'].includes(name)) name = 'home';
+      ['home', 'track', 'report'].forEach(n => {
+        document.getElementById('panel-' + n).classList.toggle('hidden', n !== name);
+      });
+      if (name === 'track' && opts.reset !== false) resetToHome();
+      window.scrollTo({ top: 0 });
     }
+    function goTo(name) {
+      const hash = name === 'home' ? '' : '#' + name;
+      if (location.hash === hash) { showPanel(name); return; }
+      if (name === 'home') history.pushState(null, '', location.pathname + location.search); else location.hash = hash;
+      showPanel(name);
+    }
+    window.addEventListener('hashchange', () => showPanel(location.hash.slice(1) || 'home'));
+    window.addEventListener('popstate', () => showPanel(location.hash.slice(1) || 'home'));
 
     function openReportForm() {
       window.open(FORM_URL, '_blank', 'noopener');
     }
 
     // เรียก API แบบ GET ธรรมดา (ไม่มี header พิเศษ จึงไม่เกิด CORS preflight)
+    const API_TIMEOUT_MS = 60000; // Apps Script บางครั้งตอบช้า (วัดได้ 1–28 วินาที)
     async function callApi(params) {
       const qs = new URLSearchParams(params).toString();
       const url = API_URL + (API_URL.includes('?') ? '&' : '?') + qs;
-      const response = await fetch(url, { method: 'GET', redirect: 'follow', cache: 'no-store' });
-      if (!response.ok) throw new Error('HTTP ' + response.status);
-      return response.json();
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), API_TIMEOUT_MS); // กันค้างนานเกินไป
+      try {
+        const response = await fetch(url, { method: 'GET', redirect: 'follow', cache: 'no-store', signal: ctrl.signal });
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return await response.json();
+      } finally {
+        clearTimeout(timer);
+      }
     }
 
     // แปลงผลลัพธ์ { headers, rows } ให้อยู่ในรูปแบบเดียวกับที่ mapColumns / rowToCase ใช้
@@ -1048,17 +744,72 @@
       return { cols, rows };
     }
 
+    // ===== แถบความคืบหน้าแบบดาวน์โหลด: วิ่งเข้าใกล้ 90% ระหว่างรอ แล้วกระโดดเป็น 100% เมื่อเสร็จ =====
+    function makeProgress(boxId, fillId, pctId, textId, noteId) {
+      const box = document.getElementById(boxId), fill = document.getElementById(fillId);
+      const pct = document.getElementById(pctId), text = document.getElementById(textId);
+      const note = document.getElementById(noteId);
+      const bar = fill.parentNode;
+      let raf = 0, label = '';
+      function set(p) {
+        const v = Math.floor(p);
+        fill.style.width = p + '%';
+        pct.textContent = v + '%';
+        bar.setAttribute('aria-valuenow', String(v));
+      }
+      return {
+        box,
+        start(msg) {
+          cancelAnimationFrame(raf);
+          label = msg;
+          box.classList.remove('ok', 'fail', 'collapsed', 'hidden');
+          text.textContent = msg;
+          note.classList.add('hidden');
+          set(0);
+          const t0 = performance.now();
+          const tick = now => {
+            const t = now - t0;
+            // เร็วช่วงแรก เข้าใกล้ 90% แล้วค่อย ๆ ขยับต่อ (ไม่เกิน 98%) เพื่อไม่ให้ดูเหมือนค้าง
+            set(Math.min(98, 90 * (1 - Math.exp(-t / 1400)) + 8 * (1 - Math.exp(-t / 20000))));
+            if (t > 5000) note.classList.remove('hidden');
+            raf = requestAnimationFrame(tick);
+          };
+          raf = requestAnimationFrame(tick);
+        },
+        finish(ok, html) {
+          cancelAnimationFrame(raf);
+          set(100);
+          box.classList.add(ok ? 'ok' : 'fail');
+          if (html != null) text.innerHTML = html;
+        }
+      };
+    }
+    const connPg = makeProgress('conn', 'conn-fill', 'conn-pct', 'sheet-status', 'conn-note');
+    const searchPg = makeProgress('search-pg', 'search-fill', 'search-pct', 'search-text', 'search-note');
+    const OK_HTML = '<svg class="ic"><use href="#i-check"/></svg> เชื่อมต่อเซิร์ฟเวอร์สำเร็จ';
+    const FAIL_HTML = '<svg class="ic"><use href="#i-warn"/></svg> เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ';
+    let connHideTimer = 0;
+
+    function setConnFailed() {
+      clearTimeout(connHideTimer);
+      connPg.box.classList.remove('collapsed', 'hidden');
+      connPg.finish(false, FAIL_HTML);
+      document.getElementById('conn-retry').classList.remove('hidden');
+    }
+
     async function checkConnection() {
-      const statusEl = document.getElementById('sheet-status');
-      statusEl.textContent = 'กำลังเชื่อมต่อเซิร์ฟเวอร์...';
+      clearTimeout(connHideTimer);
+      document.getElementById('conn-retry').classList.add('hidden');
+      connPg.start('กำลังเชื่อมต่อเซิร์ฟเวอร์...');
       try {
         if (!/^https?:\/\//.test(API_URL)) throw new Error('API_URL not set');
         const json = await callApi({ ping: 1 });
         if (!json || json.ok !== true) throw new Error('ping not ok');
-        statusEl.textContent = 'เชื่อมต่อเซิร์ฟเวอร์สำเร็จ';
+        connPg.finish(true, OK_HTML);
+        connHideTimer = setTimeout(() => connPg.box.classList.add('collapsed'), 1800); // แสดงผลสำเร็จสักครู่แล้วพับเก็บ
       } catch (err) {
         console.error(err);
-        statusEl.textContent = 'เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ';
+        setConnFailed();
       }
     }
 
@@ -1069,45 +820,54 @@
       document.getElementById('case-list-container').classList.add('hidden');
       if (title) {
         errorBox.innerHTML = '';
-        const s = document.createElement('strong'); s.textContent = title;
+        const s = document.createElement('strong');
+        s.innerHTML = '<svg class="ic"><use href="#i-warn"/></svg> ';
+        s.append(title);
         const d = document.createElement('div');
-        d.style.cssText = 'margin-top:6px;font-size:13px;opacity:.85;';
         d.textContent = message || '';
         errorBox.append(s, d);
       } else {
         errorBox.innerHTML = NOT_FOUND_HTML;
       }
       errorBox.classList.remove('hidden');
+      errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     function setSearching(on) {
       searching = on;
       const btn = document.getElementById('search-btn');
       btn.disabled = on;
-      btn.style.opacity = on ? '.7' : '';
-      btn.style.cursor = on ? 'wait' : '';
-      btn.textContent = on ? 'กำลังค้นหา...' : 'ตรวจสอบคดี';
+      document.getElementById('search-btn-text').textContent = on ? 'กำลังค้นหา...' : 'ตรวจสอบคดี';
+      if (on) searchPg.start('กำลังค้นหาข้อมูลคดี...');
+    }
+    function endSearchProgress(ok) {
+      searchPg.finish(ok);
+      setTimeout(() => searchPg.box.classList.add('hidden'), ok ? 500 : 0);
     }
 
     async function searchByCitizenId() {
       if (searching) return;
       const cid = onlyDigits(document.getElementById('id-input').value);
       if (cid.length !== 13) {
-        alert('กรุณากรอกเลขบัตรประจำตัวประชาชนให้ครบ 13 หลัก');
+        alert('กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก');
         return;
       }
       if (!/^https?:\/\//.test(API_URL)) {
         showError('ยังไม่ได้ตั้งค่าเซิร์ฟเวอร์', 'ผู้ดูแลระบบยังไม่ได้ใส่ URL ของ Apps Script (API_URL) ในหน้าเว็บ');
         return;
       }
+      document.getElementById('id-input').blur(); // ซ่อนแป้นพิมพ์มือถือ เพื่อให้เห็นผลลัพธ์
+      errorBox.classList.add('hidden');
       matchedCases = [];
       setSearching(true);
+      let ok = false;
       try {
         const json = await callApi({ cid });
         if (!json || json.ok !== true) {
           showError('ค้นหาไม่สำเร็จ', (json && json.error) || 'เซิร์ฟเวอร์ตอบกลับไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
           return;
         }
+        ok = true;
         const table = toTable(json);
         mapColumns(table.cols);
         table.rows.filter(isRealCaseRow).forEach((row, index) => {
@@ -1117,10 +877,11 @@
         });
       } catch (err) {
         console.error(err);
-        document.getElementById('sheet-status').textContent = 'เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ';
-        showError('เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ', 'ไม่สามารถติดต่อเซิร์ฟเวอร์ได้ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่อีกครั้ง');
+        setConnFailed();
+        showError('เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ', 'ติดต่อเซิร์ฟเวอร์ไม่ได้ กรุณาตรวจสอบอินเทอร์เน็ต แล้วกดตรวจสอบอีกครั้ง');
         return;
       } finally {
+        endSearchProgress(ok);
         setSearching(false);
       }
       if (!matchedCases.length) {
@@ -1147,6 +908,7 @@
         if (e.key === 'Enter') searchByCitizenId();
       });
     })();
+    showPanel(location.hash.slice(1) || 'home', { reset: false });
     checkConnection();
   </script>
 </body>
