@@ -176,6 +176,8 @@
     }
     .search-row .field-box input:focus { box-shadow: none; }
     .field-hint { font-size: 11px; color: var(--muted); min-height: 16px; }
+    .field.field-cid { flex: 2; min-width: 260px; }
+    .search-row .field-box input#id-input { letter-spacing: .12em; }
     .search-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 22px; }
 
     /* case picker */
@@ -541,22 +543,17 @@
         <div>
           <h2>ตรวจสอบสถานะคดี</h2>
 
-          <p class="muted">กรอก <b>เลข 4 ตัวท้ายของบัตรประชาชน</b> และ <b>เลข 4 ตัวท้ายของเบอร์โทรศัพท์</b> ที่ใช้ตอนแจ้งความ เพื่อดูสถานะคดี</p>
+          <p class="muted">กรอก <b>เลขบัตรประจำตัวประชาชน 13 หลัก</b> ที่ใช้ตอนแจ้งความ เพื่อดูสถานะคดี</p>
         </div>
       </div>
       <div class="search-row" style="align-items:flex-end;">
-        <label class="field">
-          <span class="field-label">เลขบัตรประชาชน <b>4 ตัวท้าย</b></span>
-          <span class="field-box"><span class="mask">x-xxxx-xxxxx-</span><input id="id-input" type="text" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="____"></span>
-          <span class="field-hint">ตัวอย่าง บัตร 1-2345-67890-<b>1234</b> ให้กรอก 1234</span>
-        </label>
-        <label class="field">
-          <span class="field-label">เบอร์โทรศัพท์ <b>4 ตัวท้าย</b></span>
-          <span class="field-box"><span class="mask">xxx-xxx-</span><input id="phone-input" type="text" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="____"></span>
-          <span class="field-hint">ตัวอย่าง เบอร์ 081-234-<b>5678</b> ให้กรอก 5678</span>
+        <label class="field field-cid">
+          <span class="field-label">เลขบัตรประจำตัวประชาชน <b>13 หลัก</b></span>
+          <span class="field-box"><input id="id-input" type="text" inputmode="numeric" maxlength="17" autocomplete="off" placeholder="x-xxxx-xxxxx-xx-x"></span>
+          <span class="field-hint">กรอกเฉพาะตัวเลข ระบบจะใส่ขีด (-) ให้อัตโนมัติ</span>
         </label>
         <div class="search-btns">
-          <button class="btn" onclick="searchByCitizenId()">ตรวจสอบคดี</button>
+          <button class="btn" id="search-btn" onclick="searchByCitizenId()">ตรวจสอบคดี</button>
           <button type="button" class="btn" style="background:linear-gradient(135deg,#334155,#64748b);" onclick="resetToHome()">ล้างผล / เริ่มใหม่</button>
         </div>
       </div>
@@ -571,7 +568,7 @@
 
     <section id="error-container" class="error-card hidden">
       <strong>ไม่พบข้อมูลคดี</strong>
-      <div style="margin-top:6px;font-size:13px;opacity:.85;">ไม่พบข้อมูลที่ตรงกับเลข 4 ตัวท้ายบัตรประชาชนและ 4 ตัวท้ายเบอร์โทรนี้ หรือยังไม่ได้บันทึกการแจ้งความ</div>
+      <div style="margin-top:6px;font-size:13px;opacity:.85;">ไม่พบข้อมูลที่ตรงกับเลขบัตรประชาชนนี้ หรือยังไม่ได้บันทึกการแจ้งความ</div>
     </section>
 
     <section id="result-container" class="hidden">
@@ -579,8 +576,8 @@
         <h3 class="section-title"><span class="num">1</span> ข้อมูลคดี</h3>
         <div class="info-grid">
           <div class="info-item"><label>เลขคำขอแจ้งความคดีออนไลน์ที่</label><strong id="res-case-code-top">-</strong></div>
-          <div class="info-item"><label>เลขบัตรประชาชน (4 ตัวท้าย)</label><strong id="res-id">-</strong></div>
-          <div class="info-item"><label>เบอร์โทรศัพท์ (4 ตัวท้าย)</label><strong id="res-phone">-</strong></div>
+          <div class="info-item"><label>เลขบัตรประชาชน</label><strong id="res-id">-</strong></div>
+          <div class="info-item" id="res-phone-item"><label>เบอร์โทรศัพท์ (4 ตัวท้าย)</label><strong id="res-phone">-</strong></div>
           <div class="info-item"><label>อัปเดตล่าสุดโดย</label><strong id="res-updated-by">-</strong></div>
           <div class="info-item wide"><label>หมายเหตุร้อยเวร</label><p id="res-note">-</p></div>
         </div>
@@ -627,8 +624,8 @@
   </footer>
 
   <script>
-    const SHEET_ID = '1N_dvxMAOcU9S7wDtiuaMqF-10MqXwkkkdWV6LRsLBLI';
-    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1`;
+    // URL ของ Google Apps Script Web App (Deploy > Web app > คัดลอก URL ที่ลงท้ายด้วย /exec)
+    const API_URL = 'วาง URL /exec ที่นี่';
 
     const FLOW_STEPS = [
       { key: 'รับแจ้ง', num: '1', label: 'รับแจ้งหรือไม่', hint: 'รับแจ้งคดีออนไลน์' },
@@ -658,8 +655,8 @@
       { key: 'ส่งอัยการ', num: '8', label: 'ส่งสำนวนอัยการ', hint: 'ส่งสำนวนให้อัยการ' }
     ];
 
-    let rawSheetData = [];
     let matchedCases = [];
+    let searching = false;
     let col = {};
 
     function normLabel(s) {
@@ -673,6 +670,25 @@
       return String(cell.v).trim();
     }
     function onlyDigits(str) { return String(str || '').replace(/\D/g, ''); }
+    // จัดรูปแบบเลขบัตร x-xxxx-xxxxx-xx-x
+    function formatCid(d) {
+      d = onlyDigits(d).slice(0, 13);
+      const parts = [d.slice(0, 1), d.slice(1, 5), d.slice(5, 10), d.slice(10, 12), d.slice(12, 13)];
+      return parts.filter(Boolean).join('-');
+    }
+    // ตรวจเลขหลักสุดท้าย (check digit) ของบัตรประชาชนไทย
+    function isValidThaiId(d) {
+      if (!/^\d{13}$/.test(d)) return false;
+      let sum = 0;
+      for (let i = 0; i < 12; i++) sum += Number(d[i]) * (13 - i);
+      return (11 - (sum % 11)) % 10 === Number(d[12]);
+    }
+    // แสดงเลขบัตรแบบปิดบัง เหลือ 4 ตัวท้าย เช่น x-xxxx-xxxx7-36-6
+    function maskCid(last4) {
+      const d = onlyDigits(last4).slice(-4);
+      if (d.length !== 4) return '-';
+      return 'x-xxxx-xxxx' + d[0] + '-' + d.slice(1, 3) + '-' + d[3];
+    }
     function maskId(id) {
       const d = onlyDigits(id);
       if (d.length < 5) return d;
@@ -713,8 +729,8 @@
       if (!hasHeaders) { col = Object.assign({}, DEFAULT_COLS); return; }
       col = {
         time: findCol(cols, [l => l.includes('ประทับเวลา')]),
-        id4: findCol(cols, [l => l.includes('เลขบัตร') || l.includes('บัตรประชา')]),
-        phone: findCol(cols, [l => l.includes('เบอร์') || l.includes('โทรศัพท์')]),
+        id4: findCol(cols, [l => l.includes('บัตร')]),
+        phone: findCol(cols, [l => l.includes('เบอร์') || l.includes('โทร')]),
         caseCode: findCol(cols, [l => l.includes('คำขอแจ้งความ') || l.includes('หมายเลขคดี') || l.includes('เลขคดี')]),
         received: findCol(cols, [l => l.includes('รับเเจ้ง') || l.includes('รับแจ้ง')]),
         appoint: findCol(cols, [l => l.includes('นัดหมายผู้แจ้ง') || (l.includes('นัดหมาย') && !l.includes('วันที่'))]),
@@ -733,6 +749,7 @@
         updatedBy: findCol(cols, [l => l.includes('อัปเดตล่าสุด') || l.includes('อัพเดทล่าสุด')])
       };
       Object.keys(DEFAULT_COLS).forEach(k => { if (col[k] == null) col[k] = -1; });
+      if (col.id4 < 0) col.id4 = 0; // ไม่พบหัวคอลัมน์เลขบัตร ใช้คอลัมน์ A
     }
     function get(row, key) {
       if (col[key] < 0) return '';
@@ -742,14 +759,14 @@
       if (idx < 0 || !row.c || !row.c[idx]) return '';
       const cell = row.c[idx];
       let d = onlyDigits(cell.f != null ? cell.f : cell.v);
-      if (typeof cell.v === 'number' && d.length < 4) d = d.padStart(4, '0');
+      if (d.length > 0 && d.length < 4) d = d.padStart(4, '0');
       return d;
     }
     function getId4(row) { return digitsOf(row, col.id4).slice(-4); }
     function getPhone(row) { return digitsOf(row, col.phone); }
     function isRealCaseRow(row) {
       if (!row.c) return false;
-      return getId4(row).length === 4 && getPhone(row).length >= 4;
+      return getId4(row).length === 4;
     }
     function rowToCase(row, index) {
       return {
@@ -933,8 +950,9 @@
       document.getElementById('error-container').classList.add('hidden');
       document.getElementById('result-container').classList.remove('hidden');
 
-      document.getElementById('res-id').textContent = c.id ? 'x-xxxx-xxxxx-' + c.id : '-';
+      document.getElementById('res-id').textContent = maskCid(c.id);
       document.getElementById('res-phone').textContent = c.phone ? 'xxx-xxx-' + c.phone.slice(-4) : '-';
+      document.getElementById('res-phone-item').classList.toggle('hidden', !c.phone);
       document.getElementById('res-case-code-top').textContent = c.caseCode || '-';
       document.getElementById('res-note').textContent = c.note || '-';
       document.getElementById('res-updated-by').textContent = c.updatedBy || '-';
@@ -981,8 +999,6 @@
     function resetToHome() {
       const input = document.getElementById('id-input');
       if (input) input.value = '';
-      const phoneInput = document.getElementById('phone-input');
-      if (phoneInput) phoneInput.value = '';
       matchedCases = [];
       document.getElementById('result-container').classList.add('hidden');
       document.getElementById('case-list-container').classList.add('hidden');
@@ -1016,18 +1032,29 @@
       window.open(FORM_URL, '_blank', 'noopener');
     }
 
-    async function fetchSheetData() {
+    // เรียก API แบบ GET ธรรมดา (ไม่มี header พิเศษ จึงไม่เกิด CORS preflight)
+    async function callApi(params) {
+      const qs = new URLSearchParams(params).toString();
+      const url = API_URL + (API_URL.includes('?') ? '&' : '?') + qs;
+      const response = await fetch(url, { method: 'GET', redirect: 'follow', cache: 'no-store' });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      return response.json();
+    }
+
+    // แปลงผลลัพธ์ { headers, rows } ให้อยู่ในรูปแบบเดียวกับที่ mapColumns / rowToCase ใช้
+    function toTable(json) {
+      const cols = (json.headers || []).map(h => ({ label: String(h == null ? '' : h) }));
+      const rows = (json.rows || []).map(r => ({ c: r.map(v => ({ v: v == null ? '' : String(v) })) }));
+      return { cols, rows };
+    }
+
+    async function checkConnection() {
       const statusEl = document.getElementById('sheet-status');
+      statusEl.textContent = 'กำลังเชื่อมต่อเซิร์ฟเวอร์...';
       try {
-        const response = await fetch(SHEET_URL);
-        const text = await response.text();
-        const start = text.indexOf('{');
-        const end = text.lastIndexOf('}');
-        if (start < 0 || end < 0) throw new Error('bad payload');
-        const json = JSON.parse(text.substring(start, end + 1));
-        if (json.status !== 'ok') throw new Error('not ok');
-        mapColumns(json.table.cols || []);
-        rawSheetData = (json.table.rows || []).filter(isRealCaseRow);
+        if (!/^https?:\/\//.test(API_URL)) throw new Error('API_URL not set');
+        const json = await callApi({ ping: 1 });
+        if (!json || json.ok !== true) throw new Error('ping not ok');
         statusEl.textContent = 'เชื่อมต่อเซิร์ฟเวอร์สำเร็จ';
       } catch (err) {
         console.error(err);
@@ -1035,42 +1062,96 @@
       }
     }
 
-    function searchByCitizenId() {
-      const id4 = onlyDigits(document.getElementById('id-input').value);
-      const phone = onlyDigits(document.getElementById('phone-input').value);
-      if (id4.length !== 4) {
-        alert('กรุณากรอกเลข 4 ตัวท้ายบัตรประชาชนให้ครบ 4 หลัก');
+    const errorBox = document.getElementById('error-container');
+    const NOT_FOUND_HTML = errorBox.innerHTML;
+    function showError(title, message) {
+      document.getElementById('result-container').classList.add('hidden');
+      document.getElementById('case-list-container').classList.add('hidden');
+      if (title) {
+        errorBox.innerHTML = '';
+        const s = document.createElement('strong'); s.textContent = title;
+        const d = document.createElement('div');
+        d.style.cssText = 'margin-top:6px;font-size:13px;opacity:.85;';
+        d.textContent = message || '';
+        errorBox.append(s, d);
+      } else {
+        errorBox.innerHTML = NOT_FOUND_HTML;
+      }
+      errorBox.classList.remove('hidden');
+    }
+
+    function setSearching(on) {
+      searching = on;
+      const btn = document.getElementById('search-btn');
+      btn.disabled = on;
+      btn.style.opacity = on ? '.7' : '';
+      btn.style.cursor = on ? 'wait' : '';
+      btn.textContent = on ? 'กำลังค้นหา...' : 'ตรวจสอบคดี';
+    }
+
+    async function searchByCitizenId() {
+      if (searching) return;
+      const cid = onlyDigits(document.getElementById('id-input').value);
+      if (cid.length !== 13) {
+        alert('กรุณากรอกเลขบัตรประจำตัวประชาชนให้ครบ 13 หลัก');
         return;
       }
-      if (phone.length !== 4) {
-        alert('กรุณากรอกเลข 4 ตัวท้ายของเบอร์โทรศัพท์ให้ครบ 4 หลัก');
+      if (!isValidThaiId(cid)) {
+        showError('เลขบัตรประชาชนไม่ถูกต้อง', 'กรุณาตรวจสอบเลขบัตรประจำตัวประชาชน 13 หลักอีกครั้ง');
+        return;
+      }
+      if (!/^https?:\/\//.test(API_URL)) {
+        showError('ยังไม่ได้ตั้งค่าเซิร์ฟเวอร์', 'ผู้ดูแลระบบยังไม่ได้ใส่ URL ของ Apps Script (API_URL) ในหน้าเว็บ');
         return;
       }
       matchedCases = [];
-      rawSheetData.forEach((row, index) => {
-        if (getId4(row) === id4 && getPhone(row).slice(-4) === phone.slice(-4)) {
-          matchedCases.push(rowToCase(row, index));
+      setSearching(true);
+      try {
+        const json = await callApi({ cid });
+        if (!json || json.ok !== true) {
+          showError('ค้นหาไม่สำเร็จ', (json && json.error) || 'เซิร์ฟเวอร์ตอบกลับไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
+          return;
         }
-      });
+        const table = toTable(json);
+        mapColumns(table.cols);
+        table.rows.filter(isRealCaseRow).forEach((row, index) => {
+          if (getId4(row) === cid.slice(-4)) { // เซิร์ฟเวอร์ปิดบังเลขบัตร จึงเทียบได้แค่ 4 ตัวท้าย
+            matchedCases.push(rowToCase(row, index));
+          }
+        });
+      } catch (err) {
+        console.error(err);
+        document.getElementById('sheet-status').textContent = 'เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ';
+        showError('เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ', 'ไม่สามารถติดต่อเซิร์ฟเวอร์ได้ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่อีกครั้ง');
+        return;
+      } finally {
+        setSearching(false);
+      }
       if (!matchedCases.length) {
-        document.getElementById('result-container').classList.add('hidden');
-        document.getElementById('case-list-container').classList.add('hidden');
-        document.getElementById('error-container').classList.remove('hidden');
+        showError();
         return;
       }
-      document.getElementById('error-container').classList.add('hidden');
+      errorBox.classList.add('hidden');
       renderCaseList(matchedCases);
       showCase(matchedCases[0]);
     }
 
-    ['id-input', 'phone-input'].forEach(id => {
-      const el = document.getElementById(id);
-      el.addEventListener('input', () => { el.value = onlyDigits(el.value).slice(0, 4); });
+    // ช่องเลขบัตร: รับเฉพาะตัวเลข 13 หลัก และใส่ขีดอัตโนมัติ (คงตำแหน่งเคอร์เซอร์ไว้)
+    (function () {
+      const el = document.getElementById('id-input');
+      el.addEventListener('input', () => {
+        const caret = el.selectionStart == null ? el.value.length : el.selectionStart;
+        const digitsBefore = onlyDigits(el.value.slice(0, caret)).length;
+        el.value = formatCid(el.value);
+        let pos = 0, seen = 0;
+        while (pos < el.value.length && seen < digitsBefore) { if (/\d/.test(el.value[pos])) seen++; pos++; }
+        if (document.activeElement === el) el.setSelectionRange(pos, pos);
+      });
       el.addEventListener('keydown', e => {
         if (e.key === 'Enter') searchByCitizenId();
       });
-    });
-    fetchSheetData();
+    })();
+    checkConnection();
   </script>
 </body>
 </html>
