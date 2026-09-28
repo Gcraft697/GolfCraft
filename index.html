@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบติดตามคดีออนไลน์</title>
+  <title>ระบบแจ้งความออนคดีไลน์ และติดตามผลคดีออนไลน์ · สภ.ด่านซ้าย</title>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -80,15 +80,15 @@
       flex-shrink: 0;
       box-shadow: 0 8px 30px rgba(0,0,0,.25);
     }
-    .seal img { width: 68px; height: 68px; object-fit: contain; }
-    .seal-fallback {
-      display: none;
-      color: var(--gold-soft);
-      font-weight: 700;
-      font-size: 12px;
-      text-align: center;
-      line-height: 1.2;
+    .seal { overflow: hidden; padding: 4px; }
+    .seal img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
     }
+    .seal-fallback { display: none; }
     .hero h1 { margin: 4px 0 6px; font-size: clamp(1.35rem, 3vw, 2rem); }
     .hero .sub { margin: 0; color: #c9d9f7; font-size: 13px; }
     .gold-line {
@@ -476,21 +476,21 @@
 </head>
 <body>
   <div class="topbar">
-    <span>สถานีตำรวจภูธรด่านซ้าย · ระบบติดตามคดีออนไลน์ (ต้นแบบ)</span>
+    <span>สถานีตำรวจภูธรด่านซ้าย · ระบบแจ้งความออนคดีไลน์ และติดตามผลคดีออนไลน์ (ต้นแบบ)</span>
     <span class="motto">พิทักษ์สันติราษฎร์</span>
   </div>
 
   <header class="hero">
     <div class="hero-inner">
-      <div class="seal">
-        <img id="seal-img" src="https://upload.wikimedia.org/wikipedia/commons/9/9c/Emblem_of_Royal_Thai_Police.png" alt="ตรา สตช."
+            <div class="seal">
+        <img id="seal-img" src="https://cdnstatic.tencentcs.com/edgeone/pages/assets/1790614311158-HzxI.png" alt="โลโก้ สภ.ด่านซ้าย"
              onerror="this.style.display='none';document.getElementById('seal-fallback').style.display='block';">
-        <div id="seal-fallback" class="seal-fallback">สน.<br>ภูธรด่านซ้าย</div>
+        <div id="seal-fallback" class="seal-fallback" aria-hidden="true"></div>
       </div>
       <div>
-        <div style="color:var(--gold-soft);font-size:12px;letter-spacing:.08em;">ROYAL THAI POLICE</div>
-        <h1>ระบบติดตามคดีออนไลน์</h1>
-        <p class="sub">ค้นหาด้วยเลขบัตรประชาชน · แจ้งความออนไลน์ · สถานะคดี</p>
+        <div style="color:var(--gold-soft);font-size:12px;letter-spacing:.08em;">สถานีตำรวจภูธรด่านซ้าย จังหวัดเลย</div>
+        <h1>ระบบแจ้งความออนคดีไลน์ และติดตามผลคดีออนไลน์</h1>
+        <p class="sub">แจ้งความออนไลน์ · ติดตามผลคดี · สภ.ด่านซ้าย จ.เลย</p>
         <div class="nav-tabs">
           <button type="button" class="nav-tab active" id="tab-track" onclick="showPanel('track')">ตรวจสอบคดี</button>
           <button type="button" class="nav-tab" id="tab-report" onclick="showPanel('report')">แจ้งความออนไลน์</button>
@@ -563,8 +563,12 @@
     <div id="panel-report" class="panel">
       <section class="card">
         <h2>แจ้งความออนไลน์</h2>
-        <p class="muted">เปิดแบบฟอร์มแจ้งความ (ถ้ามีลิงก์ฟอร์ม ให้ใส่ในชีต/อัปเดตลิงก์ภายหลังได้)</p>
+        <p class="muted">แบบฟอร์มแจ้งความออนไลน์ สถานีตำรวจภูธรด่านซ้าย จังหวัดเลย</p>
         <div style="display:grid;gap:12px;margin:16px 0 18px;">
+          <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLScrJOlpJ9HXzIQZxoQLGZSt_o04yhe1T6356NbRCoqWlQrLHg/viewform" target="_blank" rel="noopener"
+             style="text-decoration:none;display:flex;justify-content:center;align-items:center;padding:18px 22px;font-size:16px;">
+            เปิดแบบฟอร์มแจ้งความออนไลน์ สภ.ด่านซ้าย
+          </a>
           <button type="button" class="btn" style="background:linear-gradient(135deg,#334155,#64748b);" onclick="showPanel('track')">กลับไปตรวจสอบคดี</button>
         </div>
       </section>
@@ -572,7 +576,7 @@
   </main>
 
   <footer class="footer">
-    <strong>ระบบติดตามคดีออนไลน์ (ต้นแบบ)</strong>
+    <strong>ระบบแจ้งความออนคดีไลน์ และติดตามผลคดีออนไลน์ (ต้นแบบ)</strong>
     ตรวจสอบสถานะจาก Google Sheets
   </footer>
 
