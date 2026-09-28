@@ -405,7 +405,6 @@
     .mm-connector { display: none; }
 
     .detail-chips {
-    .detail-chips {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
@@ -525,37 +524,38 @@
         <div>
           <h2>ตรวจสอบสถานะคดี</h2>
 
-          <p class="muted">กรอกเลขบัตร 13 หลัก เพื่อดูรายละเอียดผู้แจ้ง ผู้ต้องหา และสถานะคดี</p>
+          <p class="muted">กรอกเลข 4 ตัวท้ายบัตรประชาชน และเบอร์โทรศัพท์ (กรอกเต็มเบอร์หรือแค่ 4 ตัวท้ายก็ได้) เพื่อดูสถานะคดี</p>
         </div>
       </div>
       <div class="search-row">
-        <input id="id-input" type="text" inputmode="numeric" maxlength="13" placeholder="เช่น 1234567890000">
+        <input id="id-input" type="text" inputmode="numeric" maxlength="4" placeholder="เลข 4 ตัวท้ายบัตรประชาชน">
+        <input id="phone-input" type="tel" inputmode="numeric" maxlength="12" placeholder="เบอร์โทรศัพท์">
         <button class="btn" onclick="searchByCitizenId()">ตรวจสอบคดี</button>
         <button type="button" class="btn" style="background:linear-gradient(135deg,#334155,#64748b);" onclick="resetToHome()">ล้างผล / เริ่มใหม่</button>
       </div>
-      <div class="status-pill"><span id="sheet-status">กำลังเชื่อมต่อข้อมูล...</span></div>
+      <div class="status-pill"><span id="sheet-status">กำลังเชื่อมต่อเซิร์ฟเวอร์...</span></div>
     </section>
 
     <section id="case-list-container" class="card hidden">
-      <h2>พบหลายคดีภายใต้เลขบัตรนี้</h2>
+      <h2>พบหลายคดีตามข้อมูลที่กรอก</h2>
       <p class="muted">เลือกคดีที่ต้องการดู</p>
       <div id="case-list" class="case-grid"></div>
     </section>
 
     <section id="error-container" class="error-card hidden">
       <strong>ไม่พบข้อมูลคดี</strong>
-      <div style="margin-top:6px;font-size:13px;opacity:.85;">ไม่พบเลขบัตรนี้ในระบบ หรือยังไม่ได้บันทึกการแจ้งความ</div>
+      <div style="margin-top:6px;font-size:13px;opacity:.85;">ไม่พบข้อมูลที่ตรงกับเลข 4 ตัวท้ายบัตรประชาชนและเบอร์โทรนี้ หรือยังไม่ได้บันทึกการแจ้งความ</div>
     </section>
 
     <section id="result-container" class="hidden">
       <article class="card">
         <h3 class="section-title"><span class="num">1</span> ข้อมูลคดี</h3>
         <div class="info-grid">
-          <div class="info-item"><label>เลขบัตรประจำตัวประชาชน</label><strong id="res-id">-</strong></div>
-          <div class="info-item"><label>เลขคำขอแจ้งความคดีออนไลน์</label><strong id="res-case-code-top">-</strong></div>
-          <div class="info-item wide"><label>หมายเหตุร้อยเวร</label><p id="res-note">-</p></div>
+          <div class="info-item"><label>เลขคำขอแจ้งความคดีออนไลน์ที่</label><strong id="res-case-code-top">-</strong></div>
+          <div class="info-item"><label>เลขบัตรประชาชน (4 ตัวท้าย)</label><strong id="res-id">-</strong></div>
+          <div class="info-item"><label>เบอร์โทรศัพท์ (4 ตัวท้าย)</label><strong id="res-phone">-</strong></div>
           <div class="info-item"><label>อัปเดตล่าสุดโดย</label><strong id="res-updated-by">-</strong></div>
-          <div class="info-item"><label>วัน–เวลาที่แจ้ง</label><strong id="res-time">-</strong></div>
+          <div class="info-item wide"><label>หมายเหตุร้อยเวร</label><p id="res-note">-</p></div>
         </div>
       </article>
 
@@ -600,8 +600,8 @@
   </footer>
 
   <script>
-    const SHEET_ID = '1Nxft_p1R6K3o_WTUDSq6zxcUDOAZdiXgEuubzKjd8nc';
-    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+    const SHEET_ID = '1N_dvxMAOcU9S7wDtiuaMqF-10MqXwkkkdWV6LRsLBLI';
+    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1`;
 
     const FLOW_STEPS = [
       { key: 'รับแจ้ง', num: '1', label: 'รับแจ้งหรือไม่', hint: 'รับแจ้งคดีออนไลน์' },
@@ -674,11 +674,21 @@
       }
       return -1;
     }
+    // ตำแหน่งคอลัมน์สำรอง (ใช้เมื่ออ่านหัวตารางไม่ได้) ตามลำดับชีตปัจจุบัน A-Q
+    const DEFAULT_COLS = {
+      id4: 0, phone: 1, caseCode: 2, received: 3, appoint: 4, appointDate: 5,
+      freeze: 6, freezeDate: 7, bankRequest: 8, bookNo: 9, postal: 10,
+      witnessSummons: 11, suspectSummons: 12, arrestWarrant: 13, toProsecutor: 14,
+      note: 15, updatedBy: 16, time: -1, interview: -1
+    };
     function mapColumns(cols) {
+      const hasHeaders = cols.some(c => normLabel(c.label));
+      if (!hasHeaders) { col = Object.assign({}, DEFAULT_COLS); return; }
       col = {
         time: findCol(cols, [l => l.includes('ประทับเวลา')]),
-        id: findCol(cols, [l => l.includes('เลขบัตร') || l.includes('บัตรประชา')]),
-        caseCode: findCol(cols, [l => l.includes('เลขคำขอแจ้งความ') || l.includes('คำขอแจ้งความ')]),
+        id4: findCol(cols, [l => l.includes('เลขบัตร') || l.includes('บัตรประชา')]),
+        phone: findCol(cols, [l => l.includes('เบอร์') || l.includes('โทรศัพท์')]),
+        caseCode: findCol(cols, [l => l.includes('คำขอแจ้งความ') || l.includes('หมายเลขคดี') || l.includes('เลขคดี')]),
         received: findCol(cols, [l => l.includes('รับเเจ้ง') || l.includes('รับแจ้ง')]),
         appoint: findCol(cols, [l => l.includes('นัดหมายผู้แจ้ง') || (l.includes('นัดหมาย') && !l.includes('วันที่'))]),
         appointDate: findCol(cols, [l => l.includes('วันที่นัดหมาย')]),
@@ -688,39 +698,38 @@
         bankRequest: findCol(cols, [l => l.includes('ขอข้อมูล') && (l.includes('ธนาคาร') || l.includes('ผู้ให้บริการ'))]),
         bookNo: findCol(cols, [l => l.includes('หนังสือส่ง') || l.includes('หนังสือเลขที่')]),
         postal: findCol(cols, [l => l.includes('เลขพัสดุ') || l.includes('ไปรษณีย์')]),
-        witnessSummons: findCol(cols, [l => l.includes('ออกหมายเรียกพยาน') || l.includes('หมายเรียกพยาน')]),
-        suspectSummons: findCol(cols, [l => l.includes('ออกหมายเรียกผู้ต้องหา') || l.includes('หมายเรียกผู้ต้องหา')]),
-        arrestWarrant: findCol(cols, [l => l.includes('ออกหมายจับ') || l.includes('หมายจับ')]),
+        witnessSummons: findCol(cols, [l => l.includes('หมายเรียกพยาน')]),
+        suspectSummons: findCol(cols, [l => l.includes('หมายเรียกผู้ต้องหา')]),
+        arrestWarrant: findCol(cols, [l => l.includes('หมายจับ')]),
         toProsecutor: findCol(cols, [l => l.includes('ส่งสำนวนอัยการ') || l.includes('ส่งอัยการ')]),
         note: findCol(cols, [l => l.includes('หมายเหตุ')]),
-        updatedBy: findCol(cols, [l => l.includes('อัปเดตล่าสุด')])
+        updatedBy: findCol(cols, [l => l.includes('อัปเดตล่าสุด') || l.includes('อัพเดทล่าสุด')])
       };
+      Object.keys(DEFAULT_COLS).forEach(k => { if (col[k] == null) col[k] = -1; });
     }
     function get(row, key) {
       if (col[key] < 0) return '';
       return cellText(row.c[col[key]]);
     }
-    function getCitizenId(row) {
-      if (col.id < 0 || !row.c) return '';
-      const cell = row.c[col.id];
-      if (!cell) return '';
-      let id = cell.f != null ? onlyDigits(cell.f) : '';
-      if (id.length !== 13 && cell.v != null) {
-        id = typeof cell.v === 'number' ? onlyDigits(String(Math.round(cell.v))) : onlyDigits(String(cell.v));
-      }
-      return id;
+    function digitsOf(row, idx) {
+      if (idx < 0 || !row.c || !row.c[idx]) return '';
+      const cell = row.c[idx];
+      let d = onlyDigits(cell.f != null ? cell.f : cell.v);
+      if (typeof cell.v === 'number' && d.length < 4) d = d.padStart(4, '0');
+      return d;
     }
+    function getId4(row) { return digitsOf(row, col.id4).slice(-4); }
+    function getPhone(row) { return digitsOf(row, col.phone); }
     function isRealCaseRow(row) {
       if (!row.c) return false;
-      const id = getCitizenId(row);
-      const code = get(row, 'caseCode');
-      return !!( (id && id.length >= 10) || code );
+      return getId4(row).length === 4 && getPhone(row).length >= 4;
     }
     function rowToCase(row, index) {
       return {
         index,
         time: get(row, 'time'),
-        id: getCitizenId(row),
+        id: getId4(row),
+        phone: getPhone(row),
         caseCode: get(row, 'caseCode') || ('CASE-' + String(index + 1).padStart(3, '0')),
         received: get(row, 'received'),
         appoint: get(row, 'appoint'),
@@ -897,11 +906,11 @@
       document.getElementById('error-container').classList.add('hidden');
       document.getElementById('result-container').classList.remove('hidden');
 
-      document.getElementById('res-id').textContent = maskId(c.id);
+      document.getElementById('res-id').textContent = c.id ? 'x-xxxx-xxxxx-' + c.id : '-';
+      document.getElementById('res-phone').textContent = c.phone ? 'xxx-xxx-' + c.phone.slice(-4) : '-';
       document.getElementById('res-case-code-top').textContent = c.caseCode || '-';
       document.getElementById('res-note').textContent = c.note || '-';
       document.getElementById('res-updated-by').textContent = c.updatedBy || '-';
-      document.getElementById('res-time').textContent = c.time || '-';
 
       document.getElementById('res-case-code').textContent = c.caseCode || '-';
       const centerState = currentStatusLabel(c);
@@ -945,6 +954,8 @@
     function resetToHome() {
       const input = document.getElementById('id-input');
       if (input) input.value = '';
+      const phoneInput = document.getElementById('phone-input');
+      if (phoneInput) phoneInput.value = '';
       matchedCases = [];
       document.getElementById('result-container').classList.add('hidden');
       document.getElementById('case-list-container').classList.add('hidden');
@@ -978,16 +989,41 @@
       window.open(FORM_URL, '_blank', 'noopener');
     }
 
+    async function fetchSheetData() {
+      const statusEl = document.getElementById('sheet-status');
+      try {
+        const response = await fetch(SHEET_URL);
+        const text = await response.text();
+        const start = text.indexOf('{');
+        const end = text.lastIndexOf('}');
+        if (start < 0 || end < 0) throw new Error('bad payload');
+        const json = JSON.parse(text.substring(start, end + 1));
+        if (json.status !== 'ok') throw new Error('not ok');
+        mapColumns(json.table.cols || []);
+        rawSheetData = (json.table.rows || []).filter(isRealCaseRow);
+        statusEl.textContent = 'เชื่อมต่อเซิร์ฟเวอร์สำเร็จ';
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = 'เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ';
+      }
+    }
 
     function searchByCitizenId() {
-      const inputVal = onlyDigits(document.getElementById('id-input').value);
-      if (inputVal.length !== 13) {
-        alert('กรุณากรอกเลขบัตรประชาชนให้ครบ 13 หลัก');
+      const id4 = onlyDigits(document.getElementById('id-input').value);
+      const phone = onlyDigits(document.getElementById('phone-input').value);
+      if (id4.length !== 4) {
+        alert('กรุณากรอกเลข 4 ตัวท้ายบัตรประชาชนให้ครบ 4 หลัก');
+        return;
+      }
+      if (phone.length < 4) {
+        alert('กรุณากรอกเบอร์โทรศัพท์ (อย่างน้อย 4 ตัวท้าย)');
         return;
       }
       matchedCases = [];
       rawSheetData.forEach((row, index) => {
-        if (getCitizenId(row) === inputVal) matchedCases.push(rowToCase(row, index));
+        if (getId4(row) === id4 && getPhone(row).slice(-4) === phone.slice(-4)) {
+          matchedCases.push(rowToCase(row, index));
+        }
       });
       if (!matchedCases.length) {
         document.getElementById('result-container').classList.add('hidden');
@@ -1000,8 +1036,10 @@
       showCase(matchedCases[0]);
     }
 
-    document.getElementById('id-input').addEventListener('keydown', e => {
-      if (e.key === 'Enter') searchByCitizenId();
+    ['id-input', 'phone-input'].forEach(id => {
+      document.getElementById(id).addEventListener('keydown', e => {
+        if (e.key === 'Enter') searchByCitizenId();
+      });
     });
     fetchSheetData();
   </script>
