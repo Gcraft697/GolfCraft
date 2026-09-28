@@ -990,7 +990,6 @@
         if (json.status !== 'ok') throw new Error('not ok');
         mapColumns(json.table.cols || []);
         rawSheetData = (json.table.rows || []).filter(isRealCaseRow);
-        statusEl.textContent = 'เชื่อมต่อแล้ว · ' + rawSheetData.length + ' คดี';
       } catch (err) {
         console.error(err);
         statusEl.textContent = 'เชื่อมต่อชีตไม่สำเร็จ · ตรวจสิทธิ์แชร์';
