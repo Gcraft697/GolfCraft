@@ -72,21 +72,28 @@
       z-index: 1;
     }
     .seal {
-      width: 84px; height: 84px;
+      width: 148px; height: 148px;
       border-radius: 50%;
-      background: rgba(255,255,255,.08);
-      border: 2px solid rgba(212,175,55,.65);
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,.22), transparent 45%),
+        rgba(255,255,255,.1);
+      border: 3px solid rgba(212,175,55,.95);
       display: grid; place-items: center;
       flex-shrink: 0;
-      box-shadow: 0 8px 30px rgba(0,0,0,.25);
+      box-shadow:
+        0 0 0 6px rgba(212,175,55,.22),
+        0 0 0 12px rgba(7,26,61,.35),
+        0 18px 40px rgba(0,0,0,.45);
+      overflow: hidden;
+      padding: 6px;
     }
-    .seal { overflow: hidden; padding: 4px; }
     .seal img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       border-radius: 50%;
       display: block;
+      filter: saturate(1.08) contrast(1.05);
     }
     .seal-fallback { display: none; }
     .hero h1 { margin: 4px 0 6px; font-size: clamp(1.35rem, 3vw, 2rem); }
@@ -199,6 +206,7 @@
     @media (max-width: 700px) {
       .info-grid { grid-template-columns: 1fr; }
       .hero-inner { align-items: flex-start; }
+      .seal { width: 112px; height: 112px; }
     }
     .info-item {
       background: linear-gradient(180deg, #f7f9fd, #f3f6fb);
@@ -435,23 +443,33 @@
     .footer strong { color: #fff; display: block; margin-bottom: 4px; }
 
     .nav-tabs {
-      display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0 0;
+      display: flex; gap: 10px; flex-wrap: wrap; margin: 18px 0 0;
+      position: relative;
+      z-index: 5;
     }
     .nav-tab {
-      border: 1px solid rgba(255,255,255,.25);
-      background: rgba(255,255,255,.08);
-      color: #e8eefc;
+      border: 2px solid rgba(243,226,160,.55);
+      background: rgba(255,255,255,.12);
+      color: #fff;
       border-radius: 999px;
-      padding: 8px 14px;
+      padding: 12px 22px;
       font: inherit;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 15px;
+      font-weight: 700;
       cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,.22);
+      transition: transform .15s ease, filter .15s ease, background .15s ease;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+      z-index: 6;
+      pointer-events: auto;
     }
+    .nav-tab:hover { filter: brightness(1.08); transform: translateY(-1px); }
     .nav-tab.active {
       background: linear-gradient(135deg, var(--gold-soft), var(--gold));
       color: #071a3d;
       border-color: transparent;
+      box-shadow: 0 10px 24px rgba(212,175,55,.35);
     }
     .btn-secondary {
       background: linear-gradient(135deg, #8b1e2d, #c2410c);
@@ -476,7 +494,7 @@
 </head>
 <body>
   <div class="topbar">
-    <span>สถานีตำรวจภูธรด่านซ้าย · ระบบแจ้งความออนคดีไลน์ และติดตามผลคดีออนไลน์ (ต้นแบบ)</span>
+    <span>สถานีตำรวจภูธรด่านซ้าย จังหวัดเลย</span>
     <span class="motto">พิทักษ์สันติราษฎร์</span>
   </div>
 
@@ -489,11 +507,11 @@
       </div>
       <div>
         <div style="color:var(--gold-soft);font-size:12px;letter-spacing:.08em;">สถานีตำรวจภูธรด่านซ้าย จังหวัดเลย</div>
-        <h1>ระบบแจ้งความออนคดีไลน์ และติดตามผลคดีออนไลน์</h1>
-        <p class="sub">แจ้งความออนไลน์ · ติดตามผลคดี · สภ.ด่านซ้าย จ.เลย</p>
+        <h1>ระบบแจ้งความคดีออนไลน์ และติดตามผลคดีออนไลน์</h1>
+        <p class="sub">แจ้งความออนไลน์ · ติดตามผลคดี · สภ.ด่านซ้าย จว.เลย</p>
         <div class="nav-tabs">
           <button type="button" class="nav-tab active" id="tab-track" onclick="showPanel('track')">ตรวจสอบคดี</button>
-          <button type="button" class="nav-tab" id="tab-report" onclick="showPanel('report')">แจ้งความออนไลน์</button>
+          <button type="button" class="nav-tab" id="tab-report" onclick="showPanel('report'); openReportForm();">แจ้งความออนไลน์</button>
         </div>
       </div>
     </div>
@@ -513,6 +531,7 @@
       <div class="search-row">
         <input id="id-input" type="text" inputmode="numeric" maxlength="13" placeholder="เช่น 1234567890000">
         <button class="btn" onclick="searchByCitizenId()">ตรวจสอบคดี</button>
+        <button type="button" class="btn" style="background:linear-gradient(135deg,#334155,#64748b);" onclick="resetToHome()">ล้างผล / เริ่มใหม่</button>
       </div>
       <div class="status-pill"><span id="sheet-status">กำลังเชื่อมต่อข้อมูล...</span></div>
     </section>
@@ -569,15 +588,15 @@
              style="text-decoration:none;display:flex;justify-content:center;align-items:center;padding:18px 22px;font-size:16px;">
             เปิดแบบฟอร์มแจ้งความออนไลน์ สภ.ด่านซ้าย
           </a>
-          <button type="button" class="btn" style="background:linear-gradient(135deg,#334155,#64748b);" onclick="showPanel('track')">กลับไปตรวจสอบคดี</button>
+          <button type="button" class="btn" style="background:linear-gradient(135deg,#334155,#64748b);" onclick="showPanel('track')">กลับหน้าเริ่มต้น / ตรวจสอบคดีใหม่</button>
         </div>
       </section>
     </div>
   </main>
 
   <footer class="footer">
-    <strong>ระบบแจ้งความออนคดีไลน์ และติดตามผลคดีออนไลน์ (ต้นแบบ)</strong>
-    ตรวจสอบสถานะจาก Google Sheets
+    <strong>สถานีตำรวจภูธรด่านซ้าย จังหวัดเลย</strong>
+    พิทักษ์สันติราษฎร์
   </footer>
 
   <script>
@@ -899,14 +918,42 @@
       });
     }
 
-    function showPanel(name) {
-      document.getElementById('panel-track').classList.toggle('active', name === 'track');
-      document.getElementById('panel-report').classList.toggle('active', name === 'report');
-      document.getElementById('tab-track').classList.toggle('active', name === 'track');
-      document.getElementById('tab-report').classList.toggle('active', name === 'report');
-      if (name === 'report') {
-        document.getElementById('panel-report').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScrJOlpJ9HXzIQZxoQLGZSt_o04yhe1T6356NbRCoqWlQrLHg/viewform';
+
+    function resetToHome() {
+      const input = document.getElementById('id-input');
+      if (input) input.value = '';
+      matchedCases = [];
+      document.getElementById('result-container').classList.add('hidden');
+      document.getElementById('case-list-container').classList.add('hidden');
+      document.getElementById('error-container').classList.add('hidden');
+      document.getElementById('case-list').innerHTML = '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showPanel(name, opts) {
+      opts = opts || {};
+      const track = document.getElementById('panel-track');
+      const report = document.getElementById('panel-report');
+      const tabTrack = document.getElementById('tab-track');
+      const tabReport = document.getElementById('tab-report');
+      if (!track || !report || !tabTrack || !tabReport) return;
+
+      track.classList.toggle('active', name === 'track');
+      report.classList.toggle('active', name === 'report');
+      tabTrack.classList.toggle('active', name === 'track');
+      tabReport.classList.toggle('active', name === 'report');
+
+      if (name === 'track') {
+        if (opts.reset !== false) resetToHome();
+        track.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else if (name === 'report') {
+        report.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+    }
+
+    function openReportForm() {
+      window.open(FORM_URL, '_blank', 'noopener');
     }
 
     async function fetchSheetData() {
