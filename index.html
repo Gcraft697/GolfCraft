@@ -509,8 +509,9 @@
 
           <p class="muted">กรอกเลขบัตร 13 หลัก เพื่อดูรายละเอียดผู้แจ้ง ผู้ต้องหา และสถานะคดี</p>
         </div>
+      </div>
       <div class="search-row">
-        <input id="id-input" type="text" inputmode="numeric" maxlength="13" placeholder="เช่น 1478600097041">
+        <input id="id-input" type="text" inputmode="numeric" maxlength="13" placeholder="เช่น 1234567890000">
         <button class="btn" onclick="searchByCitizenId()">ตรวจสอบคดี</button>
       </div>
       <div class="status-pill"><span id="sheet-status">กำลังเชื่อมต่อข้อมูล...</span></div>
@@ -528,46 +529,28 @@
     </section>
 
     <section id="result-container" class="hidden">
-      <!-- 1. ผู้แจ้ง -->
       <article class="card">
-        <h3 class="section-title"><span class="num">1</span> รายละเอียดผู้แจ้ง</h3>
+        <h3 class="section-title"><span class="num">1</span> ข้อมูลคดี</h3>
         <div class="info-grid">
-          <div class="info-item"><label>ชื่อจริง–นามสกุล</label><strong id="res-name">-</strong></div>
           <div class="info-item"><label>เลขบัตรประจำตัวประชาชน</label><strong id="res-id">-</strong></div>
-          <div class="info-item"><label>เบอร์โทรศัพท์</label><strong id="res-phone">-</strong></div>
+          <div class="info-item"><label>เลขคำขอแจ้งความคดีออนไลน์</label><strong id="res-case-code-top">-</strong></div>
+          <div class="info-item wide"><label>หมายเหตุร้อยเวร</label><p id="res-note">-</p></div>
+          <div class="info-item"><label>อัปเดตล่าสุดโดย</label><strong id="res-updated-by">-</strong></div>
           <div class="info-item"><label>วัน–เวลาที่แจ้ง</label><strong id="res-time">-</strong></div>
-          <div class="info-item wide"><label>ที่อยู่ปัจจุบัน</label><strong id="res-address">-</strong></div>
-          <div class="info-item wide"><label>ข้อเท็จจริง / เรื่องที่ต้องการแจ้ง</label><p id="res-facts">-</p></div>
         </div>
       </article>
 
-      <!-- 2. ผู้ต้องหา -->
-      <article class="card">
-        <h3 class="section-title"><span class="num">2</span> รายละเอียดผู้ต้องหา</h3>
-        <div class="info-grid">
-          <div class="info-item accused-card wide">
-            <label>ชื่อผู้ต้องกระทำความผิด</label>
-            <strong id="res-accused">-</strong>
-          </div>
-          <div class="info-item wide">
-            <label>หมายเหตุร้อยเวร</label>
-            <p id="res-note">-</p>
-          </div>
-        </div>
-      </article>
-
-      <!-- 3. Mind map -->
       <article class="card">
         <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px;">
-          <h3 class="section-title" style="margin:0;"><span class="num">3</span> สถานะคดี</h3>
+          <h3 class="section-title" style="margin:0;"><span class="num">2</span> สถานะคดี</h3>
           <span class="badge" id="res-status-badge">-</span>
         </div>
-        <p class="muted" style="margin-top:0;">สถานะคดีเรียงตามลำดับขั้นตอน — สีเขียวผ่านแล้ว · สีทองถึงขั้นนี้ · สีเทายังไม่ถึง</p>
+        <p class="muted" style="margin-top:0;">เรียงตามขั้นตอนจากชีต — สีเขียวผ่านแล้ว · สีทองถึงขั้นนี้ · สีเทายังไม่ถึง</p>
 
         <div class="mindmap">
           <div class="mm-center">
-            <div class="label">สถานะคดี</div>
-            <div class="code" id="res-case-code">CASE-xxx</div>
+            <div class="label">เลขคำขอแจ้งความ</div>
+            <div class="code" id="res-case-code">-</div>
             <div class="state" id="res-center-state">รอดำเนินการ</div>
           </div>
           <div id="status-flow" class="mm-branches"></div>
@@ -580,42 +563,50 @@
     <div id="panel-report" class="panel">
       <section class="card">
         <h2>แจ้งความออนไลน์</h2>
-        <p class="muted">Google Form ให้ “รับคำตอบจากทุกคน” และไม่บังคับล็อกอิน</p>
-
+        <p class="muted">เปิดแบบฟอร์มแจ้งความ (ถ้ามีลิงก์ฟอร์ม ให้ใส่ในชีต/อัปเดตลิงก์ภายหลังได้)</p>
         <div style="display:grid;gap:12px;margin:16px 0 18px;">
-          <a class="btn" href="https://forms.gle/5dadArUTFfDUL7No8" target="_blank" rel="noopener"
-             style="text-decoration:none;display:flex;justify-content:center;align-items:center;padding:18px 22px;font-size:16px;">
-            เปิดแบบฟอร์มแจ้งความ </a></div>
+          <button type="button" class="btn" style="background:linear-gradient(135deg,#334155,#64748b);" onclick="showPanel('track')">กลับไปตรวจสอบคดี</button>
+        </div>
+      </section>
+    </div>
+  </main>
 
   <footer class="footer">
     <strong>ระบบติดตามคดีออนไลน์ (ต้นแบบ)</strong>
-    แสดงสถานะคดี 7 ขั้น · ข้อมูลจาก Google Sheets
+    ตรวจสอบสถานะจาก Google Sheets
   </footer>
 
   <script>
-    const SHEET_ID = '1kmi6OpZvYm3GN1ZDWDAqcFDUfoPD8V_TocYOtVUOCfw';
+    const SHEET_ID = '1Nxft_p1R6K3o_WTUDSq6zxcUDOAZdiXgEuubzKjd8nc';
     const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
 
     const FLOW_STEPS = [
-      { key: 'นัดหมายผู้แจ้ง', num: '1', label: 'นัดหมายผู้แจ้ง', hint: 'นัดหมายผู้เสียหาย/ผู้แจ้ง' },
+      { key: 'รับแจ้ง', num: '1', label: 'รับแจ้งหรือไม่', hint: 'รับแจ้งคดีออนไลน์' },
       { key: 'สอบปากคำ', num: '2', label: 'สอบปากคำ', hint: 'สอบปากคำผู้แจ้ง/พยาน' },
-      { key: 'อายัดบัญชี', num: '3', label: 'อายัดบัญชี', hint: 'สั่งอายัดบัญชีที่เกี่ยวข้อง' },
+      { key: 'อายัดบัญชี', num: '3', label: 'สั่งอายัดบัญชี', hint: 'สั่งอายัดบัญชีที่เกี่ยวข้อง' },
       {
         key: 'ขอข้อมูลธนาคาร',
         num: '4',
         label: 'ขอข้อมูล ธนาคาร/ผู้ให้บริการ',
         hint: 'ขอข้อมูลจากธนาคารหรือผู้ให้บริการ',
-        sub: { key: 'เลขส่งไปรษณีย์', num: '4.1', label: 'เลขส่งไปรษณีย์', hint: 'เลขพัสดุ/ไปรษณีย์ที่ส่งคำขอ' }
+        subs: [
+          { key: 'หนังสือเลขที่', num: '4.1', label: 'หนังสือเลขที่' },
+          { key: 'เลขพัสดุไปรษณีย์', num: '4.2', label: 'เลขพัสดุไปรษณีย์' }
+        ]
       },
-      { key: 'ออกหมายเรียก', num: '5', label: 'ออกหมายเรียกพยาน/ผู้ต้องหา', hint: 'หมายเรียกพยานหรือผู้ต้องหา' },
-      { key: 'ออกหมายจับ', num: '6', label: 'ออกหมายจับ', hint: 'ออกหมายจับผู้ต้องหา' },
-      { key: 'ส่งสำนวนอัยการ', num: '7', label: 'ส่งสำนวนอัยการ', hint: 'ส่งสำนวนให้อัยการ' }
+      { key: 'หมายเรียกพยาน', num: '5', label: 'ออกหมายเรียกพยาน', hint: 'หมายเรียกพยาน' },
+      { key: 'หมายเรียกผู้ต้องหา', num: '6', label: 'ออกหมายเรียกผู้ต้องหา', hint: 'หมายเรียกผู้ต้องหา' },
+      { key: 'หมายจับ', num: '7', label: 'ออกหมายจับ', hint: 'ออกหมายจับผู้ต้องหา' },
+      { key: 'ส่งอัยการ', num: '8', label: 'ส่งสำนวนอัยการ', hint: 'ส่งสำนวนให้อัยการ' }
     ];
 
     let rawSheetData = [];
     let matchedCases = [];
     let col = {};
 
+    function normLabel(s) {
+      return String(s || '').replace(/\s+/g, ' ').trim();
+    }
     function cellText(cell) {
       if (!cell) return '';
       if (cell.f != null && String(cell.f).trim() !== '') return String(cell.f).trim();
@@ -632,12 +623,12 @@
     function isTrue(v) {
       if (v === true) return true;
       const s = String(v || '').trim().toLowerCase();
-      return ['true','yes','y','1','ใช่','แล้ว','เรียบร้อย','สำเร็จ','เสร็จ'].includes(s);
+      return ['true','yes','y','1','ใช่','แล้ว','เรียบร้อย','สำเร็จ','เสร็จ','รับ'].includes(s);
     }
     function isFalse(v) {
       if (v === false) return true;
       const s = String(v || '').trim().toLowerCase();
-      return ['false','no','n','0','ยัง','ไม่','ไม่ใช่'].includes(s);
+      return ['false','no','n','0','ยัง','ไม่','ไม่ใช่','ไม่รับ'].includes(s);
     }
     function hasText(v) {
       const s = String(v || '').trim();
@@ -647,7 +638,7 @@
     }
     function findCol(cols, preds) {
       for (let i = 0; i < cols.length; i++) {
-        const label = (cols[i].label || '').replace(/\s+/g, ' ').trim();
+        const label = normLabel(cols[i].label);
         if (preds.some(fn => fn(label))) return i;
       }
       return -1;
@@ -655,27 +646,19 @@
     function mapColumns(cols) {
       col = {
         time: findCol(cols, [l => l.includes('ประทับเวลา')]),
-        name: findCol(cols, [l => l.includes('ชื่อจริง') || l.includes('นามสกุล')]),
-        id: findCol(cols, [l => l.includes('บัตร') || l.includes('ประชาชน')]),
-        phone: findCol(cols, [l => l.includes('เบอร์') || l.includes('โทร')]),
-        address: findCol(cols, [l => l.includes('ที่อยู่')]),
-        accused: findCol(cols, [l => l.includes('ผู้ต้อง') || l.includes('กระทำ')]),
-        facts: findCol(cols, [l => l.includes('ข้อเท็จจริง')]),
-        caseCode: findCol(cols, [l => l.includes('รหัสคดี')]),
-        mainStatus: findCol(cols, [l => l.includes('สถานะหลัก')]),
-        appoint: findCol(cols, [l => l.includes('นัดหมายผู้แจ้ง') || l.includes('นัดหมาย')]),
+        id: findCol(cols, [l => l.includes('เลขบัตร') || l.includes('บัตรประชา')]),
+        caseCode: findCol(cols, [l => l.includes('เลขคำขอแจ้งความ') || l.includes('คำขอแจ้งความ')]),
+        received: findCol(cols, [l => l.includes('รับเเจ้ง') || l.includes('รับแจ้ง')]),
         interview: findCol(cols, [l => l.includes('สอบปากคำ')]),
-        investigate: findCol(cols, [l => l.includes('สอบสวน') || l.includes('สำสัง')]),
-        freeze: findCol(cols, [l => l === 'อายัดบัญชี' || l.includes('สั่งอายัด') || (l.includes('อายัดบัญชี') && !l.includes('วันที่') && !l.includes('ขอข้อมูล'))]),
+        freeze: findCol(cols, [l => l.includes('สั่งอายัด') || (l.includes('อายัดบัญชี') && !l.includes('วันที่'))]),
         freezeDate: findCol(cols, [l => l.includes('วันที่อายัด')]),
-        bankRequest: findCol(cols, [l => l.includes('ขอข้อมูลธนาคาร') || l.includes('ขอข้อมูล')]),
-        postal: findCol(cols, [l => l.includes('เลขส่งไปรษณีย์') || l.includes('ไปรษณีย์')]),
-        summons: findCol(cols, [l => l.includes('ออกหมายเรียก') || (l.includes('หมายเรียก') && !l.includes('จับ'))]),
+        bankRequest: findCol(cols, [l => l.includes('ขอข้อมูล') && (l.includes('ธนาคาร') || l.includes('ผู้ให้บริการ'))]),
+        bookNo: findCol(cols, [l => l.includes('หนังสือเลขที่')]),
+        postal: findCol(cols, [l => l.includes('เลขพัสดุ') || l.includes('ไปรษณีย์')]),
+        witnessSummons: findCol(cols, [l => l.includes('ออกหมายเรียกพยาน') || (l.includes('หมายเรียกพยาน'))]),
+        suspectSummons: findCol(cols, [l => l.includes('ออกหมายเรียกผู้ต้องหา') || l.includes('หมายเรียกผู้ต้องหา')]),
         arrestWarrant: findCol(cols, [l => l.includes('ออกหมายจับ') || l.includes('หมายจับ')]),
-        warrantStatus: findCol(cols, [l => l.includes('สถานะหมาย')]),
         toProsecutor: findCol(cols, [l => l.includes('ส่งสำนวนอัยการ') || l.includes('ส่งอัยการ')]),
-        legalStep: findCol(cols, [l => l.includes('ขั้นตอนทางกฎหมาย') || l.includes('ขั้นตอน')]),
-        received: findCol(cols, [l => l.includes('รับคดีแล้ว') || l === 'รับคดี']),
         note: findCol(cols, [l => l.includes('หมายเหตุ')]),
         updatedBy: findCol(cols, [l => l.includes('อัปเดตล่าสุด')])
       };
@@ -696,122 +679,72 @@
     }
     function isRealCaseRow(row) {
       if (!row.c) return false;
-      const name = get(row, 'name');
       const id = getCitizenId(row);
-      const facts = get(row, 'facts');
-      return !!(name || (id && id.length >= 10) || facts);
+      const code = get(row, 'caseCode');
+      return !!( (id && id.length >= 10) || code );
     }
     function rowToCase(row, index) {
       return {
         index,
-        caseCode: get(row, 'caseCode') || ('CASE-' + String(index + 1).padStart(3, '0')),
         time: get(row, 'time'),
-        name: get(row, 'name'),
         id: getCitizenId(row),
-        phone: get(row, 'phone'),
-        address: get(row, 'address'),
-        accused: get(row, 'accused'),
-        facts: get(row, 'facts'),
-        mainStatus: get(row, 'mainStatus'),
-        appoint: get(row, 'appoint'),
+        caseCode: get(row, 'caseCode') || ('CASE-' + String(index + 1).padStart(3, '0')),
+        received: get(row, 'received'),
         interview: get(row, 'interview'),
-        investigate: get(row, 'investigate'),
         freeze: get(row, 'freeze'),
         freezeDate: get(row, 'freezeDate'),
         bankRequest: get(row, 'bankRequest'),
+        bookNo: get(row, 'bookNo'),
         postal: get(row, 'postal'),
-        summons: get(row, 'summons'),
+        witnessSummons: get(row, 'witnessSummons'),
+        suspectSummons: get(row, 'suspectSummons'),
         arrestWarrant: get(row, 'arrestWarrant'),
-        warrantStatus: get(row, 'warrantStatus'),
         toProsecutor: get(row, 'toProsecutor'),
-        legalStep: get(row, 'legalStep'),
-        received: get(row, 'received'),
         note: get(row, 'note'),
         updatedBy: get(row, 'updatedBy')
       };
     }
 
     function stepDone(c, key) {
-      const main = String(c.mainStatus || '').trim();
-      const legal = String(c.legalStep || '').trim();
-      const warrant = String(c.warrantStatus || '').trim();
-      if (key === 'นัดหมายผู้แจ้ง') {
-        return hasText(c.appoint) || isTrue(c.appoint) || /นัดหมาย/.test(main) || isTrue(c.received);
-      }
-      if (key === 'สอบปากคำ') {
-        return hasText(c.interview) || isTrue(c.interview) || hasText(c.investigate) || isTrue(c.investigate) || /สอบปากคำ|สอบสวน/.test(main);
-      }
-      if (key === 'อายัดบัญชี') {
-        return isTrue(c.freeze) || hasText(c.freezeDate) || /อายัด/.test(main);
-      }
-      if (key === 'ขอข้อมูลธนาคาร') {
-        return hasText(c.bankRequest) || isTrue(c.bankRequest) || hasText(c.postal) || /ขอข้อมูล|ธนาคาร|ผู้ให้บริการ/.test(main);
-      }
-      if (key === 'เลขส่งไปรษณีย์') {
-        return hasText(c.postal);
-      }
-      if (key === 'ออกหมายเรียก') {
-        return hasText(c.summons) || isTrue(c.summons) || /หมายเรียก/.test(warrant) || /หมายเรียก/.test(main);
-      }
-      if (key === 'ออกหมายจับ') {
-        return hasText(c.arrestWarrant) || isTrue(c.arrestWarrant) || /หมายจับ/.test(warrant) || /หมายจับ/.test(main);
-      }
-      if (key === 'ส่งสำนวนอัยการ') {
-        return hasText(c.toProsecutor) || isTrue(c.toProsecutor) || /อัยการ|ส่งสำนวน/.test(legal) || /อัยการ|ส่งสำนวน/.test(main);
-      }
+      if (key === 'รับแจ้ง') return hasText(c.received) || isTrue(c.received);
+      if (key === 'สอบปากคำ') return hasText(c.interview) || isTrue(c.interview);
+      if (key === 'อายัดบัญชี') return isTrue(c.freeze) || hasText(c.freezeDate);
+      if (key === 'ขอข้อมูลธนาคาร') return hasText(c.bankRequest) || isTrue(c.bankRequest) || hasText(c.bookNo) || hasText(c.postal);
+      if (key === 'หนังสือเลขที่') return hasText(c.bookNo);
+      if (key === 'เลขพัสดุไปรษณีย์') return hasText(c.postal);
+      if (key === 'หมายเรียกพยาน') return hasText(c.witnessSummons) || isTrue(c.witnessSummons);
+      if (key === 'หมายเรียกผู้ต้องหา') return hasText(c.suspectSummons) || isTrue(c.suspectSummons);
+      if (key === 'หมายจับ') return hasText(c.arrestWarrant) || isTrue(c.arrestWarrant);
+      if (key === 'ส่งอัยการ') return hasText(c.toProsecutor) || isTrue(c.toProsecutor);
       return false;
     }
 
     function flowProgress(c) {
-      const main = String(c.mainStatus || '').trim();
-      const rejected = /ไม่รับ/.test(main);
+      const rejected = /ไม่รับ/.test(String(c.received || ''));
       const order = FLOW_STEPS.map(s => s.key);
       const flags = {};
       order.forEach(k => { flags[k] = !rejected && stepDone(c, k); });
-
-      // If a later step is done, treat earlier steps as done (sequential pipeline)
       let lastDone = -1;
       order.forEach((k, idx) => { if (flags[k]) lastDone = idx; });
       if (!rejected && lastDone >= 0) {
         for (let i = 0; i <= lastDone; i++) flags[order[i]] = true;
       }
-
-      // Push from mainStatus keywords when explicit columns empty
-      let pushTo = -1;
-      if (/นัดหมาย/.test(main)) pushTo = 0;
-      if (/สอบปากคำ|สอบสวน/.test(main)) pushTo = 1;
-      if (/อายัด/.test(main)) pushTo = 2;
-      if (/ขอข้อมูล|ธนาคาร|ผู้ให้บริการ/.test(main)) pushTo = 3;
-      if (/หมายเรียก/.test(main)) pushTo = 4;
-      if (/หมายจับ/.test(main)) pushTo = 5;
-      if (/อัยการ|ส่งสำนวน/.test(main)) pushTo = 6;
-      if (!rejected && pushTo >= 0) {
-        for (let i = 0; i <= pushTo; i++) flags[order[i]] = true;
-        lastDone = Math.max(lastDone, pushTo);
-      }
-
       if (rejected) order.forEach(k => { flags[k] = false; });
-
       let currentIdx = 0;
       if (!rejected) {
-        currentIdx = flags[order[0]] ? 0 : 0;
         order.forEach((k, idx) => { if (flags[k]) currentIdx = idx; });
-        // if not all done, current is the furthest completed; if none, stay at 0 as upcoming
         if (lastDone < 0) currentIdx = 0;
       }
-      return { flags, currentIdx, rejected, order, postalDone: !rejected && stepDone(c, 'เลขส่งไปรษณีย์') };
+      return { flags, currentIdx, rejected, order };
     }
 
     function nodeExtra(c, key) {
-      if (key === 'นัดหมายผู้แจ้ง') {
-        if (hasText(c.appoint) && !isTrue(c.appoint) && !isFalse(c.appoint)) return c.appoint;
-        return isTrue(c.appoint) || isTrue(c.received) ? 'นัดหมายแล้ว' : 'รอนัดหมาย';
+      if (key === 'รับแจ้ง') {
+        if (hasText(c.received) && !isTrue(c.received) && !isFalse(c.received)) return c.received;
+        if (/ไม่รับ/.test(c.received || '')) return 'ไม่รับแจ้ง';
+        return isTrue(c.received) ? 'รับแจ้งแล้ว' : 'รอรับแจ้ง';
       }
-      if (key === 'สอบปากคำ') {
-        if (hasText(c.interview)) return c.interview;
-        if (hasText(c.investigate)) return c.investigate;
-        return 'ยังไม่สอบปากคำ';
-      }
+      if (key === 'สอบปากคำ') return hasText(c.interview) ? c.interview : 'ยังไม่สอบปากคำ';
       if (key === 'อายัดบัญชี') {
         if (isTrue(c.freeze) || hasText(c.freezeDate)) {
           return 'อายัดแล้ว' + (hasText(c.freezeDate) ? ' · ' + c.freezeDate : '');
@@ -820,33 +753,40 @@
       }
       if (key === 'ขอข้อมูลธนาคาร') {
         if (hasText(c.bankRequest) && !isTrue(c.bankRequest) && !isFalse(c.bankRequest)) return c.bankRequest;
-        return isTrue(c.bankRequest) || hasText(c.postal) ? 'ขอข้อมูลแล้ว' : 'ยังไม่ขอข้อมูล';
+        return (isTrue(c.bankRequest) || hasText(c.bookNo) || hasText(c.postal)) ? 'ขอข้อมูลแล้ว' : 'ยังไม่ขอข้อมูล';
       }
-      if (key === 'เลขส่งไปรษณีย์') {
-        return hasText(c.postal) ? c.postal : 'ยังไม่มีเลขส่ง';
+      if (key === 'หนังสือเลขที่') return hasText(c.bookNo) ? c.bookNo : 'ยังไม่มีเลขหนังสือ';
+      if (key === 'เลขพัสดุไปรษณีย์') return hasText(c.postal) ? c.postal : 'ยังไม่มีเลขพัสดุ';
+      if (key === 'หมายเรียกพยาน') {
+        if (hasText(c.witnessSummons) && !isTrue(c.witnessSummons) && !isFalse(c.witnessSummons)) return c.witnessSummons;
+        return isTrue(c.witnessSummons) ? 'ออกแล้ว' : 'ยังไม่ออก';
       }
-      if (key === 'ออกหมายเรียก') {
-        if (hasText(c.summons) && !isTrue(c.summons) && !isFalse(c.summons)) return c.summons;
-        if (/หมายเรียก/.test(c.warrantStatus || '')) return c.warrantStatus;
-        return isTrue(c.summons) ? 'ออกหมายเรียกแล้ว' : 'ยังไม่ออกหมายเรียก';
+      if (key === 'หมายเรียกผู้ต้องหา') {
+        if (hasText(c.suspectSummons) && !isTrue(c.suspectSummons) && !isFalse(c.suspectSummons)) return c.suspectSummons;
+        return isTrue(c.suspectSummons) ? 'ออกแล้ว' : 'ยังไม่ออก';
       }
-      if (key === 'ออกหมายจับ') {
+      if (key === 'หมายจับ') {
         if (hasText(c.arrestWarrant) && !isTrue(c.arrestWarrant) && !isFalse(c.arrestWarrant)) return c.arrestWarrant;
-        if (/หมายจับ/.test(c.warrantStatus || '')) return c.warrantStatus;
-        return isTrue(c.arrestWarrant) ? 'ออกหมายจับแล้ว' : 'ยังไม่ออกหมายจับ';
+        return isTrue(c.arrestWarrant) ? 'ออกแล้ว' : 'ยังไม่ออก';
       }
-      if (key === 'ส่งสำนวนอัยการ') {
+      if (key === 'ส่งอัยการ') {
         if (hasText(c.toProsecutor) && !isTrue(c.toProsecutor) && !isFalse(c.toProsecutor)) return c.toProsecutor;
-        if (/อัยการ|ส่งสำนวน/.test(c.legalStep || '')) return c.legalStep;
-        return isTrue(c.toProsecutor) ? 'ส่งสำนวนแล้ว' : 'ยังไม่ส่งอัยการ';
+        return isTrue(c.toProsecutor) ? 'ส่งแล้ว' : 'ยังไม่ส่ง';
       }
       return '-';
+    }
+
+    function currentStatusLabel(c) {
+      const { flags, currentIdx, rejected, order } = flowProgress(c);
+      if (rejected) return 'ไม่รับแจ้ง';
+      if (!flags[order[0]]) return 'รอดำเนินการ';
+      return FLOW_STEPS[currentIdx].label;
     }
 
     function renderFlow(c) {
       const wrap = document.getElementById('status-flow');
       const detail = document.getElementById('status-detail');
-      const { flags, currentIdx, rejected, postalDone } = flowProgress(c);
+      const { flags, currentIdx, rejected } = flowProgress(c);
       wrap.innerHTML = '';
 
       FLOW_STEPS.forEach((step, idx) => {
@@ -854,7 +794,7 @@
         let tag = 'ยังไม่ถึง';
         if (rejected) {
           state = idx === 0 ? 'rejected' : 'todo';
-          tag = idx === 0 ? 'ไม่รับคดี' : 'หยุดไว้';
+          tag = idx === 0 ? 'ไม่รับแจ้ง' : 'หยุดไว้';
         } else if (flags[step.key] && idx < currentIdx) {
           state = 'done'; tag = 'ผ่านแล้ว';
         } else if (idx === currentIdx && flags[step.key]) {
@@ -864,17 +804,18 @@
         }
 
         let subHtml = '';
-        if (step.sub) {
-          const subVal = nodeExtra(c, step.sub.key);
-          const subOk = postalDone;
-          subHtml = `
-            <div class="mm-sub">
-              <div class="mm-step">${step.sub.num}</div>
-              <div class="mm-title">${step.sub.label}</div>
-              <div class="mm-desc">${subVal}</div>
-              <span class="mm-tag">${subOk ? 'มีเลขส่งแล้ว' : 'รอเลขส่ง'}</span>
-            </div>
-          `;
+        if (step.subs) {
+          subHtml = step.subs.map(sub => {
+            const ok = stepDone(c, sub.key);
+            return `
+              <div class="mm-sub">
+                <div class="mm-step">${sub.num}</div>
+                <div class="mm-title">${sub.label}</div>
+                <div class="mm-desc">${nodeExtra(c, sub.key)}</div>
+                <span class="mm-tag">${ok ? 'มีข้อมูล' : 'รอข้อมูล'}</span>
+              </div>
+            `;
+          }).join('');
         }
 
         const el = document.createElement('div');
@@ -882,7 +823,7 @@
         el.innerHTML = `
           <div class="mm-num">${step.num}</div>
           <div class="mm-body">
-            <div class="mm-step">สถานะคดี ${step.num}</div>
+            <div class="mm-step">สถานะ ${step.num}</div>
             <div class="mm-title">${step.label}</div>
             <div class="mm-desc">${nodeExtra(c, step.key)}</div>
             <span class="mm-tag">${tag}</span>
@@ -894,13 +835,16 @@
 
       const freezeDateShow = hasText(c.freezeDate) ? c.freezeDate : '-';
       detail.innerHTML = `
-        <div class="chip"><span>สถานะหลัก</span><b>${c.mainStatus || '-'}</b></div>
-        <div class="chip"><span>1. นัดหมายผู้แจ้ง</span><b>${nodeExtra(c, 'นัดหมายผู้แจ้ง')}</b></div>
-        <div class="chip"><span>2. สอบปากคำ</span><b>${nodeExtra(c, 'สอบปากคำ')}</b></div>
-        <div class="chip"><span>3. อายัดบัญชี</span><b>${isTrue(c.freeze) ? 'ใช่' : 'ยัง'} · วันที่ ${freezeDateShow}</b></div>
-        <div class="chip"><span>4. ขอข้อมูลธนาคาร / 4.1 ไปรษณีย์</span><b>${nodeExtra(c, 'ขอข้อมูลธนาคาร')} · ${hasText(c.postal) ? c.postal : '-'}</b></div>
-        <div class="chip"><span>5–6. หมายเรียก / หมายจับ</span><b>${nodeExtra(c, 'ออกหมายเรียก')} · ${nodeExtra(c, 'ออกหมายจับ')}</b></div>
-        <div class="chip"><span>7. ส่งสำนวนอัยการ</span><b>${nodeExtra(c, 'ส่งสำนวนอัยการ')}${c.updatedBy ? ' · โดย ' + c.updatedBy : ''}</b></div>
+        <div class="chip"><span>รับแจ้งหรือไม่</span><b>${c.received || '-'}</b></div>
+        <div class="chip"><span>สอบปากคำ</span><b>${c.interview || '-'}</b></div>
+        <div class="chip"><span>สั่งอายัดบัญชี</span><b>${isTrue(c.freeze) ? 'ใช่' : (c.freeze || 'ยัง')} · วันที่ ${freezeDateShow}</b></div>
+        <div class="chip"><span>ขอข้อมูลธนาคาร</span><b>${c.bankRequest || '-'}</b></div>
+        <div class="chip"><span>หนังสือเลขที่</span><b>${c.bookNo || '-'}</b></div>
+        <div class="chip"><span>เลขพัสดุไปรษณีย์</span><b>${c.postal || '-'}</b></div>
+        <div class="chip"><span>หมายเรียกพยาน</span><b>${c.witnessSummons || '-'}</b></div>
+        <div class="chip"><span>หมายเรียกผู้ต้องหา</span><b>${c.suspectSummons || '-'}</b></div>
+        <div class="chip"><span>ออกหมายจับ</span><b>${c.arrestWarrant || '-'}</b></div>
+        <div class="chip"><span>ส่งสำนวนอัยการ</span><b>${c.toProsecutor || '-'}</b></div>
       `;
     }
 
@@ -908,17 +852,14 @@
       document.getElementById('error-container').classList.add('hidden');
       document.getElementById('result-container').classList.remove('hidden');
 
-      document.getElementById('res-name').textContent = c.name || '-';
       document.getElementById('res-id').textContent = maskId(c.id);
-      document.getElementById('res-phone').textContent = c.phone || '-';
-      document.getElementById('res-time').textContent = c.time || '-';
-      document.getElementById('res-address').textContent = c.address || '-';
-      document.getElementById('res-facts').textContent = c.facts || '-';
-      document.getElementById('res-accused').textContent = c.accused || '-';
+      document.getElementById('res-case-code-top').textContent = c.caseCode || '-';
       document.getElementById('res-note').textContent = c.note || '-';
+      document.getElementById('res-updated-by').textContent = c.updatedBy || '-';
+      document.getElementById('res-time').textContent = c.time || '-';
 
       document.getElementById('res-case-code').textContent = c.caseCode || '-';
-      const centerState = c.mainStatus || (isTrue(c.received) ? 'รับคดี' : 'รอดำเนินการ');
+      const centerState = currentStatusLabel(c);
       document.getElementById('res-center-state').textContent = centerState;
       document.getElementById('res-status-badge').textContent = centerState;
 
@@ -947,25 +888,11 @@
         btn.innerHTML = `
           <div style="font-size:11px;color:#64748b;margin-bottom:4px;">คดีที่ ${i + 1}</div>
           <div style="font-weight:700;color:#071a3d;">${c.caseCode}</div>
-          <div style="font-size:13px;color:#475569;margin-top:6px;">${c.facts || c.accused || 'ไม่มีสรุปเรื่อง'}</div>
-          <div style="margin-top:8px;"><span class="badge">${c.mainStatus || '-'}</span></div>
+          <div style="margin-top:8px;"><span class="badge">${currentStatusLabel(c)}</span></div>
         `;
         btn.onclick = () => showCase(c);
         list.appendChild(btn);
       });
-    }
-
-
-
-    function toggleEmbedForm() {
-      const box = document.getElementById('form-embed-box');
-      const show = box.style.display === 'none' || !box.style.display;
-      box.style.display = show ? 'block' : 'none';
-      if (show) {
-        const iframe = document.getElementById('form-iframe');
-        iframe.src = iframe.src; // reload
-        box.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
     }
 
     function showPanel(name) {
