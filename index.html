@@ -605,7 +605,15 @@
 
     const FLOW_STEPS = [
       { key: 'รับแจ้ง', num: '1', label: 'รับแจ้งหรือไม่', hint: 'รับแจ้งคดีออนไลน์' },
-      { key: 'สอบปากคำ', num: '2', label: 'สอบปากคำ', hint: 'สอบปากคำผู้แจ้ง/พยาน' },
+      {
+        key: 'นัดหมายผู้แจ้ง',
+        num: '2',
+        label: 'นัดหมายผู้แจ้ง',
+        hint: 'นัดหมายผู้แจ้งความ',
+        subs: [
+          { key: 'วันที่นัดหมาย', num: '2.1', label: 'วันที่นัดหมาย' }
+        ]
+      },
       { key: 'อายัดบัญชี', num: '3', label: 'สั่งอายัดบัญชี', hint: 'สั่งอายัดบัญชีที่เกี่ยวข้อง' },
       {
         key: 'ขอข้อมูลธนาคาร',
@@ -613,7 +621,7 @@
         label: 'ขอข้อมูล ธนาคาร/ผู้ให้บริการ',
         hint: 'ขอข้อมูลจากธนาคารหรือผู้ให้บริการ',
         subs: [
-          { key: 'หนังสือเลขที่', num: '4.1', label: 'หนังสือเลขที่' },
+          { key: 'หนังสือส่ง', num: '4.1', label: 'หนังสือส่ง ที่' },
           { key: 'เลขพัสดุไปรษณีย์', num: '4.2', label: 'เลขพัสดุไปรษณีย์' }
         ]
       },
@@ -672,13 +680,15 @@
         id: findCol(cols, [l => l.includes('เลขบัตร') || l.includes('บัตรประชา')]),
         caseCode: findCol(cols, [l => l.includes('เลขคำขอแจ้งความ') || l.includes('คำขอแจ้งความ')]),
         received: findCol(cols, [l => l.includes('รับเเจ้ง') || l.includes('รับแจ้ง')]),
+        appoint: findCol(cols, [l => l.includes('นัดหมายผู้แจ้ง') || (l.includes('นัดหมาย') && !l.includes('วันที่'))]),
+        appointDate: findCol(cols, [l => l.includes('วันที่นัดหมาย')]),
         interview: findCol(cols, [l => l.includes('สอบปากคำ')]),
         freeze: findCol(cols, [l => l.includes('สั่งอายัด') || (l.includes('อายัดบัญชี') && !l.includes('วันที่'))]),
         freezeDate: findCol(cols, [l => l.includes('วันที่อายัด')]),
         bankRequest: findCol(cols, [l => l.includes('ขอข้อมูล') && (l.includes('ธนาคาร') || l.includes('ผู้ให้บริการ'))]),
-        bookNo: findCol(cols, [l => l.includes('หนังสือเลขที่')]),
+        bookNo: findCol(cols, [l => l.includes('หนังสือส่ง') || l.includes('หนังสือเลขที่')]),
         postal: findCol(cols, [l => l.includes('เลขพัสดุ') || l.includes('ไปรษณีย์')]),
-        witnessSummons: findCol(cols, [l => l.includes('ออกหมายเรียกพยาน') || (l.includes('หมายเรียกพยาน'))]),
+        witnessSummons: findCol(cols, [l => l.includes('ออกหมายเรียกพยาน') || l.includes('หมายเรียกพยาน')]),
         suspectSummons: findCol(cols, [l => l.includes('ออกหมายเรียกผู้ต้องหา') || l.includes('หมายเรียกผู้ต้องหา')]),
         arrestWarrant: findCol(cols, [l => l.includes('ออกหมายจับ') || l.includes('หมายจับ')]),
         toProsecutor: findCol(cols, [l => l.includes('ส่งสำนวนอัยการ') || l.includes('ส่งอัยการ')]),
@@ -713,6 +723,8 @@
         id: getCitizenId(row),
         caseCode: get(row, 'caseCode') || ('CASE-' + String(index + 1).padStart(3, '0')),
         received: get(row, 'received'),
+        appoint: get(row, 'appoint'),
+        appointDate: get(row, 'appointDate'),
         interview: get(row, 'interview'),
         freeze: get(row, 'freeze'),
         freezeDate: get(row, 'freezeDate'),
@@ -730,10 +742,12 @@
 
     function stepDone(c, key) {
       if (key === 'รับแจ้ง') return hasText(c.received) || isTrue(c.received);
+      if (key === 'นัดหมายผู้แจ้ง') return hasText(c.appoint) || isTrue(c.appoint) || hasText(c.appointDate) || hasText(c.interview) || isTrue(c.interview);
+      if (key === 'วันที่นัดหมาย') return hasText(c.appointDate);
       if (key === 'สอบปากคำ') return hasText(c.interview) || isTrue(c.interview);
       if (key === 'อายัดบัญชี') return isTrue(c.freeze) || hasText(c.freezeDate);
       if (key === 'ขอข้อมูลธนาคาร') return hasText(c.bankRequest) || isTrue(c.bankRequest) || hasText(c.bookNo) || hasText(c.postal);
-      if (key === 'หนังสือเลขที่') return hasText(c.bookNo);
+      if (key === 'หนังสือส่ง' || key === 'หนังสือเลขที่') return hasText(c.bookNo);
       if (key === 'เลขพัสดุไปรษณีย์') return hasText(c.postal);
       if (key === 'หมายเรียกพยาน') return hasText(c.witnessSummons) || isTrue(c.witnessSummons);
       if (key === 'หมายเรียกผู้ต้องหา') return hasText(c.suspectSummons) || isTrue(c.suspectSummons);
@@ -767,6 +781,13 @@
         if (/ไม่รับ/.test(c.received || '')) return 'ไม่รับแจ้ง';
         return isTrue(c.received) ? 'รับแจ้งแล้ว' : 'รอรับแจ้ง';
       }
+      if (key === 'นัดหมายผู้แจ้ง') {
+        if (hasText(c.appoint) && !isTrue(c.appoint) && !isFalse(c.appoint)) return c.appoint;
+        if (hasText(c.appointDate)) return 'นัดแล้ว · ' + c.appointDate;
+        if (hasText(c.interview)) return c.interview;
+        return isTrue(c.appoint) ? 'นัดหมายแล้ว' : 'รอนัดหมาย';
+      }
+      if (key === 'วันที่นัดหมาย') return hasText(c.appointDate) ? c.appointDate : 'ยังไม่มีวันนัด';
       if (key === 'สอบปากคำ') return hasText(c.interview) ? c.interview : 'ยังไม่สอบปากคำ';
       if (key === 'อายัดบัญชี') {
         if (isTrue(c.freeze) || hasText(c.freezeDate)) {
@@ -778,7 +799,7 @@
         if (hasText(c.bankRequest) && !isTrue(c.bankRequest) && !isFalse(c.bankRequest)) return c.bankRequest;
         return (isTrue(c.bankRequest) || hasText(c.bookNo) || hasText(c.postal)) ? 'ขอข้อมูลแล้ว' : 'ยังไม่ขอข้อมูล';
       }
-      if (key === 'หนังสือเลขที่') return hasText(c.bookNo) ? c.bookNo : 'ยังไม่มีเลขหนังสือ';
+      if (key === 'หนังสือส่ง' || key === 'หนังสือเลขที่') return hasText(c.bookNo) ? c.bookNo : 'ยังไม่มีเลขหนังสือ';
       if (key === 'เลขพัสดุไปรษณีย์') return hasText(c.postal) ? c.postal : 'ยังไม่มีเลขพัสดุ';
       if (key === 'หมายเรียกพยาน') {
         if (hasText(c.witnessSummons) && !isTrue(c.witnessSummons) && !isFalse(c.witnessSummons)) return c.witnessSummons;
@@ -859,10 +880,11 @@
       const freezeDateShow = hasText(c.freezeDate) ? c.freezeDate : '-';
       detail.innerHTML = `
         <div class="chip"><span>รับแจ้งหรือไม่</span><b>${c.received || '-'}</b></div>
-        <div class="chip"><span>สอบปากคำ</span><b>${c.interview || '-'}</b></div>
+        <div class="chip"><span>นัดหมายผู้แจ้ง</span><b>${c.appoint || '-'}</b></div>
+        <div class="chip"><span>วันที่นัดหมาย</span><b>${c.appointDate || '-'}</b></div>
         <div class="chip"><span>สั่งอายัดบัญชี</span><b>${isTrue(c.freeze) ? 'ใช่' : (c.freeze || 'ยัง')} · วันที่ ${freezeDateShow}</b></div>
         <div class="chip"><span>ขอข้อมูลธนาคาร</span><b>${c.bankRequest || '-'}</b></div>
-        <div class="chip"><span>หนังสือเลขที่</span><b>${c.bookNo || '-'}</b></div>
+        <div class="chip"><span>หนังสือส่ง ที่</span><b>${c.bookNo || '-'}</b></div>
         <div class="chip"><span>เลขพัสดุไปรษณีย์</span><b>${c.postal || '-'}</b></div>
         <div class="chip"><span>หมายเรียกพยาน</span><b>${c.witnessSummons || '-'}</b></div>
         <div class="chip"><span>หมายเรียกผู้ต้องหา</span><b>${c.suspectSummons || '-'}</b></div>
