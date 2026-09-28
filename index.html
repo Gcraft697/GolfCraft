@@ -978,23 +978,6 @@
       window.open(FORM_URL, '_blank', 'noopener');
     }
 
-    async function fetchSheetData() {
-      const statusEl = document.getElementById('sheet-status');
-      try {
-        const response = await fetch(SHEET_URL);
-        const text = await response.text();
-        const start = text.indexOf('{');
-        const end = text.lastIndexOf('}');
-        if (start < 0 || end < 0) throw new Error('bad payload');
-        const json = JSON.parse(text.substring(start, end + 1));
-        if (json.status !== 'ok') throw new Error('not ok');
-        mapColumns(json.table.cols || []);
-        rawSheetData = (json.table.rows || []).filter(isRealCaseRow);
-      } catch (err) {
-        console.error(err);
-        statusEl.textContent = 'เชื่อมต่อชีตไม่สำเร็จ · ตรวจสิทธิ์แชร์';
-      }
-    }
 
     function searchByCitizenId() {
       const inputVal = onlyDigits(document.getElementById('id-input').value);
