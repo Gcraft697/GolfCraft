@@ -543,7 +543,7 @@
         return (isTrue(c.bankRequest) || hasText(c.bookNo) || hasText(c.postal)) ? 'ขอข้อมูลแล้ว' : 'ยังไม่ขอข้อมูล';
       }
       if (key === 'หนังสือส่ง' || key === 'หนังสือเลขที่') return hasText(c.bookNo) ? c.bookNo : 'ยังไม่มีเลขหนังสือ';
-      if (key === 'เลขพัสดุไปรษณีย์') return hasText(c.postal) ? c.postal : 'ยังไม่มีเลขพัสดุ';
+      if (key === 'เลขพัสดุไปรษณีย์') return hasText(c.postal) ? 'มีเลขพัสดุแล้ว' : 'ยังไม่มีเลขพัสดุ';
       if (key === 'หมายเรียกพยาน') {
         if (hasText(c.witnessSummons) && !isTrue(c.witnessSummons) && !isFalse(c.witnessSummons)) return c.witnessSummons;
         return isTrue(c.witnessSummons) ? 'ออกแล้ว' : 'ยังไม่ออก';
@@ -631,7 +631,6 @@
         ['สั่งอายัดบัญชี', (isTrue(c.freeze) ? 'ใช่' : (c.freeze || 'ยัง')) + ' · วันที่ ' + freezeDateShow],
         ['ขอข้อมูลธนาคาร', c.bankRequest || '-'],
         ['หนังสือส่ง ที่', c.bookNo || '-'],
-        ['เลขพัสดุไปรษณีย์', c.postal || '-'],
         ['หมายเรียกพยาน', c.witnessSummons || '-'],
         ['หมายเรียกผู้ต้องหา', c.suspectSummons || '-'],
         ['ออกหมายจับ', c.arrestWarrant || '-'],
